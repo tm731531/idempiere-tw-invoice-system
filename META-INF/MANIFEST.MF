@@ -1,0 +1,17 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Taiwan Invoice Tax System
+Bundle-SymbolicName: tw.idempiere.invoice.tax;singleton:=true
+Bundle-Version: 1.0.0.qualifier
+Bundle-Activator: tw.idempiere.invoice.tax.TaiwanInvoiceTaxActivator
+Bundle-Vendor: Taiwan iDempiere Community
+Bundle-RequiredExecutionEnvironment: JavaSE-17
+Require-Bundle: org.adempiere.base;bundle-version="12.0.0"
+Import-Package: org.adempiere.base,
+ org.compiere.model,
+ org.compiere.util,
+ org.compiere.process,
+ org.osgi.framework;version="1.10.0"
+Export-Package: tw.idempiere.invoice.tax.model,
+ tw.idempiere.invoice.tax.service
+Service-Component: OSGI-INF/component.xml

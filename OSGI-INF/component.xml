@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+    DS Component Definition
+    Taiwan Invoice Tax System - OSGi DS component registration
+-->
+<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.3.0"
+               name="tw.idempiere.invoice.tax.activator"
+               immediate="true"
+               activate="activate"
+               deactivate="deactivate">
+
+    <implementation class="tw.idempiere.invoice.tax.TaiwanInvoiceTaxActivator"/>
+
+    <service>
+        <provide interface="tw.idempiere.invoice.tax.TaiwanInvoiceTaxActivator"/>
+    </service>
+
+</scr:component>
