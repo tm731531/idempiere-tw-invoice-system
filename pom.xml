@@ -17,6 +17,8 @@
         <maven.compiler.target>17</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <idempiere.version>12.0.0-SNAPSHOT</idempiere.version>
+        <maven.build.timestamp.format>yyyyMMdd-HHmm</maven.build.timestamp.format>
+        <build.timestamp>${maven.build.timestamp}</build.timestamp>
     </properties>
 
     <repositories>
@@ -77,6 +79,7 @@
     </dependencies>
 
     <build>
+        <finalName>${project.artifactId}-1.0.0.${build.timestamp}</finalName>
         <sourceDirectory>src</sourceDirectory>
         <testSourceDirectory>test</testSourceDirectory>
         <resources>
@@ -103,6 +106,9 @@
                 <configuration>
                     <archive>
                         <manifestFile>META-INF/MANIFEST.MF</manifestFile>
+                        <manifestEntries>
+                            <Bundle-Version>1.0.0.${build.timestamp}</Bundle-Version>
+                        </manifestEntries>
                     </archive>
                 </configuration>
             </plugin>

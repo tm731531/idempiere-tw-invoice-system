@@ -2,13 +2,12 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Taiwan Invoice Tax System
 Bundle-SymbolicName: tw.idempiere.invoice.tax;singleton:=true
-Bundle-Version: 1.0.0.qualifier
 Bundle-Activator: tw.idempiere.invoice.tax.TaiwanInvoiceTaxActivator
 Bundle-Vendor: Taiwan iDempiere Community
 Bundle-RequiredExecutionEnvironment: JavaSE-17
 Require-Bundle: org.adempiere.base;bundle-version="12.0.0"
 Import-Package: org.adempiere.base,
- org.adempiere.pipo2;version="[12.0.0,13.0.0)",
+ org.adempiere.pipo2,
  org.compiere.model,
  org.compiere.util,
  org.compiere.process,
