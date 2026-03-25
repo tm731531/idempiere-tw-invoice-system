@@ -20,17 +20,14 @@ mvn test -Dtest=MInvoicePrefixTest
 mvn package
 ```
 
-## Reference SQL Scripts
+## Schema Documentation
 
-5 DDL scripts exist at `src/main/resources/sql/` — use these as the **authoritative source of column names** when writing PackOut.xml:
+Table schemas and PackOut.xml writing guides are in `docs/schema/`:
 
-- `01_create_tw_invoice_prefix.sql` — TW_InvoicePrefix columns
-- `02_create_tw_invoice_prefix_map.sql` — TW_Invoice_Prefix_Map columns
-- `03_create_tw_invoice_adjustment.sql` — TW_InvoiceAdjustment columns
-- `04_create_tw_tax_statement.sql` — TW_TaxStatement columns
-- `05_accounting_codes_mapping.sql` — accounting code mappings
+- `docs/schema/table-definitions.md` — all 4 TW_* tables: columns, types, business rules
+- `docs/schema/packout-column-reference.md` — AD_Reference_ID lookup table + XML templates
 
-These scripts are **reference only** — 2Pack installs the dictionary, not these scripts.
+**⚠️ No SQL files exist in this project.** 2Pack (PackOut.xml) creates physical tables automatically via iDempiere's ColumnElementHandler DDL. Never add SQL DDL scripts — they will not be executed and could cause confusion.
 
 ---
 
@@ -65,7 +62,7 @@ tw.idempiere.invoice.tax/
 ├── resources/
 │   ├── 2pack/
 │   │   └── tw_invoice_system.zip        ← PackOut.xml packed as ZIP
-│   └── sql/                             ← 5 SQL scripts (reference)
+│   └── (no sql/ — 2Pack handles DDL)
 └── test/tw/idempiere/invoice/tax/
     ├── model/*Test.java
     └── service/*Test.java
