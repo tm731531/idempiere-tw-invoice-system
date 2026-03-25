@@ -50,11 +50,16 @@ CREATE TABLE IF NOT EXISTS TW_InvoicePrefix (
     --   C = Complete (all numbers in range have been used)
     Status                  CHAR(1)         NOT NULL DEFAULT 'A' CHECK (Status IN ('A','I','C')),
 
+    -- Invoice prefix validity period (財政部核配字軌有效期間，每2個月一期)
+    PrefixStartDate         DATE            NOT NULL,
+    PrefixEndDate           DATE            NOT NULL,
+
     -- Constraints
     CONSTRAINT TW_InvoicePrefix_Key     PRIMARY KEY (TW_InvoicePrefix_ID),
     CONSTRAINT TW_InvoicePrefix_UU_Key  UNIQUE (TW_InvoicePrefix_UU),
     CONSTRAINT TW_InvoicePrefix_Range   CHECK (EndNumber >= StartNumber),
     CONSTRAINT TW_InvoicePrefix_PrefixFmt CHECK (PrefixCode ~ '^[A-Z]{2}$'),
+    CONSTRAINT TW_InvoicePrefix_PeriodCheck CHECK (PrefixEndDate >= PrefixStartDate),
 
     -- Foreign Keys to iDempiere standard tables
     CONSTRAINT TW_InvoicePrefix_Client  FOREIGN KEY (AD_Client_ID)
@@ -72,6 +77,8 @@ COMMENT ON COLUMN TW_InvoicePrefix.CurrentNumber IS 'Current invoice number to b
 COMMENT ON COLUMN TW_InvoicePrefix.LastInvoiceNumber IS 'The last invoice number that was successfully issued';
 COMMENT ON COLUMN TW_InvoicePrefix.LastIssuedInvoiceDate IS 'Date and time of the last invoice issued with this prefix';
 COMMENT ON COLUMN TW_InvoicePrefix.Status IS 'A=Active, I=Inactive, C=Complete (all numbers used)';
+COMMENT ON COLUMN TW_InvoicePrefix.PrefixStartDate IS 'Start date of this prefix validity period (assigned by Ministry of Finance)';
+COMMENT ON COLUMN TW_InvoicePrefix.PrefixEndDate IS 'End date of this prefix validity period (typically 2 months after start)';
 
 -- ===========================================================================
 -- Indexes

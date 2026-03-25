@@ -70,7 +70,7 @@
 
 **Must fix (per model class):**
 1. Add `@Model(table = Table_Name)` annotation
-2. Fix `initPO()` to use `POInfo.getPOInfo(ctx, Table_Name)` — never return null
+2. Fix `initPO()` to use `MTable.getTable_ID(Table_Name)` then `POInfo.getPOInfo(ctx, tableId, trxName)` — never use non-existent String overload; return null only when tableId <= 0
 3. Confirm `get_AccessLevel()` returns `3`
 
 **Must validate before handing off:**
@@ -132,7 +132,9 @@
 **OSGi / Bundle:**
 - [ ] `MANIFEST.MF` imports: `org.adempiere.base`, `org.adempiere.pipo2`, `org.compiere.model`, `org.compiere.util`, `org.osgi.framework`
 - [ ] `Bundle-ClassPath` includes resources path if 2Pack ZIP is embedded
-- [ ] `Service-Component` wildcard covers all new component XML files
+- [ ] `Service-Component: OSGI-INF/*.xml` (wildcard) — NOT pointing to single file
+- [ ] Each DS component has its own XML file under OSGI-INF/ (no two root `<scr:component>` in same file)
+- [ ] Activator is registered as BundleActivator only — NOT as DS Component (no component XML entry for Activator)
 - [ ] No circular imports between packages
 
 **2Pack / PackOut.xml:**
@@ -149,7 +151,8 @@
 
 **Model classes:**
 - [ ] `@Model(table = Table_Name)` annotation present
-- [ ] `initPO()` never returns null — uses `POInfo.getPOInfo(ctx, Table_Name)`
+- [ ] `initPO()` uses `MTable.getTable_ID(Table_Name)` then `POInfo.getPOInfo(ctx, tableId, trxName)` — never uses non-existent String overload
+- [ ] `initPO()` returns null gracefully when `tableId <= 0` (before 2Pack installs) — PO constructor handles this
 - [ ] `get_AccessLevel()` returns same value as `<AccessLevel>` in 2Pack
 - [ ] All 3 constructors: `(ctx, int, trxName)`, `(ctx, String uuid, trxName)`, `(ctx, ResultSet, trxName)`
 - [ ] `Table_ID` is `0` (not hardcoded non-zero)
@@ -178,17 +181,22 @@
 - [ ] `TW_Invoice_Prefix_Map`: FK to TW_InvoicePrefix, FK to C_Invoice, InvoiceDate, InvoiceNumber
 - [ ] `TW_InvoiceAdjustment`: AdjustmentType (RETURN/ALLOWANCE), AdjustmentDate, TaxPeriod, AdjustedTaxAmount, FK to C_Invoice
 - [ ] `TW_TaxStatement`: TaxYear, TaxPeriod (1–6), OutputTax, InputTax, TaxableRatio, TaxPayable, IsMixedBusiness
+- [ ] `TW_InvoicePrefix`: includes `PrefixStartDate DATE` and `PrefixEndDate DATE` (字軌2個月有效期)
+- [ ] `TW_Invoice_Prefix_Map`: includes `BuyerTaxID CHAR(8)` — mandatory for SALES_TRIPART invoices
+- [ ] `TW_InvoiceAdjustment`: has `AdjustmentDirection` field distinguishing SALES (銷項折讓) vs PURCHASE (進項折讓)
+- [ ] `TW_TaxStatement`: includes `ZeroRateSalesAmount`, `CarryOverTaxCredit`, `NonDeductibleInputTax`
 
 **Business rule compliance:**
 - [ ] 三聯式: `SaleAmount × 1.05 = GrossAmount` (buyer has tax ID)
 - [ ] 二聯式: `floor(GrossAmount / 1.05) = SaleAmount` (no tax ID)
 - [ ] Tax amount always computed with `FLOOR`, not `ROUND`
+- [ ] 二聯式稅額 = floor(SaleAmount × 0.05)，NOT GrossAmount - SaleAmount (1 yuan difference at boundary values)
 - [ ] Bimonthly periods: 1=(Jan-Feb), 2=(Mar-Apr), 3=(May-Jun), 4=(Jul-Aug), 5=(Sep-Oct), 6=(Nov-Dec)
 - [ ] Status lifecycle: I → A → C, C cannot revert to A
 - [ ] Future invoice date → hard block (error)
 - [ ] Non-sequential dates within same prefix → warning only (not block)
 - [ ] Invoice month ≠ transaction month → warning only (not block)
-- [ ] Adjustment not in current period → warning only (not block, per current design)
+- [ ] Invoice adjustment overdue → user must confirm tax risk (not silent warning) — overdue adjustments have penalty risk
 - [ ] 兼營: < 9 months operating → no adjustment; ratio = taxable / total
 - [ ] Input tax expiry 10 years; warn 90 days before
 

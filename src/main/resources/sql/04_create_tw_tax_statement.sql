@@ -57,6 +57,18 @@ CREATE TABLE IF NOT EXISTS TW_TaxStatement (
     --   A negative value represents a refundable credit.
     TaxPayable                  NUMERIC(18,2)   NOT NULL DEFAULT 0,
 
+    -- Zero-rate sales (零稅率銷售額) - export sales, eligible for tax refund (not same as exempt)
+    ZeroRateSalesAmount         NUMERIC(15,2)   NOT NULL DEFAULT 0,
+
+    -- Non-deductible input tax (不可扣抵進項稅額) - e.g., entertainment, luxury goods
+    NonDeductibleInputTax       NUMERIC(15,2)   NOT NULL DEFAULT 0,
+
+    -- Carry-over tax credit from previous period (前期累積留抵稅額)
+    CarryOverTaxCredit          NUMERIC(15,2)   NOT NULL DEFAULT 0,
+
+    -- Filing due date (申報截止日 = 次月15日，遇假日順延)
+    FilingDueDate               DATE,
+
     -- IsMixedBusiness: 'Y' for 兼營營業人 (mixed taxable/exempt operator)
     IsMixedBusiness             CHAR(1)         NOT NULL DEFAULT 'N'
                                     CHECK (IsMixedBusiness IN ('Y','N')),
@@ -93,6 +105,10 @@ COMMENT ON COLUMN TW_TaxStatement.InputTaxAmount IS 'VAT paid on purchases befor
 COMMENT ON COLUMN TW_TaxStatement.TaxPayable IS 'Net VAT payable = OutputTax - apportioned InputTax; negative = refund due';
 COMMENT ON COLUMN TW_TaxStatement.IsMixedBusiness IS 'Y=兼營營業人 (mixed taxable/exempt operator), N=ordinary taxable business';
 COMMENT ON COLUMN TW_TaxStatement.MixedBusinessRatio IS 'Taxable-revenue ratio for input-tax apportionment (0.0000–1.0000); NULL for ordinary businesses';
+COMMENT ON COLUMN TW_TaxStatement.ZeroRateSalesAmount IS 'Zero-rate sales amount (零稅率，主要為出口), reportable separately, eligible for refund';
+COMMENT ON COLUMN TW_TaxStatement.NonDeductibleInputTax IS 'Input tax that cannot be deducted (不可扣抵進項稅額)';
+COMMENT ON COLUMN TW_TaxStatement.CarryOverTaxCredit IS 'Accumulated carry-over credit from previous period (前期留抵稅額)';
+COMMENT ON COLUMN TW_TaxStatement.FilingDueDate IS 'Filing deadline: 15th of month following period end (next working day if holiday)';
 
 -- ===========================================================================
 -- Indexes

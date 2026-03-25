@@ -13,6 +13,22 @@
 
 ---
 
+## Build Prerequisites
+
+在執行任何 `mvn compile` 或 `mvn test` 之前，確認以下條件：
+
+```bash
+# 確認 iDempiere server 存在（pom.xml 依賴此路徑）
+ls /opt/idempiere-server/x86_64/plugins/org.adempiere.base_*.jar
+
+# 如果不存在，需先安裝 iDempiere server 或從現有安裝複製 JAR
+# pom.xml repository: file:///opt/idempiere-server/x86_64/plugins
+```
+
+如果 `/opt/idempiere-server/` 不存在：`mvn compile` 直接失敗，必須先解決依賴問題。
+
+---
+
 ## 2Pack ↔ Model 對應規則（iDempiere 原始碼驗證）
 
 | 2Pack XML 元素 | Java Model 要求 | 嚴格程度 |
@@ -354,8 +370,89 @@ mkdir -p /home/tom/idempiere-tw-invoice-system/resources/2pack/tw_invoice_system
       <AD_Column_UU>UUID-COL-LASTINVOICE</AD_Column_UU>
     </AD_Column>
 
-    <!-- Standard audit columns: IsActive, Created, CreatedBy, Updated, UpdatedBy -->
-    <!-- ... follow standard iDempiere pattern ... -->
+    <!-- Prefix validity period (財政部核配字軌有效期) -->
+    <AD_Column>
+      <ColumnName>PrefixStartDate</ColumnName>
+      <Name>字軌起始日</Name>
+      <AD_Reference_ID reference="id" reference-key="AD_Reference">15</AD_Reference_ID>
+      <FieldLength>7</FieldLength>
+      <IsMandatory>Y</IsMandatory>
+      <IsKey>N</IsKey>
+      <IsActive>Y</IsActive>
+      <EntityType>TW</EntityType>
+      <AD_Column_UU>UUID-COL-PREFIXSTARTDATE</AD_Column_UU>
+    </AD_Column>
+
+    <AD_Column>
+      <ColumnName>PrefixEndDate</ColumnName>
+      <Name>字軌結束日</Name>
+      <AD_Reference_ID reference="id" reference-key="AD_Reference">15</AD_Reference_ID>
+      <FieldLength>7</FieldLength>
+      <IsMandatory>Y</IsMandatory>
+      <IsKey>N</IsKey>
+      <IsActive>Y</IsActive>
+      <EntityType>TW</EntityType>
+      <AD_Column_UU>UUID-COL-PREFIXENDDATE</AD_Column_UU>
+    </AD_Column>
+
+    <!-- Audit columns — required for every table -->
+    <AD_Column>
+      <ColumnName>IsActive</ColumnName>
+      <Name>Active</Name>
+      <AD_Reference_ID reference="id" reference-key="AD_Reference">20</AD_Reference_ID>
+      <FieldLength>1</FieldLength>
+      <IsMandatory>Y</IsMandatory>
+      <IsKey>N</IsKey>
+      <DefaultValue>Y</DefaultValue>
+      <IsActive>Y</IsActive>
+      <EntityType>TW</EntityType>
+      <AD_Column_UU>UUID-COL-PREFIX-ISACTIVE</AD_Column_UU>
+    </AD_Column>
+    <AD_Column>
+      <ColumnName>Created</ColumnName>
+      <Name>Created</Name>
+      <AD_Reference_ID reference="id" reference-key="AD_Reference">16</AD_Reference_ID>
+      <FieldLength>7</FieldLength>
+      <IsMandatory>Y</IsMandatory>
+      <IsKey>N</IsKey>
+      <IsActive>Y</IsActive>
+      <EntityType>TW</EntityType>
+      <AD_Column_UU>UUID-COL-PREFIX-CREATED</AD_Column_UU>
+    </AD_Column>
+    <AD_Column>
+      <ColumnName>CreatedBy</ColumnName>
+      <Name>Created By</Name>
+      <AD_Reference_ID reference="id" reference-key="AD_Reference">110</AD_Reference_ID>
+      <FieldLength>10</FieldLength>
+      <IsMandatory>Y</IsMandatory>
+      <IsKey>N</IsKey>
+      <IsActive>Y</IsActive>
+      <EntityType>TW</EntityType>
+      <AD_Column_UU>UUID-COL-PREFIX-CREATEDBY</AD_Column_UU>
+    </AD_Column>
+    <AD_Column>
+      <ColumnName>Updated</ColumnName>
+      <Name>Updated</Name>
+      <AD_Reference_ID reference="id" reference-key="AD_Reference">16</AD_Reference_ID>
+      <FieldLength>7</FieldLength>
+      <IsMandatory>Y</IsMandatory>
+      <IsKey>N</IsKey>
+      <IsActive>Y</IsActive>
+      <EntityType>TW</EntityType>
+      <AD_Column_UU>UUID-COL-PREFIX-UPDATED</AD_Column_UU>
+    </AD_Column>
+    <AD_Column>
+      <ColumnName>UpdatedBy</ColumnName>
+      <Name>Updated By</Name>
+      <AD_Reference_ID reference="id" reference-key="AD_Reference">110</AD_Reference_ID>
+      <FieldLength>10</FieldLength>
+      <IsMandatory>Y</IsMandatory>
+      <IsKey>N</IsKey>
+      <IsActive>Y</IsActive>
+      <EntityType>TW</EntityType>
+      <AD_Column_UU>UUID-COL-PREFIX-UPDATEDBY</AD_Column_UU>
+    </AD_Column>
+    <!-- Note: Apply same audit column pattern to TW_Invoice_Prefix_Map, TW_InvoiceAdjustment, TW_TaxStatement -->
   </AD_Table>
 
   <!-- TW_Invoice_Prefix_Map, TW_InvoiceAdjustment, TW_TaxStatement: follow same pattern -->
@@ -521,6 +618,11 @@ public void start(BundleContext context) throws Exception {
 
 private void installDictionary(BundleContext context) {
     try {
+        // Idempotency check: skip if already installed
+        if (MTable.getTable_ID("TW_InvoicePrefix") > 0) {
+            log.info("Taiwan Invoice Tax System 2Pack already installed — skipping.");
+            return;
+        }
         URL zipUrl = context.getBundle().getResource("2pack/tw_invoice_system.zip");
         if (zipUrl == null) {
             log.warning("2Pack ZIP not found — skipping dictionary install");
@@ -631,21 +733,39 @@ public class TaiwanModelFactory extends AnnotationBasedModelFactory {
 }
 ```
 
-**Step 0.3.1.2：加入 OSGI-INF/component.xml 服務宣告**
+**Step 0.3.1.2：建立獨立的 `OSGI-INF/TaiwanModelFactory.xml`**
 
-Add to `OSGI-INF/component.xml` (alongside existing activator component):
+OSGi DS XML 規範：每個檔案只能有一個根 `<scr:component>` 元素。
+不可將 ModelFactory 加入現有的 `component.xml`。
+
+Create `OSGI-INF/TaiwanModelFactory.xml`:
 
 ```xml
-<component name="tw.idempiere.invoice.tax.modelFactory"
-           immediate="true">
+<?xml version="1.0" encoding="UTF-8"?>
+<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.3.0"
+               name="tw.idempiere.invoice.tax.modelFactory"
+               immediate="true">
     <implementation class="tw.idempiere.invoice.tax.model.TaiwanModelFactory"/>
     <service>
         <provide interface="org.adempiere.base.IModelFactory"/>
     </service>
-</component>
+</scr:component>
 ```
 
-**Step 0.3.1.3：確認 MANIFEST.MF Import 包含 org.adempiere.base**
+**Step 0.3.1.3：更新 MANIFEST.MF — 改用 wildcard**
+
+In `META-INF/MANIFEST.MF`, change:
+```
+Service-Component: OSGI-INF/component.xml
+```
+to:
+```
+Service-Component: OSGI-INF/*.xml
+```
+
+This auto-discovers all component XML files under OSGI-INF/.
+
+**Step 0.3.1.4：確認 MANIFEST.MF Import 包含 org.adempiere.base**
 
 ```bash
 grep "org.adempiere.base" META-INF/MANIFEST.MF
@@ -674,10 +794,17 @@ public class MInvoicePrefix extends PO {
 ```java
 @Override
 protected POInfo initPO(Properties ctx) {
-    // Uses Table_Name lookup — works after 2Pack installs AD_Table entry
-    return POInfo.getPOInfo(ctx, Table_Name);
+    // Table_Name lookup via MTable — works after 2Pack installs AD_Table entry
+    // Returns null before 2Pack install (expected on first startup, PackIn runs first)
+    int tableId = MTable.getTable_ID(Table_Name);
+    if (tableId <= 0) return null;
+    return POInfo.getPOInfo(ctx, tableId, get_TrxName());
 }
 ```
+
+> **說明**：`MTable.getTable_ID(Table_Name)` 在 2Pack 安裝前回傳 0，`initPO()` 回傳 null。
+> 但這是安全的：Activator.start() 先執行 PackIn，安裝完字典後，Model 才被實際使用。
+> 使用 `POInfo.getPOInfo(ctx, String tableName)` 的寫法在 iDempiere 12.0 編譯失敗（此 overload 不存在，已驗證）。
 
 **Step 0.3.2.3：確認 get_AccessLevel() 回傳 3**
 
@@ -747,7 +874,8 @@ Expected: BUILD SUCCESS
 
 ```bash
 git add src/tw/idempiere/invoice/tax/model/
-git add OSGI-INF/component.xml
+git add OSGI-INF/TaiwanModelFactory.xml
+git add META-INF/MANIFEST.MF
 git add test/tw/idempiere/invoice/tax/model/ModelAnnotationTest.java
 git commit -m "fix: add @Model annotation, TaiwanModelFactory OSGi service, fix initPO() null crash"
 ```
@@ -909,7 +1037,19 @@ public class TaxCalculationServiceTest {
         TaxCalculationService.TaxResult r =
             TaxCalculationService.calcFromGross(new BigDecimal("105000"));
         assertEquals(new BigDecimal("100000"), r.getSaleAmount());
+        // Tax = floor(saleAmount × 0.05) = floor(100000 × 0.05) = 5000
         assertEquals(new BigDecimal("5000"), r.getTaxAmount());
+    }
+
+    @Test
+    public void testBipartTaxAmount_usesFloorNotDifference() {
+        // Edge case: gross=105001, sale=floor(105001/1.05)=floor(100000.952...)=100000
+        // tax = floor(100000 × 0.05) = floor(5000) = 5000
+        // NOT gross - sale = 105001 - 100000 = 5001 (WRONG - 1 yuan difference)
+        TaxCalculationService.TaxResult r =
+            TaxCalculationService.calcFromGross(new BigDecimal("105001"));
+        assertEquals(new BigDecimal("100000"), r.getSaleAmount());
+        assertEquals(new BigDecimal("5000"), r.getTaxAmount());  // floor(sale × 0.05), not gross - sale
     }
 
     @Test
@@ -975,7 +1115,8 @@ public class TaxCalculationService {
 
     public static TaxResult calcFromGross(BigDecimal grossAmount) {
         BigDecimal saleAmount = grossAmount.divide(ONE_PLUS_VAT, 0, RoundingMode.FLOOR);
-        BigDecimal taxAmount = grossAmount.subtract(saleAmount);
+        // Tax = floor(saleAmount × VAT_RATE), NOT grossAmount - saleAmount
+        BigDecimal taxAmount = saleAmount.multiply(VAT_RATE).setScale(0, RoundingMode.FLOOR);
         return new TaxResult(saleAmount, taxAmount);
     }
 
@@ -1002,7 +1143,7 @@ public class TaxCalculationService {
 mvn test -Dtest=TaxCalculationServiceTest
 ```
 
-Expected: 8 tests PASS
+Expected: 9 tests PASS
 
 ---
 
@@ -1448,3 +1589,14 @@ Final review. `tw-invoice-pm` verifies export format against Ministry of Finance
 | Review | `tw-invoice-pm` | Domain approval at each gate |
 | 2 | `service-builder` | 4 pure-Java services with tests |
 | 3–4 | `integration-builder` | Validators, callouts, processes |
+
+---
+
+## File Path Reference
+
+| Path | Purpose |
+|------|---------|
+| `src/main/resources/sql/` | Canonical SQL DDL scripts — reference for column names when writing PackOut.xml |
+| `resources/2pack/` | 2Pack ZIP output directory (created by pack-builder in Phase 0.1) |
+| `OSGI-INF/*.xml` | DS component definitions — one file per component |
+| `META-INF/MANIFEST.MF` | OSGi bundle manifest |

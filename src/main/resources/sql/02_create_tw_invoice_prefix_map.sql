@@ -40,6 +40,10 @@ CREATE TABLE IF NOT EXISTS TW_Invoice_Prefix_Map (
     --               reporting period to which this invoice belongs.
     DateInvoiced                TIMESTAMP       NOT NULL,
 
+    -- Buyer tax ID (統一編號) - mandatory for three-part invoices (三聯式)
+    -- NULL allowed for two-part invoices (二聯式) where buyer has no tax ID
+    BuyerTaxID                  CHAR(8),
+
     -- IsDateSequenceValid: 'Y' when this invoice's date is >= the previous
     --                      invoice date within the same prefix block.
     IsDateSequenceValid         CHAR(1)         NOT NULL DEFAULT 'Y'
@@ -79,6 +83,7 @@ COMMENT ON COLUMN TW_Invoice_Prefix_Map.IsDateSequenceValid IS 'Y when invoice d
 COMMENT ON COLUMN TW_Invoice_Prefix_Map.IsMonthConsistent IS 'Y when invoice month matches the transaction month';
 COMMENT ON COLUMN TW_Invoice_Prefix_Map.MonthConsistentReason IS 'Explanation for cross-month exceptions when IsMonthConsistent=N';
 COMMENT ON COLUMN TW_Invoice_Prefix_Map.IsExpiryWarning IS 'Y when the input tax claim is within 90 days of the 10-year statutory expiry';
+COMMENT ON COLUMN TW_Invoice_Prefix_Map.BuyerTaxID IS 'Buyer unified business number (統一編號), required for SALES_TRIPART (三聯式) invoices';
 
 -- ===========================================================================
 -- Indexes

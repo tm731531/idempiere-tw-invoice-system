@@ -86,9 +86,15 @@ public class MInvoicePrefix extends PO { ... }
 
 Without this, `AnnotationBasedModelFactory` cannot discover the class. All `TW_*` tables fall back to `GenericPO` and `beforeSave()`/`afterSave()` never run.
 
-### 2. `initPO()` MUST NOT return null
+### 2. `initPO()` MUST use `MTable.getTable_ID()` lookup
 
 ```java
+// WRONG — POInfo.getPOInfo(ctx, String tableName) overload does NOT exist
+@Override
+protected POInfo initPO(Properties ctx) {
+    return POInfo.getPOInfo(ctx, Table_Name);  // ← COMPILE ERROR, no such overload
+}
+
 // WRONG — crashes with IllegalArgumentException in PO constructor
 @Override
 protected POInfo initPO(Properties ctx) {
@@ -96,12 +102,19 @@ protected POInfo initPO(Properties ctx) {
     ...
 }
 
-// CORRECT — use Table_Name lookup
+// CORRECT — use MTable.getTable_ID() to look up the integer ID first
 @Override
 protected POInfo initPO(Properties ctx) {
-    return POInfo.getPOInfo(ctx, Table_Name);
+    int tableId = MTable.getTable_ID(Table_Name);
+    if (tableId <= 0) {
+        // Table not yet installed via 2Pack — expected on first startup before PackIn
+        return null;
+    }
+    return POInfo.getPOInfo(ctx, tableId, get_TrxName());
 }
 ```
+
+Note: `MTable.getTable_ID()` returns a valid value only after 2Pack installs the dictionary. The safe execution order is: bundle start → Activator calls `PackIn.importXML()` → tables registered → Model classes used. Returning `null` when `tableId <= 0` is safe because the PO constructor handles this gracefully at that early stage.
 
 ### 3. `TaiwanModelFactory` OSGi service MUST be registered
 
@@ -116,7 +129,16 @@ public class TaiwanModelFactory extends AnnotationBasedModelFactory {
 }
 ```
 
-Also register in `OSGI-INF/component.xml` and ensure `org.adempiere.base` is in `Import-Package` of `MANIFEST.MF`.
+Also register in a dedicated `OSGI-INF/TaiwanModelFactory.xml` (not the same file as other components) and ensure `org.adempiere.base` is in `Import-Package` of `MANIFEST.MF`.
+
+**Files needed:**
+- `OSGI-INF/component.xml` — existing Activator component (keep as-is, but do not re-register Activator as a DS component if it is already a `BundleActivator`)
+- `OSGI-INF/TaiwanModelFactory.xml` — new file for the ModelFactory DS component
+
+**MANIFEST.MF must use wildcard:**
+```
+Service-Component: OSGI-INF/*.xml
+```
 
 ### 4. 2Pack ZIP structure
 
@@ -159,15 +181,26 @@ Without this, OSGi refuses to resolve `PackIn` and the bundle fails to start.
 | Rule | Detail |
 |------|--------|
 | 三聯式 (B2B) | Buyer has tax ID → 3-part invoice → `SaleAmount × 1.05 = GrossAmount` |
-| 二聯式 (B2C) | No tax ID → 2-part invoice → `floor(GrossAmount / 1.05) = SaleAmount` |
+| 二聯式 (B2C) | No tax ID → 2-part invoice → `floor(GrossAmount / 1.05) = SaleAmount`; 稅額 = `floor(SaleAmount × 0.05)` (NOT `GrossAmount - SaleAmount` — differs by 1 yuan at boundary values; use the former per Ministry of Finance rules) |
 | 稅額計算 | Always `FLOOR`, never `ROUND`. Use `BigDecimal + RoundingMode.FLOOR` |
 | 申報期間 | Bimonthly: period = `(month - 1) / 2 + 1`. Period 1 = Jan-Feb ... Period 6 = Nov-Dec |
 | 字軌狀態 | `I` (Inactive) → `A` (Active) → `C` (Complete). `C` cannot revert to `A` |
-| 進項折讓 | Must be reported in same bimonthly period as the adjustment date |
+| 進項折讓 | 必須當期申報（超期需使用者確認稅務風險，非單純 warning — 有補稅/裁罰風險） |
 | 進項稅期限 | 10-year expiry; warn 90 days before expiry |
 | 兼營調整 | < 9 months operating → no adjustment required; ratio = taxable / total revenue |
 | 發票日期 | Cannot be future date; same-prefix dates should increase (warn, not block) |
 | 發票月份 | Should match transaction month (warn, not block) |
+
+## Required Fields by Law
+
+| Table | Field | Rule |
+|-------|-------|------|
+| TW_InvoicePrefix | PrefixStartDate, PrefixEndDate | 字軌有效期間（財政部核配，2個月一期），開立發票時需驗證 DateInvoiced BETWEEN PrefixStartDate AND PrefixEndDate |
+| TW_Invoice_Prefix_Map | BuyerTaxID CHAR(8) | 三聯式（B2B）法定必填買方統一編號；SALES_TRIPART 時不可為空 |
+| TW_InvoiceAdjustment | AdjustmentDirection | 需區分方向：SALES（銷項折讓，我方開立折讓單）vs PURCHASE（進項折讓，供應商開立折讓單給我方） |
+| TW_TaxStatement | ZeroRateSalesAmount | 零稅率銷售額（出口），需獨立申報，可申請退稅，非免稅 |
+| TW_TaxStatement | CarryOverTaxCredit | 上期累積留抵稅額，跨期累積 |
+| TW_TaxStatement | NonDeductibleInputTax | 不可扣抵進項稅額 |
 
 ---
 
@@ -214,8 +247,11 @@ public class ValidationResult {
 
 ## What NOT to Do
 
-- **Never** return `null` from `initPO()`
+- **Never** use `POInfo.getPOInfo(ctx, String tableName)` — that overload does not exist; use `MTable.getTable_ID()` first
+- **Never** return `null` from `initPO()` unless `MTable.getTable_ID()` returns `<= 0` (before 2Pack installs)
 - **Never** hardcode `Table_ID` as a non-zero integer
+- **Never** put two `<scr:component>` root elements in one XML file — each OSGi DS component needs its own file
+- `Service-Component` in `MANIFEST.MF` should be `OSGI-INF/*.xml` (wildcard) to auto-discover all component files
 - **Never** use `PackInProcess` directly (it's a `SvrProcess`)
 - **Never** import `org.adempiere.pipo2` in Java without declaring it in `MANIFEST.MF`
 - **Never** use `Math.round()` for tax calculation — always `BigDecimal + FLOOR`
