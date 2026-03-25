@@ -1,11 +1,11 @@
 package tw.idempiere.invoice.tax;
 
-import java.io.File;
-import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.net.URL;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipInputStream;
 
 import org.adempiere.pipo2.PackIn;
 import org.compiere.model.MTable;
@@ -52,26 +52,30 @@ public class TaiwanInvoiceTaxActivator implements BundleActivator {
                 log.warning("2Pack ZIP not found at 2pack/tw_invoice_system.zip — skipping dictionary install");
                 return;
             }
-            File tempZip = File.createTempFile("tw_invoice_system", ".zip");
-            try (InputStream in = zipUrl.openStream();
-                 FileOutputStream out = new FileOutputStream(tempZip)) {
-                byte[] buf = new byte[8192];
-                int n;
-                while ((n = in.read(buf)) != -1) out.write(buf, 0, n);
-            }
-            String trxName = Trx.createTrxName("TwInvoicePackIn");
-            Trx trx = Trx.get(trxName, true);
-            try {
-                PackIn packIn = new PackIn();
-                packIn.importXML(tempZip.getAbsolutePath(), Env.getCtx(), trxName);
-                trx.commit();
-                log.info("Taiwan Invoice Tax System 2Pack installed successfully.");
-            } catch (Exception e) {
-                trx.rollback();
-                throw e;
-            } finally {
-                trx.close();
-                tempZip.delete();
+            // Extract PackOut.xml from ZIP and pass InputStream directly to PackIn.
+            // Do NOT pass the ZIP file path to importXML — it expects XML content, not a ZIP.
+            try (InputStream zipStream = zipUrl.openStream();
+                 ZipInputStream zis = new ZipInputStream(zipStream)) {
+                ZipEntry entry;
+                while ((entry = zis.getNextEntry()) != null) {
+                    if (entry.getName().endsWith("PackOut.xml")) {
+                        String trxName = Trx.createTrxName("TwInvoicePackIn");
+                        Trx trx = Trx.get(trxName, true);
+                        try {
+                            PackIn packIn = new PackIn();
+                            packIn.importXML(zis, Env.getCtx(), trxName);
+                            trx.commit();
+                            log.info("Taiwan Invoice Tax System 2Pack installed successfully.");
+                        } catch (Exception e) {
+                            trx.rollback();
+                            throw e;
+                        } finally {
+                            trx.close();
+                        }
+                        return;
+                    }
+                }
+                log.warning("PackOut.xml not found inside tw_invoice_system.zip");
             }
         } catch (Exception e) {
             log.log(Level.WARNING,
