@@ -10,6 +10,80 @@
 
 ---
 
+## 2Pack ↔ Model 對應規則（經 iDempiere 專家驗證）
+
+> 來源：直接分析 iDempiere master 原始碼（`POInfo.java`, `PO.java`, `AnnotationBasedModelFactory.java`, `ColumnElementHandler.java`）
+
+### 對應規則總表
+
+| 2Pack XML 元素 | Java Model 要求 | 嚴格程度 |
+|----------------|-----------------|---------|
+| `<TableName>TW_InvoicePrefix</TableName>` | `Table_Name = "TW_InvoicePrefix"` | 必須完全一致（習慣上區分大小寫）|
+| `<ColumnName>PrefixCode</ColumnName>` | `COLUMNNAME_PrefixCode = "PrefixCode"` | 執行期不分大小寫，但習慣上必須一致 |
+| `<AccessLevel>3</AccessLevel>` | `get_AccessLevel() { return 3; }` | 習慣上一致，執行期不驗證 |
+| `<AD_Reference_ID>13</AD_Reference_ID>`（PK） | getter 回傳 `int`，constructor 接受 `int ID` | Integer 型別必要 |
+| `<AD_Reference_ID>19</AD_Reference_ID>`（TableDir FK） | FK getter 回傳 `int`，setter 接受 `int` | Integer 型別必要 |
+| `<IsKey>true</IsKey>` | 必有 `(ctx, int ID, trxName)` constructor | PO.get_ID() 必要 |
+| 2Pack 安裝後分配的 `AD_Table_ID` | `Table_ID = <分配的整數>` | `initPO()` 才能成功，不可為 0 |
+| 標準欄位（AD_Client_ID 等）必須在 XML 中定義 | Java Model 不需對應常數（PO base 處理） | XML 中必須明確定義 |
+
+### 模型類別如何被 iDempiere 識別（**關鍵機制**）
+
+iDempiere 使用 `AnnotationBasedModelFactory` 掃描帶有 `@org.adempiere.base.Model` 的類。
+**核心 factory 只掃描 `org.compiere.model` 等 core packages，不掃描插件的 package。**
+
+插件必須提供自己的 factory，否則所有 `TW_*` 表會退回用 `GenericPO`（無任何自訂邏輯）。
+
+### 發現的 3 個生產環境崩潰問題（目前程式碼中存在）
+
+#### 崩潰 #1：`initPO()` 回傳 null → `IllegalArgumentException`
+
+```java
+// 現有程式碼（MInvoicePrefix.java）— 會崩潰
+protected POInfo initPO(Properties ctx) {
+    if (Table_ID <= 0) {
+        log.warning("...");
+        return null;  // ← PO constructor 接到 null 會丟 IllegalArgumentException
+    }
+    return POInfo.getPOInfo(ctx, Table_ID, get_TrxName());
+}
+
+// PO.java 原始碼（已驗證）
+p_info = initPO(ctx);
+if (p_info == null || p_info.getTableName() == null)
+    throw new IllegalArgumentException("Invalid PO Info - " + p_info);
+```
+
+**修正**：2Pack 安裝後，`Table_ID` 必須更新為 AD_Table 分配的真實整數 ID。
+
+#### 崩潰 #2：缺少 `@Model` annotation
+
+```java
+// 缺少此 annotation（4個 Model 類都缺）
+@org.adempiere.base.Model(table = "TW_InvoicePrefix")
+public class MInvoicePrefix extends PO { ... }
+```
+
+沒有此 annotation，`AnnotationBasedModelFactory` 無法發現這些類別。
+
+#### 崩潰 #3：缺少 `TaiwanModelFactory` OSGi 服務
+
+```java
+// 必須新增此類別（目前不存在）
+@Component(immediate = true, service = IModelFactory.class,
+           property = {"service.ranking:Integer=10"})
+public class TaiwanModelFactory extends AnnotationBasedModelFactory {
+    @Override
+    protected String[] getPackages() {
+        return new String[]{"tw.idempiere.invoice.tax.model"};
+    }
+}
+```
+
+沒有這個 OSGi 服務，所有 `TW_*` 表都用 `GenericPO`，`beforeSave()`/`afterSave()` 完全無效。
+
+---
+
 ## 設計依據：台灣發票法規（Final Design v3.0）
 
 > 來源：`Taiwan_Invoice_Tax_System_Final_Design_v3.md`（合規度 95/100）
@@ -42,12 +116,13 @@
 |------|------|------|
 | OSGi Bundle 骨架 | ✅ 完成 | pom.xml, MANIFEST.MF, OSGI-INF/component.xml |
 | TaiwanInvoiceTaxActivator | ⚠️ 部分 | 存在但未實作 PackIn 邏輯 |
-| MInvoicePrefix | ✅ 完成 | 含驗證邏輯 |
-| MInvoicePrefixMap | ✅ 完成 | |
-| MInvoiceAdjustment | ✅ 完成 | |
-| MTaxStatement | ✅ 完成 | |
+| MInvoicePrefix | ❌ 需修正 | 缺 `@Model` annotation；`initPO()` 回傳 null 會崩潰 |
+| MInvoicePrefixMap | ❌ 需修正 | 同上 |
+| MInvoiceAdjustment | ❌ 需修正 | 同上 |
+| MTaxStatement | ❌ 需修正 | 同上 |
+| TaiwanModelFactory | ❌ 未建立 | **必須新建**，否則所有自訂 Model 邏輯無效 |
 | AccountingCodeMapper | ✅ 完成 | |
-| SQL Scripts (5個) | ✅ 完成 | 但 2Pack 才是 iDempiere 正式安裝方式 |
+| SQL Scripts (5個) | ✅ 完成 | 2Pack 安裝後可輔助使用 |
 | 2Pack XML（4個） | ❌ 格式錯誤 | 需重寫為單一 PackOut.xml + ZIP |
 | Business Service 層 | ❌ 未開始 | Phase 2 |
 | Validator / Callout | ❌ 未開始 | Phase 3 |
@@ -326,6 +401,125 @@ mvn compile
 ```bash
 git add src/tw/idempiere/invoice/tax/TaiwanInvoiceTaxActivator.java
 git commit -m "feat: add PackIn invocation in bundle Activator for 2Pack installation"
+```
+
+---
+
+---
+
+## Phase 0.3：修正 Model 類別（3 個生產崩潰問題）
+
+> **必須在 Phase 0.1/0.2 之後，Phase 2 之前執行**
+
+### Task 0.3.1：建立 `TaiwanModelFactory`
+
+**Files:**
+- Create: `src/tw/idempiere/invoice/tax/model/TaiwanModelFactory.java`
+- Modify: `OSGI-INF/component.xml`
+
+- [ ] **Step 1: 建立 TaiwanModelFactory.java**
+
+```java
+package tw.idempiere.invoice.tax.model;
+
+import org.adempiere.base.AnnotationBasedModelFactory;
+import org.adempiere.base.IModelFactory;
+import org.osgi.service.component.annotations.Component;
+
+@Component(
+    immediate = true,
+    service = IModelFactory.class,
+    property = {"service.ranking:Integer=10"}
+)
+public class TaiwanModelFactory extends AnnotationBasedModelFactory {
+    @Override
+    protected String[] getPackages() {
+        return new String[]{"tw.idempiere.invoice.tax.model"};
+    }
+}
+```
+
+- [ ] **Step 2: 在 OSGI-INF/component.xml 加入服務宣告**
+
+```xml
+<component name="tw.idempiere.invoice.tax.modelFactory"
+           immediate="true">
+    <implementation class="tw.idempiere.invoice.tax.model.TaiwanModelFactory"/>
+    <service>
+        <provide interface="org.adempiere.base.IModelFactory"/>
+    </service>
+</component>
+```
+
+- [ ] **Step 3: 確認 MANIFEST.MF Import-Package 包含 `org.adempiere.base`**
+
+---
+
+### Task 0.3.2：修正 4 個 Model 類別
+
+**修正項目（每個 Model 相同）：**
+1. 加入 `@org.adempiere.base.Model(table = "TW_XXX")` annotation
+2. 修正 `Table_ID`：在 Activator PackIn 完成後動態查詢並設定
+3. 修正 `initPO()`：不可回傳 null
+
+**Files:**
+- Modify: `src/.../model/MInvoicePrefix.java`
+- Modify: `src/.../model/MInvoicePrefixMap.java`
+- Modify: `src/.../model/MInvoiceAdjustment.java`
+- Modify: `src/.../model/MTaxStatement.java`
+
+- [ ] **Step 1: 加入 `@Model` annotation（4個類）**
+
+```java
+import org.adempiere.base.Model;
+
+@Model(table = MInvoicePrefix.Table_Name)
+public class MInvoicePrefix extends PO {
+    public static final String Table_Name = "TW_InvoicePrefix";
+    // Table_ID 初始為 0，Activator PackIn 後透過 MTable 查詢動態更新
+    public static int Table_ID = 0;
+    ...
+```
+
+- [ ] **Step 2: 修正 `initPO()` — 使用 Table_Name 查詢**
+
+```java
+@Override
+protected POInfo initPO(Properties ctx) {
+    // 用 Table_Name 查（不依賴 Table_ID），2Pack 安裝後自動可用
+    POInfo poi = POInfo.getPOInfo(ctx, Table_Name);
+    return poi;
+}
+```
+
+> **說明**：`POInfo.getPOInfo(ctx, String tableName)` 透過 `MTable.getTable(ctx, tableName)` 查詢，2Pack 安裝後表已存在於 AD_Table，此方式不需要預先知道 Table_ID。
+
+- [ ] **Step 3: 確認 `get_AccessLevel()` 回傳值與 2Pack `<AccessLevel>3</AccessLevel>` 一致**
+
+```java
+@Override
+protected int get_AccessLevel() {
+    return 3;  // Client + Org，與 PackOut.xml 中 AccessLevel=3 一致
+}
+```
+
+- [ ] **Step 4: 寫測試確認 Model 可正確初始化（Mock 環境）**
+
+```java
+@Test
+public void testModelAnnotationPresent() {
+    Model annotation = MInvoicePrefix.class.getAnnotation(Model.class);
+    assertNotNull("@Model annotation must be present", annotation);
+    assertEquals("TW_InvoicePrefix", annotation.table());
+}
+```
+
+- [ ] **Step 5: Commit**
+
+```bash
+git add src/tw/idempiere/invoice/tax/model/
+git add OSGI-INF/component.xml
+git commit -m "fix: add @Model annotation, TaiwanModelFactory, and fix initPO() to prevent crash"
 ```
 
 ---
