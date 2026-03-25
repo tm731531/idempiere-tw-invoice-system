@@ -8,10 +8,12 @@ Bundle-Vendor: Taiwan iDempiere Community
 Bundle-RequiredExecutionEnvironment: JavaSE-17
 Require-Bundle: org.adempiere.base;bundle-version="12.0.0"
 Import-Package: org.adempiere.base,
+ org.adempiere.pipo2;version="[12.0.0,13.0.0)",
  org.compiere.model,
  org.compiere.util,
  org.compiere.process,
  org.osgi.framework;version="1.10.0"
 Export-Package: tw.idempiere.invoice.tax.model,
  tw.idempiere.invoice.tax.service
-Service-Component: OSGI-INF/component.xml
+Bundle-ClassPath: .,resources/
+Service-Component: OSGI-INF/*.xml

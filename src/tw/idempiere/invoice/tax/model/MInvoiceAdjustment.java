@@ -1,0 +1,138 @@
+package tw.idempiere.invoice.tax.model;
+
+import java.math.BigDecimal;
+import java.sql.ResultSet;
+import java.util.Properties;
+
+import org.adempiere.base.Model;
+import org.compiere.model.MTable;
+import org.compiere.model.PO;
+import org.compiere.model.POInfo;
+
+/**
+ * Taiwan Invoice Adjustment (進項折讓) — TW_InvoiceAdjustment
+ *
+ * Records sales (銷項折讓) and purchase (進項折讓) credit/debit adjustments.
+ * AdjustmentDirection must distinguish SALES vs PURCHASE.
+ * Late purchase adjustments (超期) carry tax penalty risk and require user confirmation.
+ */
+@Model(table = MInvoiceAdjustment.Table_Name)
+public class MInvoiceAdjustment extends PO {
+
+    private static final long serialVersionUID = 1L;
+
+    public static final String Table_Name = "TW_InvoiceAdjustment";
+    public static int Table_ID = 0;
+
+    // Column name constants
+    public static final String COLUMNNAME_TW_InvoiceAdjustment_ID = "TW_InvoiceAdjustment_ID";
+    public static final String COLUMNNAME_OriginalInvoiceNo        = "OriginalInvoiceNo";
+    public static final String COLUMNNAME_AdjustmentDirection      = "AdjustmentDirection";
+    public static final String COLUMNNAME_AdjustmentAmount         = "AdjustmentAmount";
+    public static final String COLUMNNAME_TaxAmount                = "TaxAmount";
+    public static final String COLUMNNAME_AdjustmentDate           = "AdjustmentDate";
+    public static final String COLUMNNAME_TaxPeriod                = "TaxPeriod";
+    public static final String COLUMNNAME_InputTaxExpiry           = "InputTaxExpiry";
+    public static final String COLUMNNAME_IsActive                 = "IsActive";
+
+    /** Adjustment direction: we issue a credit note to the buyer */
+    public static final String ADJUSTMENTDIRECTION_Sales    = "SALES";
+    /** Adjustment direction: supplier issues a credit note to us */
+    public static final String ADJUSTMENTDIRECTION_Purchase = "PURCHASE";
+
+    public MInvoiceAdjustment(Properties ctx, int TW_InvoiceAdjustment_ID, String trxName) {
+        super(ctx, TW_InvoiceAdjustment_ID, trxName);
+    }
+
+    public MInvoiceAdjustment(Properties ctx, ResultSet rs, String trxName) {
+        super(ctx, rs, trxName);
+    }
+
+    @Override
+    protected POInfo initPO(Properties ctx) {
+        int tableId = MTable.getTable_ID(Table_Name);
+        if (tableId <= 0) {
+            // Table not yet installed via 2Pack — safe to return null before PackIn runs
+            return null;
+        }
+        return POInfo.getPOInfo(ctx, tableId, get_TrxName());
+    }
+
+    @Override
+    public int get_AccessLevel() {
+        return 3;
+    }
+
+    @Override
+    public String toString() {
+        return "MInvoiceAdjustment[" + get_ID()
+            + ", Direction=" + getAdjustmentDirection()
+            + ", Amount=" + getAdjustmentAmount() + "]";
+    }
+
+    // -------------------------------------------------------------------------
+    // Getters / Setters
+    // -------------------------------------------------------------------------
+
+    public String getOriginalInvoiceNo() {
+        return (String) get_Value(COLUMNNAME_OriginalInvoiceNo);
+    }
+
+    public void setOriginalInvoiceNo(String OriginalInvoiceNo) {
+        set_Value(COLUMNNAME_OriginalInvoiceNo, OriginalInvoiceNo);
+    }
+
+    /**
+     * AdjustmentDirection — "SALES" (銷項折讓) or "PURCHASE" (進項折讓).
+     */
+    public String getAdjustmentDirection() {
+        return (String) get_Value(COLUMNNAME_AdjustmentDirection);
+    }
+
+    public void setAdjustmentDirection(String AdjustmentDirection) {
+        set_Value(COLUMNNAME_AdjustmentDirection, AdjustmentDirection);
+    }
+
+    public BigDecimal getAdjustmentAmount() {
+        BigDecimal bd = (BigDecimal) get_Value(COLUMNNAME_AdjustmentAmount);
+        return bd == null ? BigDecimal.ZERO : bd;
+    }
+
+    public void setAdjustmentAmount(BigDecimal AdjustmentAmount) {
+        set_Value(COLUMNNAME_AdjustmentAmount, AdjustmentAmount);
+    }
+
+    public BigDecimal getTaxAmount() {
+        BigDecimal bd = (BigDecimal) get_Value(COLUMNNAME_TaxAmount);
+        return bd == null ? BigDecimal.ZERO : bd;
+    }
+
+    public void setTaxAmount(BigDecimal TaxAmount) {
+        set_Value(COLUMNNAME_TaxAmount, TaxAmount);
+    }
+
+    public java.sql.Timestamp getAdjustmentDate() {
+        return (java.sql.Timestamp) get_Value(COLUMNNAME_AdjustmentDate);
+    }
+
+    public void setAdjustmentDate(java.sql.Timestamp AdjustmentDate) {
+        set_Value(COLUMNNAME_AdjustmentDate, AdjustmentDate);
+    }
+
+    public String getTaxPeriod() {
+        return (String) get_Value(COLUMNNAME_TaxPeriod);
+    }
+
+    public void setTaxPeriod(String TaxPeriod) {
+        set_Value(COLUMNNAME_TaxPeriod, TaxPeriod);
+    }
+
+    public java.sql.Timestamp getInputTaxExpiry() {
+        return (java.sql.Timestamp) get_Value(COLUMNNAME_InputTaxExpiry);
+    }
+
+    public void setInputTaxExpiry(java.sql.Timestamp InputTaxExpiry) {
+        set_Value(COLUMNNAME_InputTaxExpiry, InputTaxExpiry);
+    }
+
+}

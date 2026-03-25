@@ -58,6 +58,15 @@
             <scope>provided</scope>
         </dependency>
 
+        <!-- iDempiere PackIn (pipo) — provided at OSGi runtime -->
+        <dependency>
+            <groupId>org.adempiere</groupId>
+            <artifactId>org.adempiere.pipo</artifactId>
+            <version>12.0.0</version>
+            <scope>system</scope>
+            <systemPath>/opt/idempiere-server/x86_64/plugins/org.adempiere.pipo_12.0.0.202602061302.jar</systemPath>
+        </dependency>
+
         <!-- Testing -->
         <dependency>
             <groupId>junit</groupId>
