@@ -48,4 +48,12 @@ public class MixedBusinessServiceTest {
             BigDecimal.ZERO, BigDecimal.ZERO);
         assertEquals(BigDecimal.ZERO, ratio);
     }
+
+    @Test
+    public void testTaxableRatio_usesFloorNotHalfUp() {
+        // 2/3 = 0.6666... → FLOOR → 0.6666 (not HALF_UP → 0.6667)
+        BigDecimal ratio = MixedBusinessService.calcTaxableRatio(
+            new BigDecimal("2"), new BigDecimal("3"));
+        assertEquals(new BigDecimal("0.6666"), ratio);
+    }
 }

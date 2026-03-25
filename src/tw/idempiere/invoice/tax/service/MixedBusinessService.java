@@ -12,7 +12,7 @@ public class MixedBusinessService {
     public static BigDecimal calcTaxableRatio(BigDecimal taxableRevenue, BigDecimal totalRevenue) {
         if (totalRevenue == null || totalRevenue.compareTo(BigDecimal.ZERO) == 0)
             return BigDecimal.ZERO;
-        return taxableRevenue.divide(totalRevenue, 4, RoundingMode.HALF_UP);
+        return taxableRevenue.divide(totalRevenue, 4, RoundingMode.FLOOR);
     }
 
     public static BigDecimal adjustInputTax(BigDecimal inputTax, BigDecimal taxableRatio) {
