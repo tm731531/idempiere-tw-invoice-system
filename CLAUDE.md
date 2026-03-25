@@ -20,6 +20,20 @@ mvn test -Dtest=MInvoicePrefixTest
 mvn package
 ```
 
+## Reference SQL Scripts
+
+5 DDL scripts exist at `src/main/resources/sql/` — use these as the **authoritative source of column names** when writing PackOut.xml:
+
+- `01_create_tw_invoice_prefix.sql` — TW_InvoicePrefix columns
+- `02_create_tw_invoice_prefix_map.sql` — TW_Invoice_Prefix_Map columns
+- `03_create_tw_invoice_adjustment.sql` — TW_InvoiceAdjustment columns
+- `04_create_tw_tax_statement.sql` — TW_TaxStatement columns
+- `05_accounting_codes_mapping.sql` — accounting code mappings
+
+These scripts are **reference only** — 2Pack installs the dictionary, not these scripts.
+
+---
+
 ## File Structure
 
 ```

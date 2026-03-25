@@ -65,8 +65,8 @@ cat /tmp/uuids.txt
 ### Step 0.1.2：確認欄位名稱（AD_Org_ID vs C_Org_ID） `[pack-builder]`
 
 ```bash
-grep -rn "Org_ID" src/tw/idempiere/invoice/tax/model/*.java
-grep -rn "Org_ID" resources/sql/*.sql 2>/dev/null
+grep -rn "Org_ID" src/tw/idempiere/invoice/tax/model/*.java 2>/dev/null
+grep -rn "Org_ID" src/main/resources/sql/*.sql
 ```
 
 預期：所有地方都用 `AD_Org_ID`（iDempiere 標準）。如有不一致，以 Model 的 `COLUMNNAME_*` 為準。
@@ -771,8 +771,8 @@ grep "<ColumnName>" resources/2pack/tw_invoice_system/dict/PackOut.xml
 # Extract COLUMNNAME_ constants from Model classes
 grep "COLUMNNAME_" src/tw/idempiere/invoice/tax/model/*.java
 
-# Extract column names from SQL scripts
-grep -i "column\|field" resources/sql/*.sql 2>/dev/null
+# Extract column names from SQL scripts (reference DDL)
+grep -E "^\s+[A-Za-z_]+ " src/main/resources/sql/*.sql | grep -v "CONSTRAINT\|INDEX\|COMMENT"
 ```
 
 - [ ] Every COLUMNNAME_* constant has a matching `<ColumnName>` in PackOut.xml
