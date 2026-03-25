@@ -1,25 +1,23 @@
 package tw.idempiere.invoice.tax;
 
-import org.adempiere.plugin.utils.AdempiereActivator;
+import org.adempiere.plugin.utils.Incremental2PackActivator;
 
 /**
  * OSGi Bundle Activator for the Taiwan Invoice Tax System.
  *
- * Extends {@link AdempiereActivator} which automatically:
+ * Extends {@link Incremental2PackActivator} which automatically:
  * <ul>
  *   <li>Waits for IDictionaryService and framework readiness before installing</li>
- *   <li>Loads 2Pack from {@code /META-INF/2Pack.zip} inside the bundle</li>
+ *   <li>Loads 2Pack from {@code /META-INF/2Pack_1.0.0.zip} inside the bundle</li>
  *   <li>Checks AD_Package_Imp for idempotency (skips if already installed)</li>
- *   <li>Acquires a DB lock to prevent concurrent installs</li>
+ *   <li>Tracks package versions for incremental upgrades</li>
  * </ul>
  *
- * No overrides needed — getName() and getVersion() read from bundle headers,
- * and the default packIn() + install() behavior is sufficient.
+ * No overrides needed — all lifecycle and PackIn handling is in the base class.
  */
-public class TaiwanInvoiceTaxActivator extends AdempiereActivator {
-    // AdempiereActivator handles everything:
-    // - getName() reads Bundle-SymbolicName
-    // - getVersion() reads Bundle-Version
-    // - packIn() loads /META-INF/2Pack.zip
-    // - installPackage() checks AD_Package_Imp for idempotency
+public class TaiwanInvoiceTaxActivator extends Incremental2PackActivator {
+    // Incremental2PackActivator handles everything:
+    // - Loads /META-INF/2Pack_<version>.zip automatically
+    // - Checks AD_Package_Imp for idempotency
+    // - Supports incremental version upgrades
 }
