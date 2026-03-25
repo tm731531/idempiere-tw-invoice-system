@@ -54,7 +54,7 @@ ls /opt/idempiere-server/x86_64/plugins/org.adempiere.base_*.jar
 | MTaxStatement | ❌ 需修正 | 同上 |
 | TaiwanModelFactory | ❌ 未建立 | **必須新建**，否則所有 Model 邏輯無效 |
 | AccountingCodeMapper | ✅ | |
-| SQL Scripts (5個) | ✅ | 2Pack 安裝後輔助使用 |
+| docs/schema/ (文件) | ✅ | 表結構說明文件，不可執行 SQL |
 | 2Pack XML（4個） | ❌ 格式錯誤 | 需重寫為單一 PackOut.xml + ZIP |
 | Phase 2 Service 層 | ❌ 未開始 | |
 | Phase 3 Validator/Callout | ❌ 未開始 | |
@@ -82,7 +82,7 @@ cat /tmp/uuids.txt
 
 ```bash
 grep -rn "Org_ID" src/tw/idempiere/invoice/tax/model/*.java 2>/dev/null
-grep -rn "Org_ID" src/main/resources/sql/*.sql
+grep -rn "Org_ID" docs/schema/table-definitions.md
 ```
 
 預期：所有地方都用 `AD_Org_ID`（iDempiere 標準）。如有不一致，以 Model 的 `COLUMNNAME_*` 為準。
@@ -899,12 +899,12 @@ grep "<ColumnName>" resources/2pack/tw_invoice_system/dict/PackOut.xml
 # Extract COLUMNNAME_ constants from Model classes
 grep "COLUMNNAME_" src/tw/idempiere/invoice/tax/model/*.java
 
-# Extract column names from SQL scripts (reference DDL)
-grep -E "^\s+[A-Za-z_]+ " src/main/resources/sql/*.sql | grep -v "CONSTRAINT\|INDEX\|COMMENT"
+# Reference column names from schema docs
+grep "^|" docs/schema/table-definitions.md | grep -v "^| Column"
 ```
 
 - [ ] Every COLUMNNAME_* constant has a matching `<ColumnName>` in PackOut.xml
-- [ ] SQL scripts use same column names as Model constants
+- [ ] docs/schema/table-definitions.md matches Java model COLUMNNAME_* constants
 - [ ] If mismatches found: update PackOut.xml to match Java constants (not the reverse)
 
 ---
@@ -1596,7 +1596,8 @@ Final review. `tw-invoice-pm` verifies export format against Ministry of Finance
 
 | Path | Purpose |
 |------|---------|
-| `src/main/resources/sql/` | Canonical SQL DDL scripts — reference for column names when writing PackOut.xml |
+| `docs/schema/table-definitions.md` | 表結構說明文件 — 撰寫 PackOut.xml 時查閱欄位名稱 |
+| `docs/schema/packout-column-reference.md` | AD_Reference_ID 對照表 + XML 模板 |
 | `resources/2pack/` | 2Pack ZIP output directory (created by pack-builder in Phase 0.1) |
 | `OSGI-INF/*.xml` | DS component definitions — one file per component |
 | `META-INF/MANIFEST.MF` | OSGi bundle manifest |
