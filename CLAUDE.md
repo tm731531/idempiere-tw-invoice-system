@@ -254,3 +254,6 @@ public class ValidationResult {
 - **Never** use `Math.round()` for tax calculation — always `BigDecimal + FLOOR`
 - **Never** block saves for date-sequence warnings — warn only
 - **Never** use `float`/`double` for monetary amounts — always `BigDecimal`
+- **Never** pass `null` as trxName to `PackIn.importXML()` — throws `No Transaction Name` at runtime. Always create a named transaction: `String trxName = Trx.createTrxName("name"); Trx trx = Trx.get(trxName, true);`
+- **Never** declare `Import-Package: org.adempiere.pipo2;version="[12.0.0,13.0.0)"` — pipo2 is exported without version (0.0.0), the version range causes bundle resolve failure. Use `org.adempiere.pipo2` with no version constraint
+- **Never** override `PO.isActive()` — it is `final` in iDempiere 12.0 and will cause a compile error
