@@ -69,6 +69,23 @@
             <systemPath>/opt/idempiere-server/x86_64/plugins/org.adempiere.pipo_12.0.0.202602061302.jar</systemPath>
         </dependency>
 
+        <!-- iDempiere Plugin Utils (AdempiereActivator) -->
+        <dependency>
+            <groupId>org.adempiere</groupId>
+            <artifactId>org.adempiere.plugin.utils</artifactId>
+            <version>12.0.0</version>
+            <scope>system</scope>
+            <systemPath>/opt/idempiere-server/x86_64/plugins/org.adempiere.plugin.utils_12.0.0.202602061302.jar</systemPath>
+        </dependency>
+
+        <!-- OSGi Event Service (for AbstractEventHandler) -->
+        <dependency>
+            <groupId>org.osgi</groupId>
+            <artifactId>org.osgi.service.event</artifactId>
+            <version>1.4.1</version>
+            <scope>provided</scope>
+        </dependency>
+
         <!-- Testing -->
         <dependency>
             <groupId>junit</groupId>
@@ -160,6 +177,9 @@
                                 <exclude>tw/idempiere/invoice/tax/model/MTaxStatement.class</exclude>
                                 <!-- OSGi bundle activator (requires OSGi container) -->
                                 <exclude>tw/idempiere/invoice/tax/TaiwanInvoiceTaxActivator.class</exclude>
+                                <!-- Event handlers (require iDempiere runtime + IEventManager) -->
+                                <exclude>tw/idempiere/invoice/tax/callout/InvoicePrefixEventHandler.class</exclude>
+                                <exclude>tw/idempiere/invoice/tax/callout/InvoicePrefixMapEventHandler.class</exclude>
                             </excludes>
                             <rules>
                                 <!--
