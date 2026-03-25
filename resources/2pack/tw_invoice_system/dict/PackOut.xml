@@ -1,0 +1,2088 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<idempiere
+    Name="TW Invoice Tax System"
+    Version="1.0.0"
+    idempiereVersion="12.0.0"
+    DataBaseVersion="12.0.0"
+    Description="Taiwan Unified Invoice and Business Tax System"
+    Author="TW iDempiere Community"
+    AuthorEmail="dev@tw-idempiere.org"
+    CreatedDate="2026-03-25 00:00:00"
+    UpdatedDate="2026-03-25 00:00:00"
+    PackOutVersion="100"
+    UpdateDictionary="true"
+    Client="0"
+    AD_Client_UU="11111111-1111-1111-1111-111111111111">
+
+  <!-- ============================================================ -->
+  <!-- AD_EntityType                                                  -->
+  <!-- ============================================================ -->
+  <AD_EntityType>
+    <EntityType>TW</EntityType>
+    <Name>Taiwan Invoice Tax System</Name>
+    <Description>Taiwan Unified Invoice and Business Tax System</Description>
+    <IsActive>Y</IsActive>
+    <ModelPackage>tw.idempiere.invoice.tax</ModelPackage>
+    <AD_EntityType_UU>d9b958f3-8873-4074-99ea-2eb2f9ffa095</AD_EntityType_UU>
+  </AD_EntityType>
+
+  <!-- ============================================================ -->
+  <!-- AD_Reference: TW_InvoiceType                                  -->
+  <!-- ============================================================ -->
+  <AD_Reference>
+    <Name>TW_InvoiceType</Name>
+    <Description>Taiwan Invoice Type: B2B Tripart or B2C Bipart</Description>
+    <ValidationType>L</ValidationType>
+    <IsActive>Y</IsActive>
+    <AD_Reference_UU>e357331a-239f-474d-a6fc-6b29f02eff7a</AD_Reference_UU>
+    <AD_Ref_List>
+      <Value>SALES_TRIPART</Value>
+      <Name>三聯式 (B2B)</Name>
+      <IsActive>Y</IsActive>
+      <AD_Ref_List_UU>88d6a663-3415-493c-a1d6-d4c32ace0dca</AD_Ref_List_UU>
+    </AD_Ref_List>
+    <AD_Ref_List>
+      <Value>SALES_BIPART</Value>
+      <Name>二聯式 (B2C)</Name>
+      <IsActive>Y</IsActive>
+      <AD_Ref_List_UU>348d1081-c203-49c5-966e-454904b1e5c1</AD_Ref_List_UU>
+    </AD_Ref_List>
+  </AD_Reference>
+
+  <!-- ============================================================ -->
+  <!-- AD_Reference: TW_InvoicePrefixStatus                          -->
+  <!-- ============================================================ -->
+  <AD_Reference>
+    <Name>TW_InvoicePrefixStatus</Name>
+    <Description>Taiwan Invoice Prefix Status</Description>
+    <ValidationType>L</ValidationType>
+    <IsActive>Y</IsActive>
+    <AD_Reference_UU>e1a895b8-da67-4835-b6a3-410bc8391e84</AD_Reference_UU>
+    <AD_Ref_List>
+      <Value>A</Value>
+      <Name>Active 使用中</Name>
+      <IsActive>Y</IsActive>
+      <AD_Ref_List_UU>83dafc84-d852-4f47-a02b-aefc43643b2c</AD_Ref_List_UU>
+    </AD_Ref_List>
+    <AD_Ref_List>
+      <Value>I</Value>
+      <Name>Inactive 未啟用</Name>
+      <IsActive>Y</IsActive>
+      <AD_Ref_List_UU>3c097db9-ecc1-4e23-b9c6-6d9bde4bc9a0</AD_Ref_List_UU>
+    </AD_Ref_List>
+    <AD_Ref_List>
+      <Value>C</Value>
+      <Name>Complete 已完成</Name>
+      <IsActive>Y</IsActive>
+      <AD_Ref_List_UU>88514e78-1b7e-4733-b4a1-a4d54352712f</AD_Ref_List_UU>
+    </AD_Ref_List>
+  </AD_Reference>
+
+  <!-- ============================================================ -->
+  <!-- AD_Reference: TW_AdjustmentType                               -->
+  <!-- ============================================================ -->
+  <AD_Reference>
+    <Name>TW_AdjustmentType</Name>
+    <Description>Taiwan Invoice Adjustment Type</Description>
+    <ValidationType>L</ValidationType>
+    <IsActive>Y</IsActive>
+    <AD_Reference_UU>6f1e0105-6be5-4e4a-91c8-504c52e88617</AD_Reference_UU>
+    <AD_Ref_List>
+      <Value>RETURN</Value>
+      <Name>退貨</Name>
+      <IsActive>Y</IsActive>
+      <AD_Ref_List_UU>4a7d63b4-96b5-4d4c-a1d8-8e8770369d31</AD_Ref_List_UU>
+    </AD_Ref_List>
+    <AD_Ref_List>
+      <Value>ALLOWANCE</Value>
+      <Name>折讓</Name>
+      <IsActive>Y</IsActive>
+      <AD_Ref_List_UU>ccf89650-14bf-4f1a-ad32-6a255207b112</AD_Ref_List_UU>
+    </AD_Ref_List>
+  </AD_Reference>
+
+  <!-- ============================================================ -->
+  <!-- AD_Reference: TW_AdjustmentDirection                          -->
+  <!-- ============================================================ -->
+  <AD_Reference>
+    <Name>TW_AdjustmentDirection</Name>
+    <Description>Taiwan Adjustment Direction: Sales or Purchase</Description>
+    <ValidationType>L</ValidationType>
+    <IsActive>Y</IsActive>
+    <AD_Reference_UU>76a56c0b-cd41-4b17-87a6-c7c58e53bcc4</AD_Reference_UU>
+    <AD_Ref_List>
+      <Value>SALES</Value>
+      <Name>銷項折讓</Name>
+      <IsActive>Y</IsActive>
+      <AD_Ref_List_UU>600b4d2c-2fe2-4482-8b86-5f170efd055b</AD_Ref_List_UU>
+    </AD_Ref_List>
+    <AD_Ref_List>
+      <Value>PURCHASE</Value>
+      <Name>進項折讓</Name>
+      <IsActive>Y</IsActive>
+      <AD_Ref_List_UU>e065b604-7119-4fcb-897f-6341a06941e5</AD_Ref_List_UU>
+    </AD_Ref_List>
+  </AD_Reference>
+
+  <!-- ============================================================ -->
+  <!-- AD_Reference: TW_TaxPeriod                                    -->
+  <!-- ============================================================ -->
+  <AD_Reference>
+    <Name>TW_TaxPeriod</Name>
+    <Description>Taiwan Bimonthly Tax Filing Period</Description>
+    <ValidationType>L</ValidationType>
+    <IsActive>Y</IsActive>
+    <AD_Reference_UU>96216680-5925-4f68-9d71-75fb37656b84</AD_Reference_UU>
+    <AD_Ref_List>
+      <Value>1</Value>
+      <Name>第1期 (1-2月)</Name>
+      <IsActive>Y</IsActive>
+      <AD_Ref_List_UU>81411943-ba71-4568-aea5-ef1108720448</AD_Ref_List_UU>
+    </AD_Ref_List>
+    <AD_Ref_List>
+      <Value>2</Value>
+      <Name>第2期 (3-4月)</Name>
+      <IsActive>Y</IsActive>
+      <AD_Ref_List_UU>47370db7-b786-4967-9d05-eca3e6dd1a09</AD_Ref_List_UU>
+    </AD_Ref_List>
+    <AD_Ref_List>
+      <Value>3</Value>
+      <Name>第3期 (5-6月)</Name>
+      <IsActive>Y</IsActive>
+      <AD_Ref_List_UU>799ef73e-1e9f-41b1-b482-0ec68efdd73a</AD_Ref_List_UU>
+    </AD_Ref_List>
+    <AD_Ref_List>
+      <Value>4</Value>
+      <Name>第4期 (7-8月)</Name>
+      <IsActive>Y</IsActive>
+      <AD_Ref_List_UU>a51c6972-3376-498b-938c-817a3f05736d</AD_Ref_List_UU>
+    </AD_Ref_List>
+    <AD_Ref_List>
+      <Value>5</Value>
+      <Name>第5期 (9-10月)</Name>
+      <IsActive>Y</IsActive>
+      <AD_Ref_List_UU>8257effb-91e3-411a-af60-e9db0c785c25</AD_Ref_List_UU>
+    </AD_Ref_List>
+    <AD_Ref_List>
+      <Value>6</Value>
+      <Name>第6期 (11-12月)</Name>
+      <IsActive>Y</IsActive>
+      <AD_Ref_List_UU>cf373271-ebe7-4879-9cc6-e551e9c08b00</AD_Ref_List_UU>
+    </AD_Ref_List>
+  </AD_Reference>
+
+  <!-- ============================================================ -->
+  <!-- AD_Sequence: TW_InvoicePrefix                                 -->
+  <!-- ============================================================ -->
+  <AD_Sequence>
+    <Name>TW_InvoicePrefix</Name>
+    <Description>Taiwan Invoice Prefix sequence</Description>
+    <IncrementNo>1</IncrementNo>
+    <StartNo>1000000</StartNo>
+    <CurrentNextSys>1000000</CurrentNextSys>
+    <CurrentNext>1000000</CurrentNext>
+    <IsTableID>Y</IsTableID>
+    <IsActive>Y</IsActive>
+    <AD_Sequence_UU>568b64be-f700-47ff-b83f-3556374c4dd5</AD_Sequence_UU>
+  </AD_Sequence>
+
+  <!-- ============================================================ -->
+  <!-- AD_Sequence: TW_Invoice_Prefix_Map                            -->
+  <!-- ============================================================ -->
+  <AD_Sequence>
+    <Name>TW_Invoice_Prefix_Map</Name>
+    <Description>Taiwan Invoice Prefix Map sequence</Description>
+    <IncrementNo>1</IncrementNo>
+    <StartNo>1000000</StartNo>
+    <CurrentNextSys>1000000</CurrentNextSys>
+    <CurrentNext>1000000</CurrentNext>
+    <IsTableID>Y</IsTableID>
+    <IsActive>Y</IsActive>
+    <AD_Sequence_UU>ff1c0ccd-0f47-459c-8aed-ddd4be9ccf7a</AD_Sequence_UU>
+  </AD_Sequence>
+
+  <!-- ============================================================ -->
+  <!-- AD_Sequence: TW_InvoiceAdjustment                             -->
+  <!-- ============================================================ -->
+  <AD_Sequence>
+    <Name>TW_InvoiceAdjustment</Name>
+    <Description>Taiwan Invoice Adjustment sequence</Description>
+    <IncrementNo>1</IncrementNo>
+    <StartNo>1000000</StartNo>
+    <CurrentNextSys>1000000</CurrentNextSys>
+    <CurrentNext>1000000</CurrentNext>
+    <IsTableID>Y</IsTableID>
+    <IsActive>Y</IsActive>
+    <AD_Sequence_UU>9c875292-40be-42bc-922a-f4d1b7a874f1</AD_Sequence_UU>
+  </AD_Sequence>
+
+  <!-- ============================================================ -->
+  <!-- AD_Sequence: TW_TaxStatement                                  -->
+  <!-- ============================================================ -->
+  <AD_Sequence>
+    <Name>TW_TaxStatement</Name>
+    <Description>Taiwan Tax Statement sequence</Description>
+    <IncrementNo>1</IncrementNo>
+    <StartNo>1000000</StartNo>
+    <CurrentNextSys>1000000</CurrentNextSys>
+    <CurrentNext>1000000</CurrentNext>
+    <IsTableID>Y</IsTableID>
+    <IsActive>Y</IsActive>
+    <AD_Sequence_UU>8be893ab-9491-4f1b-88bd-019b3fbf3f43</AD_Sequence_UU>
+  </AD_Sequence>
+
+  <!-- ============================================================ -->
+  <!-- AD_Table: TW_InvoicePrefix                                    -->
+  <!-- ============================================================ -->
+  <AD_Table>
+    <TableName>TW_InvoicePrefix</TableName>
+    <Name>Taiwan Invoice Prefix 發票字軌</Name>
+    <Description>Taiwan Ministry of Finance assigned invoice prefix ranges</Description>
+    <EntityType>TW</EntityType>
+    <AccessLevel>3</AccessLevel>
+    <IsActive>Y</IsActive>
+    <IsView>N</IsView>
+    <IsDeleteable>Y</IsDeleteable>
+    <IsHighVolume>N</IsHighVolume>
+    <IsChangeLog>N</IsChangeLog>
+    <AD_Table_UU>019e1ac0-58f9-4705-8da7-4e73f83901e7</AD_Table_UU>
+
+    <AD_Column>
+      <ColumnName>TW_InvoicePrefix_ID</ColumnName>
+      <Name>TW Invoice Prefix</Name>
+      <EntityType>TW</EntityType>
+      <FieldLength>10</FieldLength>
+      <IsKey>Y</IsKey>
+      <IsParent>N</IsParent>
+      <IsMandatory>Y</IsMandatory>
+      <IsUpdateable>N</IsUpdateable>
+      <IsIdentifier>N</IsIdentifier>
+      <IsActive>Y</IsActive>
+      <AD_Reference_ID reference="id" reference-key="AD_Reference">13</AD_Reference_ID>
+      <AD_Column_UU>809fa0d8-9ef6-451c-9c1f-30cf85097eed</AD_Column_UU>
+    </AD_Column>
+
+    <AD_Column>
+      <ColumnName>TW_InvoicePrefix_UU</ColumnName>
+      <Name>TW Invoice Prefix UUID</Name>
+      <EntityType>TW</EntityType>
+      <FieldLength>36</FieldLength>
+      <IsKey>N</IsKey>
+      <IsParent>N</IsParent>
+      <IsMandatory>N</IsMandatory>
+      <IsUpdateable>N</IsUpdateable>
+      <IsIdentifier>N</IsIdentifier>
+      <IsActive>Y</IsActive>
+      <AD_Reference_ID reference="id" reference-key="AD_Reference">10</AD_Reference_ID>
+      <AD_Column_UU>4973a358-13c7-4adf-8bcb-8d522a0e1bdd</AD_Column_UU>
+    </AD_Column>
+
+    <AD_Column>
+      <ColumnName>AD_Client_ID</ColumnName>
+      <Name>Client</Name>
+      <EntityType>TW</EntityType>
+      <FieldLength>10</FieldLength>
+      <IsKey>N</IsKey>
+      <IsParent>N</IsParent>
+      <IsMandatory>Y</IsMandatory>
+      <IsUpdateable>N</IsUpdateable>
+      <IsIdentifier>N</IsIdentifier>
+      <IsActive>Y</IsActive>
+      <AD_Reference_ID reference="id" reference-key="AD_Reference">19</AD_Reference_ID>
+      <AD_Column_UU>a7828d0d-7fad-4ce0-a9d6-a9a01405512b</AD_Column_UU>
+    </AD_Column>
+
+    <AD_Column>
+      <ColumnName>AD_Org_ID</ColumnName>
+      <Name>Organization</Name>
+      <EntityType>TW</EntityType>
+      <FieldLength>10</FieldLength>
+      <IsKey>N</IsKey>
+      <IsParent>N</IsParent>
+      <IsMandatory>Y</IsMandatory>
+      <IsUpdateable>N</IsUpdateable>
+      <IsIdentifier>N</IsIdentifier>
+      <IsActive>Y</IsActive>
+      <AD_Reference_ID reference="id" reference-key="AD_Reference">19</AD_Reference_ID>
+      <AD_Column_UU>67abc226-cdc4-4c65-8e6a-73b82b04eb50</AD_Column_UU>
+    </AD_Column>
+
+    <AD_Column>
+      <ColumnName>IsActive</ColumnName>
+      <Name>Active</Name>
+      <EntityType>TW</EntityType>
+      <FieldLength>1</FieldLength>
+      <DefaultValue>Y</DefaultValue>
+      <IsKey>N</IsKey>
+      <IsParent>N</IsParent>
+      <IsMandatory>Y</IsMandatory>
+      <IsUpdateable>Y</IsUpdateable>
+      <IsIdentifier>N</IsIdentifier>
+      <IsActive>Y</IsActive>
+      <AD_Reference_ID reference="id" reference-key="AD_Reference">20</AD_Reference_ID>
+      <AD_Column_UU>aecbe185-0ddf-425b-8c71-cf4abc1fdbce</AD_Column_UU>
+    </AD_Column>
+
+    <AD_Column>
+      <ColumnName>Created</ColumnName>
+      <Name>Created</Name>
+      <EntityType>TW</EntityType>
+      <FieldLength>7</FieldLength>
+      <IsKey>N</IsKey>
+      <IsParent>N</IsParent>
+      <IsMandatory>Y</IsMandatory>
+      <IsUpdateable>N</IsUpdateable>
+      <IsIdentifier>N</IsIdentifier>
+      <IsActive>Y</IsActive>
+      <AD_Reference_ID reference="id" reference-key="AD_Reference">16</AD_Reference_ID>
+      <AD_Column_UU>7dfe5f7a-cdae-49d4-899a-16db78d8bc96</AD_Column_UU>
+    </AD_Column>
+
+    <AD_Column>
+      <ColumnName>CreatedBy</ColumnName>
+      <Name>Created By</Name>
+      <EntityType>TW</EntityType>
+      <FieldLength>10</FieldLength>
+      <IsKey>N</IsKey>
+      <IsParent>N</IsParent>
+      <IsMandatory>Y</IsMandatory>
+      <IsUpdateable>N</IsUpdateable>
+      <IsIdentifier>N</IsIdentifier>
+      <IsActive>Y</IsActive>
+      <AD_Reference_ID reference="id" reference-key="AD_Reference">110</AD_Reference_ID>
+      <AD_Column_UU>a58f3146-fea2-4284-b1fd-1719a4c80ea1</AD_Column_UU>
+    </AD_Column>
+
+    <AD_Column>
+      <ColumnName>Updated</ColumnName>
+      <Name>Updated</Name>
+      <EntityType>TW</EntityType>
+      <FieldLength>7</FieldLength>
+      <IsKey>N</IsKey>
+      <IsParent>N</IsParent>
+      <IsMandatory>Y</IsMandatory>
+      <IsUpdateable>N</IsUpdateable>
+      <IsIdentifier>N</IsIdentifier>
+      <IsActive>Y</IsActive>
+      <AD_Reference_ID reference="id" reference-key="AD_Reference">16</AD_Reference_ID>
+      <AD_Column_UU>144d9964-04d2-4500-8cf7-d89f9e417761</AD_Column_UU>
+    </AD_Column>
+
+    <AD_Column>
+      <ColumnName>UpdatedBy</ColumnName>
+      <Name>Updated By</Name>
+      <EntityType>TW</EntityType>
+      <FieldLength>10</FieldLength>
+      <IsKey>N</IsKey>
+      <IsParent>N</IsParent>
+      <IsMandatory>Y</IsMandatory>
+      <IsUpdateable>N</IsUpdateable>
+      <IsIdentifier>N</IsIdentifier>
+      <IsActive>Y</IsActive>
+      <AD_Reference_ID reference="id" reference-key="AD_Reference">110</AD_Reference_ID>
+      <AD_Column_UU>4013cf9c-e7f6-4c17-8216-a9d3feaa91ef</AD_Column_UU>
+    </AD_Column>
+
+    <AD_Column>
+      <ColumnName>PrefixCode</ColumnName>
+      <Name>字軌代號</Name>
+      <Description>Two-character invoice prefix code assigned by Ministry of Finance</Description>
+      <EntityType>TW</EntityType>
+      <FieldLength>2</FieldLength>
+      <IsKey>N</IsKey>
+      <IsParent>N</IsParent>
+      <IsMandatory>Y</IsMandatory>
+      <IsUpdateable>Y</IsUpdateable>
+      <IsIdentifier>Y</IsIdentifier>
+      <SeqNo>1</SeqNo>
+      <IsActive>Y</IsActive>
+      <AD_Reference_ID reference="id" reference-key="AD_Reference">10</AD_Reference_ID>
+      <AD_Column_UU>75c777ad-85d7-45be-9f1c-754efc2e0b02</AD_Column_UU>
+    </AD_Column>
+
+    <AD_Column>
+      <ColumnName>InvoiceType</ColumnName>
+      <Name>發票類型</Name>
+      <Description>Invoice type: Tripart (B2B) or Bipart (B2C)</Description>
+      <EntityType>TW</EntityType>
+      <FieldLength>20</FieldLength>
+      <IsKey>N</IsKey>
+      <IsParent>N</IsParent>
+      <IsMandatory>Y</IsMandatory>
+      <IsUpdateable>Y</IsUpdateable>
+      <IsIdentifier>N</IsIdentifier>
+      <IsActive>Y</IsActive>
+      <AD_Reference_ID reference="id" reference-key="AD_Reference">17</AD_Reference_ID>
+      <AD_Reference_Value_ID reference="uuid" reference-key="AD_Reference">e357331a-239f-474d-a6fc-6b29f02eff7a</AD_Reference_Value_ID>
+      <AD_Column_UU>60f1b6bb-54c0-4df7-915c-7b22dd2e81ce</AD_Column_UU>
+    </AD_Column>
+
+    <AD_Column>
+      <ColumnName>PrefixStartDate</ColumnName>
+      <Name>字軌起始日期</Name>
+      <Description>Start date of invoice prefix validity period</Description>
+      <EntityType>TW</EntityType>
+      <FieldLength>7</FieldLength>
+      <IsKey>N</IsKey>
+      <IsParent>N</IsParent>
+      <IsMandatory>Y</IsMandatory>
+      <IsUpdateable>Y</IsUpdateable>
+      <IsIdentifier>N</IsIdentifier>
+      <IsActive>Y</IsActive>
+      <AD_Reference_ID reference="id" reference-key="AD_Reference">15</AD_Reference_ID>
+      <AD_Column_UU>74a4b971-eb37-4d95-b331-abc942302050</AD_Column_UU>
+    </AD_Column>
+
+    <AD_Column>
+      <ColumnName>PrefixEndDate</ColumnName>
+      <Name>字軌結束日期</Name>
+      <Description>End date of invoice prefix validity period</Description>
+      <EntityType>TW</EntityType>
+      <FieldLength>7</FieldLength>
+      <IsKey>N</IsKey>
+      <IsParent>N</IsParent>
+      <IsMandatory>Y</IsMandatory>
+      <IsUpdateable>Y</IsUpdateable>
+      <IsIdentifier>N</IsIdentifier>
+      <IsActive>Y</IsActive>
+      <AD_Reference_ID reference="id" reference-key="AD_Reference">15</AD_Reference_ID>
+      <AD_Column_UU>c5d9a2cb-7030-42ad-bd06-a3a6479c0beb</AD_Column_UU>
+    </AD_Column>
+
+    <AD_Column>
+      <ColumnName>StartNumber</ColumnName>
+      <Name>起始號碼</Name>
+      <Description>First invoice number in this prefix range</Description>
+      <EntityType>TW</EntityType>
+      <FieldLength>10</FieldLength>
+      <IsKey>N</IsKey>
+      <IsParent>N</IsParent>
+      <IsMandatory>Y</IsMandatory>
+      <IsUpdateable>Y</IsUpdateable>
+      <IsIdentifier>N</IsIdentifier>
+      <IsActive>Y</IsActive>
+      <AD_Reference_ID reference="id" reference-key="AD_Reference">11</AD_Reference_ID>
+      <AD_Column_UU>b92f686d-a682-4f34-aba2-0a5a44fc68e7</AD_Column_UU>
+    </AD_Column>
+
+    <AD_Column>
+      <ColumnName>EndNumber</ColumnName>
+      <Name>結束號碼</Name>
+      <Description>Last invoice number in this prefix range</Description>
+      <EntityType>TW</EntityType>
+      <FieldLength>10</FieldLength>
+      <IsKey>N</IsKey>
+      <IsParent>N</IsParent>
+      <IsMandatory>Y</IsMandatory>
+      <IsUpdateable>Y</IsUpdateable>
+      <IsIdentifier>N</IsIdentifier>
+      <IsActive>Y</IsActive>
+      <AD_Reference_ID reference="id" reference-key="AD_Reference">11</AD_Reference_ID>
+      <AD_Column_UU>dfcd8e50-5c24-4f1b-b370-0612030b0627</AD_Column_UU>
+    </AD_Column>
+
+    <AD_Column>
+      <ColumnName>CurrentNumber</ColumnName>
+      <Name>目前號碼</Name>
+      <Description>Current invoice number (next to be issued)</Description>
+      <EntityType>TW</EntityType>
+      <FieldLength>10</FieldLength>
+      <IsKey>N</IsKey>
+      <IsParent>N</IsParent>
+      <IsMandatory>Y</IsMandatory>
+      <IsUpdateable>Y</IsUpdateable>
+      <IsIdentifier>N</IsIdentifier>
+      <IsActive>Y</IsActive>
+      <AD_Reference_ID reference="id" reference-key="AD_Reference">11</AD_Reference_ID>
+      <AD_Column_UU>2f30cf68-8acc-4fd8-8a5e-c8d79d84445d</AD_Column_UU>
+    </AD_Column>
+
+    <AD_Column>
+      <ColumnName>LastInvoiceNumber</ColumnName>
+      <Name>最後發票號碼</Name>
+      <Description>Last issued invoice number</Description>
+      <EntityType>TW</EntityType>
+      <FieldLength>10</FieldLength>
+      <IsKey>N</IsKey>
+      <IsParent>N</IsParent>
+      <IsMandatory>N</IsMandatory>
+      <IsUpdateable>Y</IsUpdateable>
+      <IsIdentifier>N</IsIdentifier>
+      <IsActive>Y</IsActive>
+      <AD_Reference_ID reference="id" reference-key="AD_Reference">10</AD_Reference_ID>
+      <AD_Column_UU>bea5e450-83de-4448-8bbb-2a991df091a3</AD_Column_UU>
+    </AD_Column>
+
+    <AD_Column>
+      <ColumnName>LastIssuedInvoiceDate</ColumnName>
+      <Name>最後開立日期</Name>
+      <Description>Date of the last issued invoice in this prefix range</Description>
+      <EntityType>TW</EntityType>
+      <FieldLength>7</FieldLength>
+      <IsKey>N</IsKey>
+      <IsParent>N</IsParent>
+      <IsMandatory>N</IsMandatory>
+      <IsUpdateable>Y</IsUpdateable>
+      <IsIdentifier>N</IsIdentifier>
+      <IsActive>Y</IsActive>
+      <AD_Reference_ID reference="id" reference-key="AD_Reference">15</AD_Reference_ID>
+      <AD_Column_UU>adbba354-34c2-4a52-978b-46bf4c860bd1</AD_Column_UU>
+    </AD_Column>
+
+    <AD_Column>
+      <ColumnName>Status</ColumnName>
+      <Name>狀態</Name>
+      <Description>Invoice prefix status: I=Inactive, A=Active, C=Complete</Description>
+      <EntityType>TW</EntityType>
+      <FieldLength>1</FieldLength>
+      <DefaultValue>I</DefaultValue>
+      <IsKey>N</IsKey>
+      <IsParent>N</IsParent>
+      <IsMandatory>Y</IsMandatory>
+      <IsUpdateable>Y</IsUpdateable>
+      <IsIdentifier>N</IsIdentifier>
+      <IsActive>Y</IsActive>
+      <AD_Reference_ID reference="id" reference-key="AD_Reference">17</AD_Reference_ID>
+      <AD_Reference_Value_ID reference="uuid" reference-key="AD_Reference">e1a895b8-da67-4835-b6a3-410bc8391e84</AD_Reference_Value_ID>
+      <AD_Column_UU>4492c8af-5b3d-496e-a252-4587bff39197</AD_Column_UU>
+    </AD_Column>
+
+  </AD_Table>
+
+  <!-- ============================================================ -->
+  <!-- AD_Table: TW_Invoice_Prefix_Map                               -->
+  <!-- ============================================================ -->
+  <AD_Table>
+    <TableName>TW_Invoice_Prefix_Map</TableName>
+    <Name>Taiwan Invoice Prefix Map 發票對應</Name>
+    <Description>Maps iDempiere invoices to Taiwan invoice prefix and number</Description>
+    <EntityType>TW</EntityType>
+    <AccessLevel>3</AccessLevel>
+    <IsActive>Y</IsActive>
+    <IsView>N</IsView>
+    <IsDeleteable>Y</IsDeleteable>
+    <IsHighVolume>Y</IsHighVolume>
+    <IsChangeLog>N</IsChangeLog>
+    <AD_Table_UU>1c099039-3941-4059-9938-9d476296dfad</AD_Table_UU>
+
+    <AD_Column>
+      <ColumnName>TW_Invoice_Prefix_Map_ID</ColumnName>
+      <Name>TW Invoice Prefix Map</Name>
+      <EntityType>TW</EntityType>
+      <FieldLength>10</FieldLength>
+      <IsKey>Y</IsKey>
+      <IsParent>N</IsParent>
+      <IsMandatory>Y</IsMandatory>
+      <IsUpdateable>N</IsUpdateable>
+      <IsIdentifier>N</IsIdentifier>
+      <IsActive>Y</IsActive>
+      <AD_Reference_ID reference="id" reference-key="AD_Reference">13</AD_Reference_ID>
+      <AD_Column_UU>72b7fd05-31d9-4f29-a372-56eb4453fa38</AD_Column_UU>
+    </AD_Column>
+
+    <AD_Column>
+      <ColumnName>TW_Invoice_Prefix_Map_UU</ColumnName>
+      <Name>TW Invoice Prefix Map UUID</Name>
+      <EntityType>TW</EntityType>
+      <FieldLength>36</FieldLength>
+      <IsKey>N</IsKey>
+      <IsParent>N</IsParent>
+      <IsMandatory>N</IsMandatory>
+      <IsUpdateable>N</IsUpdateable>
+      <IsIdentifier>N</IsIdentifier>
+      <IsActive>Y</IsActive>
+      <AD_Reference_ID reference="id" reference-key="AD_Reference">10</AD_Reference_ID>
+      <AD_Column_UU>9c0510b1-8dc1-4ee8-8fab-d3cf2a6d5535</AD_Column_UU>
+    </AD_Column>
+
+    <AD_Column>
+      <ColumnName>AD_Client_ID</ColumnName>
+      <Name>Client</Name>
+      <EntityType>TW</EntityType>
+      <FieldLength>10</FieldLength>
+      <IsKey>N</IsKey>
+      <IsParent>N</IsParent>
+      <IsMandatory>Y</IsMandatory>
+      <IsUpdateable>N</IsUpdateable>
+      <IsIdentifier>N</IsIdentifier>
+      <IsActive>Y</IsActive>
+      <AD_Reference_ID reference="id" reference-key="AD_Reference">19</AD_Reference_ID>
+      <AD_Column_UU>350185e0-d736-45e7-9f91-83f636816ad4</AD_Column_UU>
+    </AD_Column>
+
+    <AD_Column>
+      <ColumnName>AD_Org_ID</ColumnName>
+      <Name>Organization</Name>
+      <EntityType>TW</EntityType>
+      <FieldLength>10</FieldLength>
+      <IsKey>N</IsKey>
+      <IsParent>N</IsParent>
+      <IsMandatory>Y</IsMandatory>
+      <IsUpdateable>N</IsUpdateable>
+      <IsIdentifier>N</IsIdentifier>
+      <IsActive>Y</IsActive>
+      <AD_Reference_ID reference="id" reference-key="AD_Reference">19</AD_Reference_ID>
+      <AD_Column_UU>8149ee5e-ecb0-4274-a1a5-d640f510092b</AD_Column_UU>
+    </AD_Column>
+
+    <AD_Column>
+      <ColumnName>IsActive</ColumnName>
+      <Name>Active</Name>
+      <EntityType>TW</EntityType>
+      <FieldLength>1</FieldLength>
+      <DefaultValue>Y</DefaultValue>
+      <IsKey>N</IsKey>
+      <IsParent>N</IsParent>
+      <IsMandatory>Y</IsMandatory>
+      <IsUpdateable>Y</IsUpdateable>
+      <IsIdentifier>N</IsIdentifier>
+      <IsActive>Y</IsActive>
+      <AD_Reference_ID reference="id" reference-key="AD_Reference">20</AD_Reference_ID>
+      <AD_Column_UU>1c3d8b10-1d48-4dd0-a8de-2a3580e9b303</AD_Column_UU>
+    </AD_Column>
+
+    <AD_Column>
+      <ColumnName>Created</ColumnName>
+      <Name>Created</Name>
+      <EntityType>TW</EntityType>
+      <FieldLength>7</FieldLength>
+      <IsKey>N</IsKey>
+      <IsParent>N</IsParent>
+      <IsMandatory>Y</IsMandatory>
+      <IsUpdateable>N</IsUpdateable>
+      <IsIdentifier>N</IsIdentifier>
+      <IsActive>Y</IsActive>
+      <AD_Reference_ID reference="id" reference-key="AD_Reference">16</AD_Reference_ID>
+      <AD_Column_UU>1eee2999-c520-43f0-a797-ab549642f928</AD_Column_UU>
+    </AD_Column>
+
+    <AD_Column>
+      <ColumnName>CreatedBy</ColumnName>
+      <Name>Created By</Name>
+      <EntityType>TW</EntityType>
+      <FieldLength>10</FieldLength>
+      <IsKey>N</IsKey>
+      <IsParent>N</IsParent>
+      <IsMandatory>Y</IsMandatory>
+      <IsUpdateable>N</IsUpdateable>
+      <IsIdentifier>N</IsIdentifier>
+      <IsActive>Y</IsActive>
+      <AD_Reference_ID reference="id" reference-key="AD_Reference">110</AD_Reference_ID>
+      <AD_Column_UU>e30eed21-1f79-4376-813f-848a0f0fdf6e</AD_Column_UU>
+    </AD_Column>
+
+    <AD_Column>
+      <ColumnName>Updated</ColumnName>
+      <Name>Updated</Name>
+      <EntityType>TW</EntityType>
+      <FieldLength>7</FieldLength>
+      <IsKey>N</IsKey>
+      <IsParent>N</IsParent>
+      <IsMandatory>Y</IsMandatory>
+      <IsUpdateable>N</IsUpdateable>
+      <IsIdentifier>N</IsIdentifier>
+      <IsActive>Y</IsActive>
+      <AD_Reference_ID reference="id" reference-key="AD_Reference">16</AD_Reference_ID>
+      <AD_Column_UU>2e0d1374-612d-4195-b52a-53bbbfd40f82</AD_Column_UU>
+    </AD_Column>
+
+    <AD_Column>
+      <ColumnName>UpdatedBy</ColumnName>
+      <Name>Updated By</Name>
+      <EntityType>TW</EntityType>
+      <FieldLength>10</FieldLength>
+      <IsKey>N</IsKey>
+      <IsParent>N</IsParent>
+      <IsMandatory>Y</IsMandatory>
+      <IsUpdateable>N</IsUpdateable>
+      <IsIdentifier>N</IsIdentifier>
+      <IsActive>Y</IsActive>
+      <AD_Reference_ID reference="id" reference-key="AD_Reference">110</AD_Reference_ID>
+      <AD_Column_UU>d7d053db-3940-4168-b4a8-df1f624430c0</AD_Column_UU>
+    </AD_Column>
+
+    <AD_Column>
+      <ColumnName>TW_InvoicePrefix_ID</ColumnName>
+      <Name>發票字軌</Name>
+      <Description>FK to TW_InvoicePrefix</Description>
+      <EntityType>TW</EntityType>
+      <FieldLength>10</FieldLength>
+      <IsKey>N</IsKey>
+      <IsParent>Y</IsParent>
+      <IsMandatory>Y</IsMandatory>
+      <IsUpdateable>N</IsUpdateable>
+      <IsIdentifier>N</IsIdentifier>
+      <IsActive>Y</IsActive>
+      <AD_Reference_ID reference="id" reference-key="AD_Reference">19</AD_Reference_ID>
+      <AD_Column_UU>c1627cfb-11e8-49d6-863a-b0d5d1444006</AD_Column_UU>
+    </AD_Column>
+
+    <AD_Column>
+      <ColumnName>C_Invoice_ID</ColumnName>
+      <Name>發票</Name>
+      <Description>FK to C_Invoice</Description>
+      <EntityType>TW</EntityType>
+      <FieldLength>10</FieldLength>
+      <IsKey>N</IsKey>
+      <IsParent>N</IsParent>
+      <IsMandatory>Y</IsMandatory>
+      <IsUpdateable>Y</IsUpdateable>
+      <IsIdentifier>N</IsIdentifier>
+      <IsActive>Y</IsActive>
+      <AD_Reference_ID reference="id" reference-key="AD_Reference">19</AD_Reference_ID>
+      <AD_Column_UU>0dbc228b-64c9-4c01-b984-3243b6b6b658</AD_Column_UU>
+    </AD_Column>
+
+    <AD_Column>
+      <ColumnName>InvoiceDate</ColumnName>
+      <Name>發票日期</Name>
+      <Description>Date the invoice was issued</Description>
+      <EntityType>TW</EntityType>
+      <FieldLength>7</FieldLength>
+      <IsKey>N</IsKey>
+      <IsParent>N</IsParent>
+      <IsMandatory>Y</IsMandatory>
+      <IsUpdateable>Y</IsUpdateable>
+      <IsIdentifier>N</IsIdentifier>
+      <IsActive>Y</IsActive>
+      <AD_Reference_ID reference="id" reference-key="AD_Reference">15</AD_Reference_ID>
+      <AD_Column_UU>a654f729-4dfb-4fb0-9d4a-ce70b675cdd8</AD_Column_UU>
+    </AD_Column>
+
+    <AD_Column>
+      <ColumnName>InvoiceNumber</ColumnName>
+      <Name>發票號碼</Name>
+      <Description>Full invoice number (prefix + 8 digits)</Description>
+      <EntityType>TW</EntityType>
+      <FieldLength>10</FieldLength>
+      <IsKey>N</IsKey>
+      <IsParent>N</IsParent>
+      <IsMandatory>Y</IsMandatory>
+      <IsUpdateable>Y</IsUpdateable>
+      <IsIdentifier>Y</IsIdentifier>
+      <SeqNo>1</SeqNo>
+      <IsActive>Y</IsActive>
+      <AD_Reference_ID reference="id" reference-key="AD_Reference">10</AD_Reference_ID>
+      <AD_Column_UU>03fc7aec-c621-417c-8942-5439d7562971</AD_Column_UU>
+    </AD_Column>
+
+    <AD_Column>
+      <ColumnName>BuyerTaxID</ColumnName>
+      <Name>買方統一編號</Name>
+      <Description>Buyer tax ID (required for B2B tripart invoices)</Description>
+      <EntityType>TW</EntityType>
+      <FieldLength>8</FieldLength>
+      <IsKey>N</IsKey>
+      <IsParent>N</IsParent>
+      <IsMandatory>N</IsMandatory>
+      <IsUpdateable>Y</IsUpdateable>
+      <IsIdentifier>N</IsIdentifier>
+      <IsActive>Y</IsActive>
+      <AD_Reference_ID reference="id" reference-key="AD_Reference">10</AD_Reference_ID>
+      <AD_Column_UU>4ef7daf9-bab9-414b-9ac0-a732ed01c25c</AD_Column_UU>
+    </AD_Column>
+
+    <AD_Column>
+      <ColumnName>IsExpiryWarning</ColumnName>
+      <Name>到期警示</Name>
+      <Description>Whether expiry warning has been issued for this invoice</Description>
+      <EntityType>TW</EntityType>
+      <FieldLength>1</FieldLength>
+      <DefaultValue>N</DefaultValue>
+      <IsKey>N</IsKey>
+      <IsParent>N</IsParent>
+      <IsMandatory>Y</IsMandatory>
+      <IsUpdateable>Y</IsUpdateable>
+      <IsIdentifier>N</IsIdentifier>
+      <IsActive>Y</IsActive>
+      <AD_Reference_ID reference="id" reference-key="AD_Reference">20</AD_Reference_ID>
+      <AD_Column_UU>4d5d80ef-42e3-4f27-ad60-5031b7f40074</AD_Column_UU>
+    </AD_Column>
+
+  </AD_Table>
+
+  <!-- ============================================================ -->
+  <!-- AD_Table: TW_InvoiceAdjustment                                -->
+  <!-- ============================================================ -->
+  <AD_Table>
+    <TableName>TW_InvoiceAdjustment</TableName>
+    <Name>Taiwan Invoice Adjustment 進項折讓</Name>
+    <Description>Taiwan sales and purchase invoice adjustments (returns and allowances)</Description>
+    <EntityType>TW</EntityType>
+    <AccessLevel>3</AccessLevel>
+    <IsActive>Y</IsActive>
+    <IsView>N</IsView>
+    <IsDeleteable>Y</IsDeleteable>
+    <IsHighVolume>N</IsHighVolume>
+    <IsChangeLog>N</IsChangeLog>
+    <AD_Table_UU>d29f8934-8e44-44ae-b147-2caa2f2f72f4</AD_Table_UU>
+
+    <AD_Column>
+      <ColumnName>TW_InvoiceAdjustment_ID</ColumnName>
+      <Name>TW Invoice Adjustment</Name>
+      <EntityType>TW</EntityType>
+      <FieldLength>10</FieldLength>
+      <IsKey>Y</IsKey>
+      <IsParent>N</IsParent>
+      <IsMandatory>Y</IsMandatory>
+      <IsUpdateable>N</IsUpdateable>
+      <IsIdentifier>N</IsIdentifier>
+      <IsActive>Y</IsActive>
+      <AD_Reference_ID reference="id" reference-key="AD_Reference">13</AD_Reference_ID>
+      <AD_Column_UU>5b68e04f-ac5d-4fef-b757-c402a6090a1a</AD_Column_UU>
+    </AD_Column>
+
+    <AD_Column>
+      <ColumnName>TW_InvoiceAdjustment_UU</ColumnName>
+      <Name>TW Invoice Adjustment UUID</Name>
+      <EntityType>TW</EntityType>
+      <FieldLength>36</FieldLength>
+      <IsKey>N</IsKey>
+      <IsParent>N</IsParent>
+      <IsMandatory>N</IsMandatory>
+      <IsUpdateable>N</IsUpdateable>
+      <IsIdentifier>N</IsIdentifier>
+      <IsActive>Y</IsActive>
+      <AD_Reference_ID reference="id" reference-key="AD_Reference">10</AD_Reference_ID>
+      <AD_Column_UU>a2fd3820-44fd-482d-9855-db4aad8c43b7</AD_Column_UU>
+    </AD_Column>
+
+    <AD_Column>
+      <ColumnName>AD_Client_ID</ColumnName>
+      <Name>Client</Name>
+      <EntityType>TW</EntityType>
+      <FieldLength>10</FieldLength>
+      <IsKey>N</IsKey>
+      <IsParent>N</IsParent>
+      <IsMandatory>Y</IsMandatory>
+      <IsUpdateable>N</IsUpdateable>
+      <IsIdentifier>N</IsIdentifier>
+      <IsActive>Y</IsActive>
+      <AD_Reference_ID reference="id" reference-key="AD_Reference">19</AD_Reference_ID>
+      <AD_Column_UU>94c28529-0605-43b9-ae0f-514b9a4b8b1f</AD_Column_UU>
+    </AD_Column>
+
+    <AD_Column>
+      <ColumnName>AD_Org_ID</ColumnName>
+      <Name>Organization</Name>
+      <EntityType>TW</EntityType>
+      <FieldLength>10</FieldLength>
+      <IsKey>N</IsKey>
+      <IsParent>N</IsParent>
+      <IsMandatory>Y</IsMandatory>
+      <IsUpdateable>N</IsUpdateable>
+      <IsIdentifier>N</IsIdentifier>
+      <IsActive>Y</IsActive>
+      <AD_Reference_ID reference="id" reference-key="AD_Reference">19</AD_Reference_ID>
+      <AD_Column_UU>26979631-b041-4827-af82-dbe399a456ed</AD_Column_UU>
+    </AD_Column>
+
+    <AD_Column>
+      <ColumnName>IsActive</ColumnName>
+      <Name>Active</Name>
+      <EntityType>TW</EntityType>
+      <FieldLength>1</FieldLength>
+      <DefaultValue>Y</DefaultValue>
+      <IsKey>N</IsKey>
+      <IsParent>N</IsParent>
+      <IsMandatory>Y</IsMandatory>
+      <IsUpdateable>Y</IsUpdateable>
+      <IsIdentifier>N</IsIdentifier>
+      <IsActive>Y</IsActive>
+      <AD_Reference_ID reference="id" reference-key="AD_Reference">20</AD_Reference_ID>
+      <AD_Column_UU>90de368e-7ac2-494d-a20a-56c4ead8aec0</AD_Column_UU>
+    </AD_Column>
+
+    <AD_Column>
+      <ColumnName>Created</ColumnName>
+      <Name>Created</Name>
+      <EntityType>TW</EntityType>
+      <FieldLength>7</FieldLength>
+      <IsKey>N</IsKey>
+      <IsParent>N</IsParent>
+      <IsMandatory>Y</IsMandatory>
+      <IsUpdateable>N</IsUpdateable>
+      <IsIdentifier>N</IsIdentifier>
+      <IsActive>Y</IsActive>
+      <AD_Reference_ID reference="id" reference-key="AD_Reference">16</AD_Reference_ID>
+      <AD_Column_UU>4b5137e3-8601-4d36-9570-f52dfc6f2044</AD_Column_UU>
+    </AD_Column>
+
+    <AD_Column>
+      <ColumnName>CreatedBy</ColumnName>
+      <Name>Created By</Name>
+      <EntityType>TW</EntityType>
+      <FieldLength>10</FieldLength>
+      <IsKey>N</IsKey>
+      <IsParent>N</IsParent>
+      <IsMandatory>Y</IsMandatory>
+      <IsUpdateable>N</IsUpdateable>
+      <IsIdentifier>N</IsIdentifier>
+      <IsActive>Y</IsActive>
+      <AD_Reference_ID reference="id" reference-key="AD_Reference">110</AD_Reference_ID>
+      <AD_Column_UU>132777c0-bbad-412b-a661-20f8e81e17c9</AD_Column_UU>
+    </AD_Column>
+
+    <AD_Column>
+      <ColumnName>Updated</ColumnName>
+      <Name>Updated</Name>
+      <EntityType>TW</EntityType>
+      <FieldLength>7</FieldLength>
+      <IsKey>N</IsKey>
+      <IsParent>N</IsParent>
+      <IsMandatory>Y</IsMandatory>
+      <IsUpdateable>N</IsUpdateable>
+      <IsIdentifier>N</IsIdentifier>
+      <IsActive>Y</IsActive>
+      <AD_Reference_ID reference="id" reference-key="AD_Reference">16</AD_Reference_ID>
+      <AD_Column_UU>66a8c288-60f4-4d74-b3d1-6c045abf4d56</AD_Column_UU>
+    </AD_Column>
+
+    <AD_Column>
+      <ColumnName>UpdatedBy</ColumnName>
+      <Name>Updated By</Name>
+      <EntityType>TW</EntityType>
+      <FieldLength>10</FieldLength>
+      <IsKey>N</IsKey>
+      <IsParent>N</IsParent>
+      <IsMandatory>Y</IsMandatory>
+      <IsUpdateable>N</IsUpdateable>
+      <IsIdentifier>N</IsIdentifier>
+      <IsActive>Y</IsActive>
+      <AD_Reference_ID reference="id" reference-key="AD_Reference">110</AD_Reference_ID>
+      <AD_Column_UU>b4f7ed43-11ce-4847-a073-0b724b924089</AD_Column_UU>
+    </AD_Column>
+
+    <AD_Column>
+      <ColumnName>C_Invoice_ID</ColumnName>
+      <Name>原始發票</Name>
+      <Description>FK to original C_Invoice (optional)</Description>
+      <EntityType>TW</EntityType>
+      <FieldLength>10</FieldLength>
+      <IsKey>N</IsKey>
+      <IsParent>N</IsParent>
+      <IsMandatory>N</IsMandatory>
+      <IsUpdateable>Y</IsUpdateable>
+      <IsIdentifier>N</IsIdentifier>
+      <IsActive>Y</IsActive>
+      <AD_Reference_ID reference="id" reference-key="AD_Reference">19</AD_Reference_ID>
+      <AD_Column_UU>15e4ce2c-7b84-42b7-85ae-ec0f5295f1df</AD_Column_UU>
+    </AD_Column>
+
+    <AD_Column>
+      <ColumnName>AdjustmentType</ColumnName>
+      <Name>折讓類型</Name>
+      <Description>Adjustment type: Return or Allowance</Description>
+      <EntityType>TW</EntityType>
+      <FieldLength>20</FieldLength>
+      <IsKey>N</IsKey>
+      <IsParent>N</IsParent>
+      <IsMandatory>Y</IsMandatory>
+      <IsUpdateable>Y</IsUpdateable>
+      <IsIdentifier>N</IsIdentifier>
+      <IsActive>Y</IsActive>
+      <AD_Reference_ID reference="id" reference-key="AD_Reference">17</AD_Reference_ID>
+      <AD_Reference_Value_ID reference="uuid" reference-key="AD_Reference">6f1e0105-6be5-4e4a-91c8-504c52e88617</AD_Reference_Value_ID>
+      <AD_Column_UU>50984e03-0147-4109-b7e4-6c095e407fc4</AD_Column_UU>
+    </AD_Column>
+
+    <AD_Column>
+      <ColumnName>AdjustmentDirection</ColumnName>
+      <Name>折讓方向</Name>
+      <Description>Sales (outgoing) or Purchase (incoming) adjustment</Description>
+      <EntityType>TW</EntityType>
+      <FieldLength>20</FieldLength>
+      <IsKey>N</IsKey>
+      <IsParent>N</IsParent>
+      <IsMandatory>Y</IsMandatory>
+      <IsUpdateable>Y</IsUpdateable>
+      <IsIdentifier>N</IsIdentifier>
+      <IsActive>Y</IsActive>
+      <AD_Reference_ID reference="id" reference-key="AD_Reference">17</AD_Reference_ID>
+      <AD_Reference_Value_ID reference="uuid" reference-key="AD_Reference">76a56c0b-cd41-4b17-87a6-c7c58e53bcc4</AD_Reference_Value_ID>
+      <AD_Column_UU>8a6b4619-8051-479c-b8b2-2da92b4dcb3c</AD_Column_UU>
+    </AD_Column>
+
+    <AD_Column>
+      <ColumnName>AdjustmentDate</ColumnName>
+      <Name>折讓日期</Name>
+      <Description>Date the adjustment was made</Description>
+      <EntityType>TW</EntityType>
+      <FieldLength>7</FieldLength>
+      <IsKey>N</IsKey>
+      <IsParent>N</IsParent>
+      <IsMandatory>Y</IsMandatory>
+      <IsUpdateable>Y</IsUpdateable>
+      <IsIdentifier>N</IsIdentifier>
+      <IsActive>Y</IsActive>
+      <AD_Reference_ID reference="id" reference-key="AD_Reference">15</AD_Reference_ID>
+      <AD_Column_UU>a70d4866-fc10-4142-820a-2a629069448b</AD_Column_UU>
+    </AD_Column>
+
+    <AD_Column>
+      <ColumnName>AdjustedTaxAmount</ColumnName>
+      <Name>折讓稅額</Name>
+      <Description>Tax amount being adjusted</Description>
+      <EntityType>TW</EntityType>
+      <FieldLength>15</FieldLength>
+      <IsKey>N</IsKey>
+      <IsParent>N</IsParent>
+      <IsMandatory>Y</IsMandatory>
+      <IsUpdateable>Y</IsUpdateable>
+      <IsIdentifier>N</IsIdentifier>
+      <IsActive>Y</IsActive>
+      <AD_Reference_ID reference="id" reference-key="AD_Reference">12</AD_Reference_ID>
+      <AD_Column_UU>afa2493e-c31f-4cb0-81bf-950da4a6cd98</AD_Column_UU>
+    </AD_Column>
+
+    <AD_Column>
+      <ColumnName>TaxPeriod</ColumnName>
+      <Name>申報期別</Name>
+      <Description>Bimonthly filing period for this adjustment</Description>
+      <EntityType>TW</EntityType>
+      <FieldLength>1</FieldLength>
+      <IsKey>N</IsKey>
+      <IsParent>N</IsParent>
+      <IsMandatory>Y</IsMandatory>
+      <IsUpdateable>Y</IsUpdateable>
+      <IsIdentifier>N</IsIdentifier>
+      <IsActive>Y</IsActive>
+      <AD_Reference_ID reference="id" reference-key="AD_Reference">17</AD_Reference_ID>
+      <AD_Reference_Value_ID reference="uuid" reference-key="AD_Reference">96216680-5925-4f68-9d71-75fb37656b84</AD_Reference_Value_ID>
+      <AD_Column_UU>796e61c3-0c54-44e1-ac34-584a32510173</AD_Column_UU>
+    </AD_Column>
+
+    <AD_Column>
+      <ColumnName>IsOverduePeriod</ColumnName>
+      <Name>超期申報</Name>
+      <Description>Whether this adjustment is filed outside the original tax period</Description>
+      <EntityType>TW</EntityType>
+      <FieldLength>1</FieldLength>
+      <DefaultValue>N</DefaultValue>
+      <IsKey>N</IsKey>
+      <IsParent>N</IsParent>
+      <IsMandatory>Y</IsMandatory>
+      <IsUpdateable>Y</IsUpdateable>
+      <IsIdentifier>N</IsIdentifier>
+      <IsActive>Y</IsActive>
+      <AD_Reference_ID reference="id" reference-key="AD_Reference">20</AD_Reference_ID>
+      <AD_Column_UU>b55ba037-aafa-410b-a37a-e689f3b3bc65</AD_Column_UU>
+    </AD_Column>
+
+  </AD_Table>
+
+  <!-- ============================================================ -->
+  <!-- AD_Table: TW_TaxStatement                                     -->
+  <!-- ============================================================ -->
+  <AD_Table>
+    <TableName>TW_TaxStatement</TableName>
+    <Name>Taiwan Tax Statement 401申報表</Name>
+    <Description>Taiwan Form 401 Business Tax Return (bimonthly VAT filing)</Description>
+    <EntityType>TW</EntityType>
+    <AccessLevel>3</AccessLevel>
+    <IsActive>Y</IsActive>
+    <IsView>N</IsView>
+    <IsDeleteable>Y</IsDeleteable>
+    <IsHighVolume>N</IsHighVolume>
+    <IsChangeLog>N</IsChangeLog>
+    <AD_Table_UU>d419afea-bc00-4040-ab7d-9b247a533aca</AD_Table_UU>
+
+    <AD_Column>
+      <ColumnName>TW_TaxStatement_ID</ColumnName>
+      <Name>TW Tax Statement</Name>
+      <EntityType>TW</EntityType>
+      <FieldLength>10</FieldLength>
+      <IsKey>Y</IsKey>
+      <IsParent>N</IsParent>
+      <IsMandatory>Y</IsMandatory>
+      <IsUpdateable>N</IsUpdateable>
+      <IsIdentifier>N</IsIdentifier>
+      <IsActive>Y</IsActive>
+      <AD_Reference_ID reference="id" reference-key="AD_Reference">13</AD_Reference_ID>
+      <AD_Column_UU>712ed415-1161-41e7-a3c0-a709d605c891</AD_Column_UU>
+    </AD_Column>
+
+    <AD_Column>
+      <ColumnName>TW_TaxStatement_UU</ColumnName>
+      <Name>TW Tax Statement UUID</Name>
+      <EntityType>TW</EntityType>
+      <FieldLength>36</FieldLength>
+      <IsKey>N</IsKey>
+      <IsParent>N</IsParent>
+      <IsMandatory>N</IsMandatory>
+      <IsUpdateable>N</IsUpdateable>
+      <IsIdentifier>N</IsIdentifier>
+      <IsActive>Y</IsActive>
+      <AD_Reference_ID reference="id" reference-key="AD_Reference">10</AD_Reference_ID>
+      <AD_Column_UU>b29dad19-d8ed-4d67-a4b7-1f123be22a72</AD_Column_UU>
+    </AD_Column>
+
+    <AD_Column>
+      <ColumnName>AD_Client_ID</ColumnName>
+      <Name>Client</Name>
+      <EntityType>TW</EntityType>
+      <FieldLength>10</FieldLength>
+      <IsKey>N</IsKey>
+      <IsParent>N</IsParent>
+      <IsMandatory>Y</IsMandatory>
+      <IsUpdateable>N</IsUpdateable>
+      <IsIdentifier>N</IsIdentifier>
+      <IsActive>Y</IsActive>
+      <AD_Reference_ID reference="id" reference-key="AD_Reference">19</AD_Reference_ID>
+      <AD_Column_UU>35d436d5-8345-46ea-8db2-1cc00a07c71f</AD_Column_UU>
+    </AD_Column>
+
+    <AD_Column>
+      <ColumnName>AD_Org_ID</ColumnName>
+      <Name>Organization</Name>
+      <EntityType>TW</EntityType>
+      <FieldLength>10</FieldLength>
+      <IsKey>N</IsKey>
+      <IsParent>N</IsParent>
+      <IsMandatory>Y</IsMandatory>
+      <IsUpdateable>N</IsUpdateable>
+      <IsIdentifier>N</IsIdentifier>
+      <IsActive>Y</IsActive>
+      <AD_Reference_ID reference="id" reference-key="AD_Reference">19</AD_Reference_ID>
+      <AD_Column_UU>4ac6c1e5-b433-4d8e-a6dd-850015852723</AD_Column_UU>
+    </AD_Column>
+
+    <AD_Column>
+      <ColumnName>IsActive</ColumnName>
+      <Name>Active</Name>
+      <EntityType>TW</EntityType>
+      <FieldLength>1</FieldLength>
+      <DefaultValue>Y</DefaultValue>
+      <IsKey>N</IsKey>
+      <IsParent>N</IsParent>
+      <IsMandatory>Y</IsMandatory>
+      <IsUpdateable>Y</IsUpdateable>
+      <IsIdentifier>N</IsIdentifier>
+      <IsActive>Y</IsActive>
+      <AD_Reference_ID reference="id" reference-key="AD_Reference">20</AD_Reference_ID>
+      <AD_Column_UU>c7396842-9bf7-419d-a42d-c078965b0c2a</AD_Column_UU>
+    </AD_Column>
+
+    <AD_Column>
+      <ColumnName>Created</ColumnName>
+      <Name>Created</Name>
+      <EntityType>TW</EntityType>
+      <FieldLength>7</FieldLength>
+      <IsKey>N</IsKey>
+      <IsParent>N</IsParent>
+      <IsMandatory>Y</IsMandatory>
+      <IsUpdateable>N</IsUpdateable>
+      <IsIdentifier>N</IsIdentifier>
+      <IsActive>Y</IsActive>
+      <AD_Reference_ID reference="id" reference-key="AD_Reference">16</AD_Reference_ID>
+      <AD_Column_UU>9984d119-1b59-45bd-af36-1b0a992e6956</AD_Column_UU>
+    </AD_Column>
+
+    <AD_Column>
+      <ColumnName>CreatedBy</ColumnName>
+      <Name>Created By</Name>
+      <EntityType>TW</EntityType>
+      <FieldLength>10</FieldLength>
+      <IsKey>N</IsKey>
+      <IsParent>N</IsParent>
+      <IsMandatory>Y</IsMandatory>
+      <IsUpdateable>N</IsUpdateable>
+      <IsIdentifier>N</IsIdentifier>
+      <IsActive>Y</IsActive>
+      <AD_Reference_ID reference="id" reference-key="AD_Reference">110</AD_Reference_ID>
+      <AD_Column_UU>9bda1398-47d3-4b0f-a171-793b4ac2cb48</AD_Column_UU>
+    </AD_Column>
+
+    <AD_Column>
+      <ColumnName>Updated</ColumnName>
+      <Name>Updated</Name>
+      <EntityType>TW</EntityType>
+      <FieldLength>7</FieldLength>
+      <IsKey>N</IsKey>
+      <IsParent>N</IsParent>
+      <IsMandatory>Y</IsMandatory>
+      <IsUpdateable>N</IsUpdateable>
+      <IsIdentifier>N</IsIdentifier>
+      <IsActive>Y</IsActive>
+      <AD_Reference_ID reference="id" reference-key="AD_Reference">16</AD_Reference_ID>
+      <AD_Column_UU>e4a70319-1dbd-4b78-8572-22529e84bc18</AD_Column_UU>
+    </AD_Column>
+
+    <AD_Column>
+      <ColumnName>UpdatedBy</ColumnName>
+      <Name>Updated By</Name>
+      <EntityType>TW</EntityType>
+      <FieldLength>10</FieldLength>
+      <IsKey>N</IsKey>
+      <IsParent>N</IsParent>
+      <IsMandatory>Y</IsMandatory>
+      <IsUpdateable>N</IsUpdateable>
+      <IsIdentifier>N</IsIdentifier>
+      <IsActive>Y</IsActive>
+      <AD_Reference_ID reference="id" reference-key="AD_Reference">110</AD_Reference_ID>
+      <AD_Column_UU>48692fc6-f562-4a07-8b3d-d3fa0cf3dc1b</AD_Column_UU>
+    </AD_Column>
+
+    <AD_Column>
+      <ColumnName>StatementYear</ColumnName>
+      <Name>申報年度</Name>
+      <Description>Year of the tax statement</Description>
+      <EntityType>TW</EntityType>
+      <FieldLength>10</FieldLength>
+      <IsKey>N</IsKey>
+      <IsParent>N</IsParent>
+      <IsMandatory>Y</IsMandatory>
+      <IsUpdateable>Y</IsUpdateable>
+      <IsIdentifier>Y</IsIdentifier>
+      <SeqNo>1</SeqNo>
+      <IsActive>Y</IsActive>
+      <AD_Reference_ID reference="id" reference-key="AD_Reference">11</AD_Reference_ID>
+      <AD_Column_UU>e99dbee5-4e09-4e60-8ff8-112cea1951c4</AD_Column_UU>
+    </AD_Column>
+
+    <AD_Column>
+      <ColumnName>StatementPeriod</ColumnName>
+      <Name>申報期別</Name>
+      <Description>Bimonthly filing period (1-6)</Description>
+      <EntityType>TW</EntityType>
+      <FieldLength>1</FieldLength>
+      <IsKey>N</IsKey>
+      <IsParent>N</IsParent>
+      <IsMandatory>Y</IsMandatory>
+      <IsUpdateable>Y</IsUpdateable>
+      <IsIdentifier>Y</IsIdentifier>
+      <SeqNo>2</SeqNo>
+      <IsActive>Y</IsActive>
+      <AD_Reference_ID reference="id" reference-key="AD_Reference">17</AD_Reference_ID>
+      <AD_Reference_Value_ID reference="uuid" reference-key="AD_Reference">96216680-5925-4f68-9d71-75fb37656b84</AD_Reference_Value_ID>
+      <AD_Column_UU>11ad8727-e431-408b-a7b3-bf5022931251</AD_Column_UU>
+    </AD_Column>
+
+    <AD_Column>
+      <ColumnName>TaxableRevenue</ColumnName>
+      <Name>應稅銷售額</Name>
+      <Description>Total taxable revenue for the period</Description>
+      <EntityType>TW</EntityType>
+      <FieldLength>15</FieldLength>
+      <IsKey>N</IsKey>
+      <IsParent>N</IsParent>
+      <IsMandatory>Y</IsMandatory>
+      <IsUpdateable>Y</IsUpdateable>
+      <IsIdentifier>N</IsIdentifier>
+      <IsActive>Y</IsActive>
+      <AD_Reference_ID reference="id" reference-key="AD_Reference">12</AD_Reference_ID>
+      <AD_Column_UU>c69629fa-6775-45c4-9108-2c15f86f7c2a</AD_Column_UU>
+    </AD_Column>
+
+    <AD_Column>
+      <ColumnName>ZeroRateSalesAmount</ColumnName>
+      <Name>零稅率銷售額</Name>
+      <Description>Zero-rate sales amount (exports); eligible for tax refund</Description>
+      <EntityType>TW</EntityType>
+      <FieldLength>15</FieldLength>
+      <IsKey>N</IsKey>
+      <IsParent>N</IsParent>
+      <IsMandatory>Y</IsMandatory>
+      <IsUpdateable>Y</IsUpdateable>
+      <IsIdentifier>N</IsIdentifier>
+      <IsActive>Y</IsActive>
+      <AD_Reference_ID reference="id" reference-key="AD_Reference">12</AD_Reference_ID>
+      <AD_Column_UU>f887a4b1-787d-476f-9708-e09b2a6f3650</AD_Column_UU>
+    </AD_Column>
+
+    <AD_Column>
+      <ColumnName>ExemptRevenue</ColumnName>
+      <Name>免稅銷售額</Name>
+      <Description>Exempt revenue (not subject to VAT)</Description>
+      <EntityType>TW</EntityType>
+      <FieldLength>15</FieldLength>
+      <IsKey>N</IsKey>
+      <IsParent>N</IsParent>
+      <IsMandatory>Y</IsMandatory>
+      <IsUpdateable>Y</IsUpdateable>
+      <IsIdentifier>N</IsIdentifier>
+      <IsActive>Y</IsActive>
+      <AD_Reference_ID reference="id" reference-key="AD_Reference">12</AD_Reference_ID>
+      <AD_Column_UU>9a01f9c3-91fe-4d26-af0a-a1aa2d7fa97b</AD_Column_UU>
+    </AD_Column>
+
+    <AD_Column>
+      <ColumnName>OutputTaxAmount</ColumnName>
+      <Name>銷項稅額</Name>
+      <Description>Output VAT amount (5% of taxable revenue)</Description>
+      <EntityType>TW</EntityType>
+      <FieldLength>15</FieldLength>
+      <IsKey>N</IsKey>
+      <IsParent>N</IsParent>
+      <IsMandatory>Y</IsMandatory>
+      <IsUpdateable>Y</IsUpdateable>
+      <IsIdentifier>N</IsIdentifier>
+      <IsActive>Y</IsActive>
+      <AD_Reference_ID reference="id" reference-key="AD_Reference">12</AD_Reference_ID>
+      <AD_Column_UU>5b40235f-ca3c-4674-a63c-75fc0a79c1f5</AD_Column_UU>
+    </AD_Column>
+
+    <AD_Column>
+      <ColumnName>InputTaxAmount</ColumnName>
+      <Name>進項稅額</Name>
+      <Description>Deductible input VAT amount</Description>
+      <EntityType>TW</EntityType>
+      <FieldLength>15</FieldLength>
+      <IsKey>N</IsKey>
+      <IsParent>N</IsParent>
+      <IsMandatory>Y</IsMandatory>
+      <IsUpdateable>Y</IsUpdateable>
+      <IsIdentifier>N</IsIdentifier>
+      <IsActive>Y</IsActive>
+      <AD_Reference_ID reference="id" reference-key="AD_Reference">12</AD_Reference_ID>
+      <AD_Column_UU>33860910-3bd0-455d-a779-3ef7ba4570a8</AD_Column_UU>
+    </AD_Column>
+
+    <AD_Column>
+      <ColumnName>NonDeductibleInputTax</ColumnName>
+      <Name>不可扣抵進項稅額</Name>
+      <Description>Non-deductible input tax (e.g., entertainment expenses)</Description>
+      <EntityType>TW</EntityType>
+      <FieldLength>15</FieldLength>
+      <IsKey>N</IsKey>
+      <IsParent>N</IsParent>
+      <IsMandatory>Y</IsMandatory>
+      <IsUpdateable>Y</IsUpdateable>
+      <IsIdentifier>N</IsIdentifier>
+      <IsActive>Y</IsActive>
+      <AD_Reference_ID reference="id" reference-key="AD_Reference">12</AD_Reference_ID>
+      <AD_Column_UU>87f926f3-0800-4a7f-8c68-cbb478509f3e</AD_Column_UU>
+    </AD_Column>
+
+    <AD_Column>
+      <ColumnName>CarryOverTaxCredit</ColumnName>
+      <Name>上期留抵稅額</Name>
+      <Description>Carry-over tax credit from previous period</Description>
+      <EntityType>TW</EntityType>
+      <FieldLength>15</FieldLength>
+      <IsKey>N</IsKey>
+      <IsParent>N</IsParent>
+      <IsMandatory>Y</IsMandatory>
+      <IsUpdateable>Y</IsUpdateable>
+      <IsIdentifier>N</IsIdentifier>
+      <IsActive>Y</IsActive>
+      <AD_Reference_ID reference="id" reference-key="AD_Reference">12</AD_Reference_ID>
+      <AD_Column_UU>da4d300d-cce2-4189-a793-6d17d2aa8cec</AD_Column_UU>
+    </AD_Column>
+
+    <AD_Column>
+      <ColumnName>TaxableRatio</ColumnName>
+      <Name>應稅比率</Name>
+      <Description>Ratio of taxable to total revenue (for mixed business)</Description>
+      <EntityType>TW</EntityType>
+      <FieldLength>10</FieldLength>
+      <IsKey>N</IsKey>
+      <IsParent>N</IsParent>
+      <IsMandatory>N</IsMandatory>
+      <IsUpdateable>Y</IsUpdateable>
+      <IsIdentifier>N</IsIdentifier>
+      <IsActive>Y</IsActive>
+      <AD_Reference_ID reference="id" reference-key="AD_Reference">22</AD_Reference_ID>
+      <AD_Column_UU>b328efb7-e3bd-4eb2-8aed-fa4cccbb5c4a</AD_Column_UU>
+    </AD_Column>
+
+    <AD_Column>
+      <ColumnName>AdjustedInputTax</ColumnName>
+      <Name>調整後進項稅額</Name>
+      <Description>Input tax after mixed-business ratio adjustment</Description>
+      <EntityType>TW</EntityType>
+      <FieldLength>15</FieldLength>
+      <IsKey>N</IsKey>
+      <IsParent>N</IsParent>
+      <IsMandatory>N</IsMandatory>
+      <IsUpdateable>Y</IsUpdateable>
+      <IsIdentifier>N</IsIdentifier>
+      <IsActive>Y</IsActive>
+      <AD_Reference_ID reference="id" reference-key="AD_Reference">12</AD_Reference_ID>
+      <AD_Column_UU>e7d1fa1f-0932-4fc5-85c2-9d6ab71c8674</AD_Column_UU>
+    </AD_Column>
+
+    <AD_Column>
+      <ColumnName>TaxPayable</ColumnName>
+      <Name>應納稅額</Name>
+      <Description>Net tax payable (or refundable) for the period</Description>
+      <EntityType>TW</EntityType>
+      <FieldLength>15</FieldLength>
+      <IsKey>N</IsKey>
+      <IsParent>N</IsParent>
+      <IsMandatory>Y</IsMandatory>
+      <IsUpdateable>Y</IsUpdateable>
+      <IsIdentifier>N</IsIdentifier>
+      <IsActive>Y</IsActive>
+      <AD_Reference_ID reference="id" reference-key="AD_Reference">12</AD_Reference_ID>
+      <AD_Column_UU>51d15428-2b57-4981-82cb-b8de4a23549a</AD_Column_UU>
+    </AD_Column>
+
+    <AD_Column>
+      <ColumnName>IsMixedBusiness</ColumnName>
+      <Name>兼營業者</Name>
+      <Description>Whether this entity engages in both taxable and exempt business</Description>
+      <EntityType>TW</EntityType>
+      <FieldLength>1</FieldLength>
+      <DefaultValue>N</DefaultValue>
+      <IsKey>N</IsKey>
+      <IsParent>N</IsParent>
+      <IsMandatory>Y</IsMandatory>
+      <IsUpdateable>Y</IsUpdateable>
+      <IsIdentifier>N</IsIdentifier>
+      <IsActive>Y</IsActive>
+      <AD_Reference_ID reference="id" reference-key="AD_Reference">20</AD_Reference_ID>
+      <AD_Column_UU>bc051c08-7cfd-4597-a15d-787abd8d1e07</AD_Column_UU>
+    </AD_Column>
+
+    <AD_Column>
+      <ColumnName>FilingDueDate</ColumnName>
+      <Name>申報截止日</Name>
+      <Description>Filing due date for this tax period</Description>
+      <EntityType>TW</EntityType>
+      <FieldLength>7</FieldLength>
+      <IsKey>N</IsKey>
+      <IsParent>N</IsParent>
+      <IsMandatory>N</IsMandatory>
+      <IsUpdateable>Y</IsUpdateable>
+      <IsIdentifier>N</IsIdentifier>
+      <IsActive>Y</IsActive>
+      <AD_Reference_ID reference="id" reference-key="AD_Reference">15</AD_Reference_ID>
+      <AD_Column_UU>e95fce28-839c-4bd0-b48f-3f484f91fddb</AD_Column_UU>
+    </AD_Column>
+
+  </AD_Table>
+
+  <!-- ============================================================ -->
+  <!-- AD_Window: TW_InvoicePrefix                                   -->
+  <!-- ============================================================ -->
+  <AD_Window>
+    <Name>Taiwan Invoice Prefix 發票字軌管理</Name>
+    <Description>Manage Taiwan Ministry of Finance assigned invoice prefix ranges</Description>
+    <EntityType>TW</EntityType>
+    <IsActive>Y</IsActive>
+    <WindowType>M</WindowType>
+    <AD_Window_UU>6006f77e-91ea-40ca-86cb-c9c61880437b</AD_Window_UU>
+
+    <AD_Tab>
+      <Name>發票字軌</Name>
+      <Description>Invoice Prefix</Description>
+      <EntityType>TW</EntityType>
+      <SeqNo>10</SeqNo>
+      <TabLevel>0</TabLevel>
+      <IsActive>Y</IsActive>
+      <IsSingleRow>N</IsSingleRow>
+      <IsReadOnly>N</IsReadOnly>
+      <AD_Table_UU>019e1ac0-58f9-4705-8da7-4e73f83901e7</AD_Table_UU>
+      <AD_Tab_UU>d53983bc-2ec4-420e-8539-ae71376aae19</AD_Tab_UU>
+
+      <AD_Field>
+        <Name>字軌代號</Name>
+        <Description>Invoice prefix code</Description>
+        <EntityType>TW</EntityType>
+        <SeqNo>10</SeqNo>
+        <IsActive>Y</IsActive>
+        <IsDisplayed>Y</IsDisplayed>
+        <IsReadOnly>N</IsReadOnly>
+        <IsMandatory>Y</IsMandatory>
+        <AD_Column_UU>75c777ad-85d7-45be-9f1c-754efc2e0b02</AD_Column_UU>
+        <AD_Field_UU>038f7fba-9471-42d1-b954-af95b6df6b86</AD_Field_UU>
+      </AD_Field>
+
+      <AD_Field>
+        <Name>發票類型</Name>
+        <Description>Invoice type</Description>
+        <EntityType>TW</EntityType>
+        <SeqNo>20</SeqNo>
+        <IsActive>Y</IsActive>
+        <IsDisplayed>Y</IsDisplayed>
+        <IsReadOnly>N</IsReadOnly>
+        <IsMandatory>Y</IsMandatory>
+        <AD_Column_UU>60f1b6bb-54c0-4df7-915c-7b22dd2e81ce</AD_Column_UU>
+        <AD_Field_UU>d29daee8-2e4e-4cd3-a590-eb7b14548c8a</AD_Field_UU>
+      </AD_Field>
+
+      <AD_Field>
+        <Name>狀態</Name>
+        <Description>Prefix status</Description>
+        <EntityType>TW</EntityType>
+        <SeqNo>30</SeqNo>
+        <IsActive>Y</IsActive>
+        <IsDisplayed>Y</IsDisplayed>
+        <IsReadOnly>N</IsReadOnly>
+        <IsMandatory>Y</IsMandatory>
+        <AD_Column_UU>4492c8af-5b3d-496e-a252-4587bff39197</AD_Column_UU>
+        <AD_Field_UU>dc868dea-dc81-4e65-84b6-32bd1d37fa02</AD_Field_UU>
+      </AD_Field>
+
+      <AD_Field>
+        <Name>字軌起始日期</Name>
+        <Description>Prefix start date</Description>
+        <EntityType>TW</EntityType>
+        <SeqNo>40</SeqNo>
+        <IsActive>Y</IsActive>
+        <IsDisplayed>Y</IsDisplayed>
+        <IsReadOnly>N</IsReadOnly>
+        <IsMandatory>Y</IsMandatory>
+        <AD_Column_UU>74a4b971-eb37-4d95-b331-abc942302050</AD_Column_UU>
+        <AD_Field_UU>afd96fe3-c0b3-49ee-b239-cac741147329</AD_Field_UU>
+      </AD_Field>
+
+      <AD_Field>
+        <Name>字軌結束日期</Name>
+        <Description>Prefix end date</Description>
+        <EntityType>TW</EntityType>
+        <SeqNo>50</SeqNo>
+        <IsActive>Y</IsActive>
+        <IsDisplayed>Y</IsDisplayed>
+        <IsReadOnly>N</IsReadOnly>
+        <IsMandatory>Y</IsMandatory>
+        <AD_Column_UU>c5d9a2cb-7030-42ad-bd06-a3a6479c0beb</AD_Column_UU>
+        <AD_Field_UU>1f278df3-4119-4253-bdf3-74fbef152ded</AD_Field_UU>
+      </AD_Field>
+
+      <AD_Field>
+        <Name>起始號碼</Name>
+        <Description>First invoice number</Description>
+        <EntityType>TW</EntityType>
+        <SeqNo>60</SeqNo>
+        <IsActive>Y</IsActive>
+        <IsDisplayed>Y</IsDisplayed>
+        <IsReadOnly>N</IsReadOnly>
+        <IsMandatory>Y</IsMandatory>
+        <AD_Column_UU>b92f686d-a682-4f34-aba2-0a5a44fc68e7</AD_Column_UU>
+        <AD_Field_UU>60691aa8-d988-46ec-9c50-ae707baec1e3</AD_Field_UU>
+      </AD_Field>
+
+      <AD_Field>
+        <Name>結束號碼</Name>
+        <Description>Last invoice number</Description>
+        <EntityType>TW</EntityType>
+        <SeqNo>70</SeqNo>
+        <IsActive>Y</IsActive>
+        <IsDisplayed>Y</IsDisplayed>
+        <IsReadOnly>N</IsReadOnly>
+        <IsMandatory>Y</IsMandatory>
+        <AD_Column_UU>dfcd8e50-5c24-4f1b-b370-0612030b0627</AD_Column_UU>
+        <AD_Field_UU>a0c74560-5d0b-4217-a485-74f390ae9e95</AD_Field_UU>
+      </AD_Field>
+
+      <AD_Field>
+        <Name>目前號碼</Name>
+        <Description>Current invoice number</Description>
+        <EntityType>TW</EntityType>
+        <SeqNo>80</SeqNo>
+        <IsActive>Y</IsActive>
+        <IsDisplayed>Y</IsDisplayed>
+        <IsReadOnly>N</IsReadOnly>
+        <IsMandatory>Y</IsMandatory>
+        <AD_Column_UU>2f30cf68-8acc-4fd8-8a5e-c8d79d84445d</AD_Column_UU>
+        <AD_Field_UU>be225820-dc8f-4da5-83c8-5822600ece0d</AD_Field_UU>
+      </AD_Field>
+
+      <AD_Field>
+        <Name>最後發票號碼</Name>
+        <Description>Last issued invoice number</Description>
+        <EntityType>TW</EntityType>
+        <SeqNo>90</SeqNo>
+        <IsActive>Y</IsActive>
+        <IsDisplayed>Y</IsDisplayed>
+        <IsReadOnly>N</IsReadOnly>
+        <IsMandatory>N</IsMandatory>
+        <AD_Column_UU>bea5e450-83de-4448-8bbb-2a991df091a3</AD_Column_UU>
+        <AD_Field_UU>0103b00d-e143-483a-9cb3-4aeeb9ad3cc8</AD_Field_UU>
+      </AD_Field>
+
+      <AD_Field>
+        <Name>最後開立日期</Name>
+        <Description>Date of last issued invoice</Description>
+        <EntityType>TW</EntityType>
+        <SeqNo>100</SeqNo>
+        <IsActive>Y</IsActive>
+        <IsDisplayed>Y</IsDisplayed>
+        <IsReadOnly>N</IsReadOnly>
+        <IsMandatory>N</IsMandatory>
+        <AD_Column_UU>adbba354-34c2-4a52-978b-46bf4c860bd1</AD_Column_UU>
+        <AD_Field_UU>e5122395-4c20-4ca0-98bb-355d08d70c8a</AD_Field_UU>
+      </AD_Field>
+
+    </AD_Tab>
+  </AD_Window>
+
+  <!-- ============================================================ -->
+  <!-- AD_Window: TW_Invoice_Prefix_Map                              -->
+  <!-- ============================================================ -->
+  <AD_Window>
+    <Name>Taiwan Invoice Prefix Map 發票對應管理</Name>
+    <Description>Maps iDempiere invoices to Taiwan invoice prefix and number</Description>
+    <EntityType>TW</EntityType>
+    <IsActive>Y</IsActive>
+    <WindowType>M</WindowType>
+    <AD_Window_UU>bc490b51-b6d9-4e52-9939-235876051874</AD_Window_UU>
+
+    <AD_Tab>
+      <Name>發票對應</Name>
+      <Description>Invoice Prefix Map</Description>
+      <EntityType>TW</EntityType>
+      <SeqNo>10</SeqNo>
+      <TabLevel>0</TabLevel>
+      <IsActive>Y</IsActive>
+      <IsSingleRow>N</IsSingleRow>
+      <IsReadOnly>N</IsReadOnly>
+      <AD_Table_UU>1c099039-3941-4059-9938-9d476296dfad</AD_Table_UU>
+      <AD_Tab_UU>ea25fd07-0aee-4889-8db2-da7d0ffd79cf</AD_Tab_UU>
+
+      <AD_Field>
+        <Name>發票字軌</Name>
+        <Description>Invoice prefix</Description>
+        <EntityType>TW</EntityType>
+        <SeqNo>10</SeqNo>
+        <IsActive>Y</IsActive>
+        <IsDisplayed>Y</IsDisplayed>
+        <IsReadOnly>N</IsReadOnly>
+        <IsMandatory>Y</IsMandatory>
+        <AD_Column_UU>c1627cfb-11e8-49d6-863a-b0d5d1444006</AD_Column_UU>
+        <AD_Field_UU>b2e44c76-c216-41b0-9608-007edf80a0ed</AD_Field_UU>
+      </AD_Field>
+
+      <AD_Field>
+        <Name>發票</Name>
+        <Description>iDempiere Invoice</Description>
+        <EntityType>TW</EntityType>
+        <SeqNo>20</SeqNo>
+        <IsActive>Y</IsActive>
+        <IsDisplayed>Y</IsDisplayed>
+        <IsReadOnly>N</IsReadOnly>
+        <IsMandatory>Y</IsMandatory>
+        <AD_Column_UU>0dbc228b-64c9-4c01-b984-3243b6b6b658</AD_Column_UU>
+        <AD_Field_UU>482b3407-cda7-4c88-9a01-bb1625411a4f</AD_Field_UU>
+      </AD_Field>
+
+      <AD_Field>
+        <Name>發票日期</Name>
+        <Description>Invoice date</Description>
+        <EntityType>TW</EntityType>
+        <SeqNo>30</SeqNo>
+        <IsActive>Y</IsActive>
+        <IsDisplayed>Y</IsDisplayed>
+        <IsReadOnly>N</IsReadOnly>
+        <IsMandatory>Y</IsMandatory>
+        <AD_Column_UU>a654f729-4dfb-4fb0-9d4a-ce70b675cdd8</AD_Column_UU>
+        <AD_Field_UU>91e892a1-708e-4db9-bdc4-e7d15ece24d4</AD_Field_UU>
+      </AD_Field>
+
+      <AD_Field>
+        <Name>發票號碼</Name>
+        <Description>Invoice number</Description>
+        <EntityType>TW</EntityType>
+        <SeqNo>40</SeqNo>
+        <IsActive>Y</IsActive>
+        <IsDisplayed>Y</IsDisplayed>
+        <IsReadOnly>N</IsReadOnly>
+        <IsMandatory>Y</IsMandatory>
+        <AD_Column_UU>03fc7aec-c621-417c-8942-5439d7562971</AD_Column_UU>
+        <AD_Field_UU>9e39c384-91f3-4b83-b0ef-598bfcb3acbf</AD_Field_UU>
+      </AD_Field>
+
+      <AD_Field>
+        <Name>買方統一編號</Name>
+        <Description>Buyer tax ID (B2B required)</Description>
+        <EntityType>TW</EntityType>
+        <SeqNo>50</SeqNo>
+        <IsActive>Y</IsActive>
+        <IsDisplayed>Y</IsDisplayed>
+        <IsReadOnly>N</IsReadOnly>
+        <IsMandatory>N</IsMandatory>
+        <AD_Column_UU>4ef7daf9-bab9-414b-9ac0-a732ed01c25c</AD_Column_UU>
+        <AD_Field_UU>939a31ad-7596-42a7-8a73-837c1ca1885d</AD_Field_UU>
+      </AD_Field>
+
+      <AD_Field>
+        <Name>到期警示</Name>
+        <Description>Expiry warning flag</Description>
+        <EntityType>TW</EntityType>
+        <SeqNo>60</SeqNo>
+        <IsActive>Y</IsActive>
+        <IsDisplayed>Y</IsDisplayed>
+        <IsReadOnly>N</IsReadOnly>
+        <IsMandatory>Y</IsMandatory>
+        <AD_Column_UU>4d5d80ef-42e3-4f27-ad60-5031b7f40074</AD_Column_UU>
+        <AD_Field_UU>d84b5640-4634-4465-88cc-893b4d1dc31c</AD_Field_UU>
+      </AD_Field>
+
+    </AD_Tab>
+  </AD_Window>
+
+  <!-- ============================================================ -->
+  <!-- AD_Window: TW_InvoiceAdjustment                               -->
+  <!-- ============================================================ -->
+  <AD_Window>
+    <Name>Taiwan Invoice Adjustment 進項折讓管理</Name>
+    <Description>Taiwan sales and purchase invoice adjustments</Description>
+    <EntityType>TW</EntityType>
+    <IsActive>Y</IsActive>
+    <WindowType>M</WindowType>
+    <AD_Window_UU>bc9a9e5a-ddee-464a-bb60-6fb57d1500f7</AD_Window_UU>
+
+    <AD_Tab>
+      <Name>進項折讓</Name>
+      <Description>Invoice Adjustment</Description>
+      <EntityType>TW</EntityType>
+      <SeqNo>10</SeqNo>
+      <TabLevel>0</TabLevel>
+      <IsActive>Y</IsActive>
+      <IsSingleRow>N</IsSingleRow>
+      <IsReadOnly>N</IsReadOnly>
+      <AD_Table_UU>d29f8934-8e44-44ae-b147-2caa2f2f72f4</AD_Table_UU>
+      <AD_Tab_UU>30928dd8-6524-4d45-8fef-1ff140038d48</AD_Tab_UU>
+
+      <AD_Field>
+        <Name>原始發票</Name>
+        <Description>Original invoice</Description>
+        <EntityType>TW</EntityType>
+        <SeqNo>10</SeqNo>
+        <IsActive>Y</IsActive>
+        <IsDisplayed>Y</IsDisplayed>
+        <IsReadOnly>N</IsReadOnly>
+        <IsMandatory>N</IsMandatory>
+        <AD_Column_UU>15e4ce2c-7b84-42b7-85ae-ec0f5295f1df</AD_Column_UU>
+        <AD_Field_UU>fa804310-4960-473b-a40b-8bf525bb4fe4</AD_Field_UU>
+      </AD_Field>
+
+      <AD_Field>
+        <Name>折讓類型</Name>
+        <Description>Adjustment type</Description>
+        <EntityType>TW</EntityType>
+        <SeqNo>20</SeqNo>
+        <IsActive>Y</IsActive>
+        <IsDisplayed>Y</IsDisplayed>
+        <IsReadOnly>N</IsReadOnly>
+        <IsMandatory>Y</IsMandatory>
+        <AD_Column_UU>50984e03-0147-4109-b7e4-6c095e407fc4</AD_Column_UU>
+        <AD_Field_UU>532b62c5-dbfb-41f5-8eef-fbc8d54b9b48</AD_Field_UU>
+      </AD_Field>
+
+      <AD_Field>
+        <Name>折讓方向</Name>
+        <Description>Adjustment direction</Description>
+        <EntityType>TW</EntityType>
+        <SeqNo>30</SeqNo>
+        <IsActive>Y</IsActive>
+        <IsDisplayed>Y</IsDisplayed>
+        <IsReadOnly>N</IsReadOnly>
+        <IsMandatory>Y</IsMandatory>
+        <AD_Column_UU>8a6b4619-8051-479c-b8b2-2da92b4dcb3c</AD_Column_UU>
+        <AD_Field_UU>a67e0bc5-e076-47d1-ad94-f3deecffb400</AD_Field_UU>
+      </AD_Field>
+
+      <AD_Field>
+        <Name>折讓日期</Name>
+        <Description>Adjustment date</Description>
+        <EntityType>TW</EntityType>
+        <SeqNo>40</SeqNo>
+        <IsActive>Y</IsActive>
+        <IsDisplayed>Y</IsDisplayed>
+        <IsReadOnly>N</IsReadOnly>
+        <IsMandatory>Y</IsMandatory>
+        <AD_Column_UU>a70d4866-fc10-4142-820a-2a629069448b</AD_Column_UU>
+        <AD_Field_UU>0b37901d-e557-46a8-ac03-705d0f00d612</AD_Field_UU>
+      </AD_Field>
+
+      <AD_Field>
+        <Name>折讓稅額</Name>
+        <Description>Adjusted tax amount</Description>
+        <EntityType>TW</EntityType>
+        <SeqNo>50</SeqNo>
+        <IsActive>Y</IsActive>
+        <IsDisplayed>Y</IsDisplayed>
+        <IsReadOnly>N</IsReadOnly>
+        <IsMandatory>Y</IsMandatory>
+        <AD_Column_UU>afa2493e-c31f-4cb0-81bf-950da4a6cd98</AD_Column_UU>
+        <AD_Field_UU>392e8c7f-9684-4a14-aa09-b564b76edce7</AD_Field_UU>
+      </AD_Field>
+
+      <AD_Field>
+        <Name>申報期別</Name>
+        <Description>Tax period</Description>
+        <EntityType>TW</EntityType>
+        <SeqNo>60</SeqNo>
+        <IsActive>Y</IsActive>
+        <IsDisplayed>Y</IsDisplayed>
+        <IsReadOnly>N</IsReadOnly>
+        <IsMandatory>Y</IsMandatory>
+        <AD_Column_UU>796e61c3-0c54-44e1-ac34-584a32510173</AD_Column_UU>
+        <AD_Field_UU>dd3407b8-33df-4db1-9b0f-1b6650f5d8f8</AD_Field_UU>
+      </AD_Field>
+
+      <AD_Field>
+        <Name>超期申報</Name>
+        <Description>Overdue period flag</Description>
+        <EntityType>TW</EntityType>
+        <SeqNo>70</SeqNo>
+        <IsActive>Y</IsActive>
+        <IsDisplayed>Y</IsDisplayed>
+        <IsReadOnly>N</IsReadOnly>
+        <IsMandatory>Y</IsMandatory>
+        <AD_Column_UU>b55ba037-aafa-410b-a37a-e689f3b3bc65</AD_Column_UU>
+        <AD_Field_UU>ba59e857-5d42-4cfa-90d6-7a1cd348c4f5</AD_Field_UU>
+      </AD_Field>
+
+    </AD_Tab>
+  </AD_Window>
+
+  <!-- ============================================================ -->
+  <!-- AD_Window: TW_TaxStatement                                    -->
+  <!-- ============================================================ -->
+  <AD_Window>
+    <Name>Taiwan Tax Statement 401申報表管理</Name>
+    <Description>Taiwan Form 401 Business Tax Return</Description>
+    <EntityType>TW</EntityType>
+    <IsActive>Y</IsActive>
+    <WindowType>M</WindowType>
+    <AD_Window_UU>c47e9d6d-e1d5-422b-aeee-3b26ba1ae9a0</AD_Window_UU>
+
+    <AD_Tab>
+      <Name>401申報表</Name>
+      <Description>Tax Statement</Description>
+      <EntityType>TW</EntityType>
+      <SeqNo>10</SeqNo>
+      <TabLevel>0</TabLevel>
+      <IsActive>Y</IsActive>
+      <IsSingleRow>Y</IsSingleRow>
+      <IsReadOnly>N</IsReadOnly>
+      <AD_Table_UU>d419afea-bc00-4040-ab7d-9b247a533aca</AD_Table_UU>
+      <AD_Tab_UU>e43ec7f4-682f-47ae-bcfe-a176c205e05b</AD_Tab_UU>
+
+      <AD_Field>
+        <Name>申報年度</Name>
+        <Description>Statement year</Description>
+        <EntityType>TW</EntityType>
+        <SeqNo>10</SeqNo>
+        <IsActive>Y</IsActive>
+        <IsDisplayed>Y</IsDisplayed>
+        <IsReadOnly>N</IsReadOnly>
+        <IsMandatory>Y</IsMandatory>
+        <AD_Column_UU>e99dbee5-4e09-4e60-8ff8-112cea1951c4</AD_Column_UU>
+        <AD_Field_UU>2d28cc93-ce38-4272-9a4d-3522bc5061d0</AD_Field_UU>
+      </AD_Field>
+
+      <AD_Field>
+        <Name>申報期別</Name>
+        <Description>Filing period</Description>
+        <EntityType>TW</EntityType>
+        <SeqNo>20</SeqNo>
+        <IsActive>Y</IsActive>
+        <IsDisplayed>Y</IsDisplayed>
+        <IsReadOnly>N</IsReadOnly>
+        <IsMandatory>Y</IsMandatory>
+        <AD_Column_UU>11ad8727-e431-408b-a7b3-bf5022931251</AD_Column_UU>
+        <AD_Field_UU>539b0b10-d33e-496a-afa0-623efe3d87fa</AD_Field_UU>
+      </AD_Field>
+
+      <AD_Field>
+        <Name>應稅銷售額</Name>
+        <Description>Taxable revenue</Description>
+        <EntityType>TW</EntityType>
+        <SeqNo>30</SeqNo>
+        <IsActive>Y</IsActive>
+        <IsDisplayed>Y</IsDisplayed>
+        <IsReadOnly>N</IsReadOnly>
+        <IsMandatory>Y</IsMandatory>
+        <AD_Column_UU>c69629fa-6775-45c4-9108-2c15f86f7c2a</AD_Column_UU>
+        <AD_Field_UU>5b9e66d5-9ae7-4364-bef6-1eeb99bc6111</AD_Field_UU>
+      </AD_Field>
+
+      <AD_Field>
+        <Name>零稅率銷售額</Name>
+        <Description>Zero-rate sales (exports)</Description>
+        <EntityType>TW</EntityType>
+        <SeqNo>40</SeqNo>
+        <IsActive>Y</IsActive>
+        <IsDisplayed>Y</IsDisplayed>
+        <IsReadOnly>N</IsReadOnly>
+        <IsMandatory>Y</IsMandatory>
+        <AD_Column_UU>f887a4b1-787d-476f-9708-e09b2a6f3650</AD_Column_UU>
+        <AD_Field_UU>56bbebaa-ec67-4b4c-9d9f-da4c544e70e4</AD_Field_UU>
+      </AD_Field>
+
+      <AD_Field>
+        <Name>免稅銷售額</Name>
+        <Description>Exempt revenue</Description>
+        <EntityType>TW</EntityType>
+        <SeqNo>50</SeqNo>
+        <IsActive>Y</IsActive>
+        <IsDisplayed>Y</IsDisplayed>
+        <IsReadOnly>N</IsReadOnly>
+        <IsMandatory>Y</IsMandatory>
+        <AD_Column_UU>9a01f9c3-91fe-4d26-af0a-a1aa2d7fa97b</AD_Column_UU>
+        <AD_Field_UU>5ccb542d-07ac-4165-968d-a1ef8e6e1e63</AD_Field_UU>
+      </AD_Field>
+
+      <AD_Field>
+        <Name>銷項稅額</Name>
+        <Description>Output tax amount</Description>
+        <EntityType>TW</EntityType>
+        <SeqNo>60</SeqNo>
+        <IsActive>Y</IsActive>
+        <IsDisplayed>Y</IsDisplayed>
+        <IsReadOnly>N</IsReadOnly>
+        <IsMandatory>Y</IsMandatory>
+        <AD_Column_UU>5b40235f-ca3c-4674-a63c-75fc0a79c1f5</AD_Column_UU>
+        <AD_Field_UU>64ce6db6-133d-4661-9b09-c17f1f142b77</AD_Field_UU>
+      </AD_Field>
+
+      <AD_Field>
+        <Name>進項稅額</Name>
+        <Description>Input tax amount</Description>
+        <EntityType>TW</EntityType>
+        <SeqNo>70</SeqNo>
+        <IsActive>Y</IsActive>
+        <IsDisplayed>Y</IsDisplayed>
+        <IsReadOnly>N</IsReadOnly>
+        <IsMandatory>Y</IsMandatory>
+        <AD_Column_UU>33860910-3bd0-455d-a779-3ef7ba4570a8</AD_Column_UU>
+        <AD_Field_UU>d8b1a6d1-8fa4-4f09-9136-5e44363427a0</AD_Field_UU>
+      </AD_Field>
+
+      <AD_Field>
+        <Name>不可扣抵進項稅額</Name>
+        <Description>Non-deductible input tax</Description>
+        <EntityType>TW</EntityType>
+        <SeqNo>80</SeqNo>
+        <IsActive>Y</IsActive>
+        <IsDisplayed>Y</IsDisplayed>
+        <IsReadOnly>N</IsReadOnly>
+        <IsMandatory>Y</IsMandatory>
+        <AD_Column_UU>87f926f3-0800-4a7f-8c68-cbb478509f3e</AD_Column_UU>
+        <AD_Field_UU>2799ebf7-2676-48ec-98e9-f4abeb678850</AD_Field_UU>
+      </AD_Field>
+
+      <AD_Field>
+        <Name>上期留抵稅額</Name>
+        <Description>Carry-over tax credit</Description>
+        <EntityType>TW</EntityType>
+        <SeqNo>90</SeqNo>
+        <IsActive>Y</IsActive>
+        <IsDisplayed>Y</IsDisplayed>
+        <IsReadOnly>N</IsReadOnly>
+        <IsMandatory>Y</IsMandatory>
+        <AD_Column_UU>da4d300d-cce2-4189-a793-6d17d2aa8cec</AD_Column_UU>
+        <AD_Field_UU>762360a4-d0ba-4f03-b83e-d500d6e82071</AD_Field_UU>
+      </AD_Field>
+
+      <AD_Field>
+        <Name>兼營業者</Name>
+        <Description>Mixed business flag</Description>
+        <EntityType>TW</EntityType>
+        <SeqNo>100</SeqNo>
+        <IsActive>Y</IsActive>
+        <IsDisplayed>Y</IsDisplayed>
+        <IsReadOnly>N</IsReadOnly>
+        <IsMandatory>Y</IsMandatory>
+        <AD_Column_UU>bc051c08-7cfd-4597-a15d-787abd8d1e07</AD_Column_UU>
+        <AD_Field_UU>a5d00328-595a-45ed-b09b-438a21876a5a</AD_Field_UU>
+      </AD_Field>
+
+      <AD_Field>
+        <Name>應稅比率</Name>
+        <Description>Taxable ratio for mixed business</Description>
+        <EntityType>TW</EntityType>
+        <SeqNo>110</SeqNo>
+        <IsActive>Y</IsActive>
+        <IsDisplayed>Y</IsDisplayed>
+        <IsReadOnly>N</IsReadOnly>
+        <IsMandatory>N</IsMandatory>
+        <AD_Column_UU>b328efb7-e3bd-4eb2-8aed-fa4cccbb5c4a</AD_Column_UU>
+        <AD_Field_UU>96c03434-3fe0-44f0-96ec-d8f5e43bffd0</AD_Field_UU>
+      </AD_Field>
+
+      <AD_Field>
+        <Name>調整後進項稅額</Name>
+        <Description>Adjusted input tax after ratio</Description>
+        <EntityType>TW</EntityType>
+        <SeqNo>120</SeqNo>
+        <IsActive>Y</IsActive>
+        <IsDisplayed>Y</IsDisplayed>
+        <IsReadOnly>N</IsReadOnly>
+        <IsMandatory>N</IsMandatory>
+        <AD_Column_UU>e7d1fa1f-0932-4fc5-85c2-9d6ab71c8674</AD_Column_UU>
+        <AD_Field_UU>42707558-a7a4-4bec-9ecb-31a2c6d7db21</AD_Field_UU>
+      </AD_Field>
+
+      <AD_Field>
+        <Name>應納稅額</Name>
+        <Description>Net tax payable</Description>
+        <EntityType>TW</EntityType>
+        <SeqNo>130</SeqNo>
+        <IsActive>Y</IsActive>
+        <IsDisplayed>Y</IsDisplayed>
+        <IsReadOnly>N</IsReadOnly>
+        <IsMandatory>Y</IsMandatory>
+        <AD_Column_UU>51d15428-2b57-4981-82cb-b8de4a23549a</AD_Column_UU>
+        <AD_Field_UU>8f721278-c02c-44e7-8aa4-831dd0020b94</AD_Field_UU>
+      </AD_Field>
+
+      <AD_Field>
+        <Name>申報截止日</Name>
+        <Description>Filing due date</Description>
+        <EntityType>TW</EntityType>
+        <SeqNo>140</SeqNo>
+        <IsActive>Y</IsActive>
+        <IsDisplayed>Y</IsDisplayed>
+        <IsReadOnly>N</IsReadOnly>
+        <IsMandatory>N</IsMandatory>
+        <AD_Column_UU>e95fce28-839c-4bd0-b48f-3f484f91fddb</AD_Column_UU>
+        <AD_Field_UU>e2642033-463a-4025-830a-982df4e1dff9</AD_Field_UU>
+      </AD_Field>
+
+    </AD_Tab>
+  </AD_Window>
+
+  <!-- ============================================================ -->
+  <!-- AD_Menu entries                                               -->
+  <!-- ============================================================ -->
+  <AD_Menu>
+    <Name>Taiwan Invoice Prefix 發票字軌</Name>
+    <Description>Manage Taiwan invoice prefix ranges</Description>
+    <EntityType>TW</EntityType>
+    <IsActive>Y</IsActive>
+    <Action>W</Action>
+    <IsSummary>N</IsSummary>
+    <AD_Window_UU>6006f77e-91ea-40ca-86cb-c9c61880437b</AD_Window_UU>
+    <AD_Menu_UU>225f6748-99fb-4b3c-8228-4d5c2d7ad8fd</AD_Menu_UU>
+  </AD_Menu>
+
+  <AD_Menu>
+    <Name>Taiwan Invoice Prefix Map 發票對應</Name>
+    <Description>View Taiwan invoice to prefix mapping</Description>
+    <EntityType>TW</EntityType>
+    <IsActive>Y</IsActive>
+    <Action>W</Action>
+    <IsSummary>N</IsSummary>
+    <AD_Window_UU>bc490b51-b6d9-4e52-9939-235876051874</AD_Window_UU>
+    <AD_Menu_UU>45e975f0-6eba-4d66-b2a8-f2f5546f1198</AD_Menu_UU>
+  </AD_Menu>
+
+  <AD_Menu>
+    <Name>Taiwan Invoice Adjustment 進項折讓</Name>
+    <Description>Manage Taiwan invoice adjustments</Description>
+    <EntityType>TW</EntityType>
+    <IsActive>Y</IsActive>
+    <Action>W</Action>
+    <IsSummary>N</IsSummary>
+    <AD_Window_UU>bc9a9e5a-ddee-464a-bb60-6fb57d1500f7</AD_Window_UU>
+    <AD_Menu_UU>c0a26c95-7edd-46f0-8a9a-717196dbeec9</AD_Menu_UU>
+  </AD_Menu>
+
+  <AD_Menu>
+    <Name>Taiwan Tax Statement 401申報表</Name>
+    <Description>Manage Taiwan Form 401 tax statements</Description>
+    <EntityType>TW</EntityType>
+    <IsActive>Y</IsActive>
+    <Action>W</Action>
+    <IsSummary>N</IsSummary>
+    <AD_Window_UU>c47e9d6d-e1d5-422b-aeee-3b26ba1ae9a0</AD_Window_UU>
+    <AD_Menu_UU>54cc0e50-ae5e-41e2-8e94-6cf3c152d503</AD_Menu_UU>
+  </AD_Menu>
+
+</idempiere>
