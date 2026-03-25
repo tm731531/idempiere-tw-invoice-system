@@ -13,18 +13,27 @@ public class ExportTaxReportProcess extends SvrProcess {
     private int p_TaxPeriod;
 
     public static String getCSVHeader() {
-        return "TaxYear,TaxPeriod,TaxableRevenue,OutputTax,InputTax,TaxPayable";
+        return "TaxYear,TaxPeriod,TaxableRevenue,ZeroRateSalesAmount,ExemptSalesAmount," +
+               "OutputTax,InputTax,NonDeductibleInputTax,CarryOverTaxCredit,TaxPayable";
     }
 
     public static String formatCSVLine(int taxYear, int taxPeriod,
                                         BigDecimal taxableRevenue,
+                                        BigDecimal zeroRateSalesAmount,
+                                        BigDecimal exemptSalesAmount,
                                         BigDecimal outputTax,
                                         BigDecimal inputTax,
+                                        BigDecimal nonDeductibleInputTax,
+                                        BigDecimal carryOverTaxCredit,
                                         BigDecimal taxPayable) {
         return taxYear + "," + taxPeriod + "," +
                taxableRevenue.toPlainString() + "," +
+               zeroRateSalesAmount.toPlainString() + "," +
+               exemptSalesAmount.toPlainString() + "," +
                outputTax.toPlainString() + "," +
                inputTax.toPlainString() + "," +
+               nonDeductibleInputTax.toPlainString() + "," +
+               carryOverTaxCredit.toPlainString() + "," +
                taxPayable.toPlainString();
     }
 
@@ -41,9 +50,9 @@ public class ExportTaxReportProcess extends SvrProcess {
     @Override
     protected String doIt() throws Exception {
         log.info("ExportTaxReport: year=" + p_TaxYear + " period=" + p_TaxPeriod);
-        StringBuilder sb = new StringBuilder();
-        sb.append(getCSVHeader()).append("\n");
-        // TODO: query TW_TaxStatement for period, format each row
-        return sb.toString();
+        // TODO: Phase 4 full implementation — query TW_TaxStatement records for the period,
+        // write CSV rows using formatCSVLine(), save to file or attachment, return record count.
+        int exportedCount = 0;
+        return "Exported " + exportedCount + " records successfully";
     }
 }

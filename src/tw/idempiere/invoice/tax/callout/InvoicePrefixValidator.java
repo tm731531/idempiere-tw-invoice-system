@@ -22,7 +22,12 @@ public class InvoicePrefixValidator implements ModelValidator {
     }
 
     public static boolean isInvalidStatusTransition(String oldStatus, String newStatus) {
-        return "C".equals(oldStatus) && "A".equals(newStatus);
+        // C cannot revert to A or I (completed state is irreversible)
+        if ("C".equals(oldStatus) && "A".equals(newStatus)) return true;
+        if ("C".equals(oldStatus) && "I".equals(newStatus)) return true;
+        // I cannot skip A and jump directly to C (must go I→A→C)
+        if ("I".equals(oldStatus) && "C".equals(newStatus)) return true;
+        return false;
     }
 
     // --- iDempiere ModelValidator implementation ---
@@ -52,7 +57,7 @@ public class InvoicePrefixValidator implements ModelValidator {
                 String oldStatus = (String) prefix.get_ValueOld(MInvoicePrefix.COLUMNNAME_PrefixStatus);
                 String newStatus = prefix.getPrefixStatus();
                 if (isInvalidStatusTransition(oldStatus, newStatus))
-                    return "已完成的字軌不可重新設為使用中";
+                    return "字軌狀態轉換不合規：已完成狀態不可回退，且必須依 I→A→C 順序推進";
             }
         }
         return null;

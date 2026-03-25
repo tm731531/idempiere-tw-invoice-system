@@ -9,22 +9,33 @@ public class GenerateTaxStatementProcessTest {
     @Test
     public void testNetTaxPayable_outputMinusInput() {
         BigDecimal net = GenerateTaxStatementProcess.calcNetTaxPayable(
-            new BigDecimal("50000"), new BigDecimal("30000"), BigDecimal.ZERO);
+            new BigDecimal("50000"), new BigDecimal("30000"), BigDecimal.ZERO, BigDecimal.ZERO);
         assertEquals(new BigDecimal("20000"), net);
     }
 
     @Test
     public void testNetTaxPayable_withCarryOver() {
         BigDecimal net = GenerateTaxStatementProcess.calcNetTaxPayable(
-            new BigDecimal("50000"), new BigDecimal("30000"), new BigDecimal("5000"));
+            new BigDecimal("50000"), new BigDecimal("30000"), BigDecimal.ZERO, new BigDecimal("5000"));
         assertEquals(new BigDecimal("15000"), net);
     }
 
     @Test
     public void testNetTaxPayable_negative_isRefund() {
         BigDecimal net = GenerateTaxStatementProcess.calcNetTaxPayable(
-            new BigDecimal("10000"), new BigDecimal("30000"), BigDecimal.ZERO);
+            new BigDecimal("10000"), new BigDecimal("30000"), BigDecimal.ZERO, BigDecimal.ZERO);
         assertTrue("Negative net tax = refund", net.compareTo(BigDecimal.ZERO) < 0);
+    }
+
+    @Test
+    public void testNetTaxPayable_nonDeductibleReducesDeductible() {
+        // outputTax=50000, adjustedInput=30000, nonDeductible=5000, carryOver=0
+        // deductibleInput = 30000 - 5000 = 25000
+        // net = 50000 - 25000 - 0 = 25000
+        BigDecimal net = GenerateTaxStatementProcess.calcNetTaxPayable(
+            new BigDecimal("50000"), new BigDecimal("30000"),
+            new BigDecimal("5000"), BigDecimal.ZERO);
+        assertEquals(new BigDecimal("25000"), net);
     }
 
     @Test

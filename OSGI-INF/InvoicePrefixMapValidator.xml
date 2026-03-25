@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.3.0"
+               name="tw.idempiere.invoice.tax.invoicePrefixMapValidator"
+               immediate="true">
+    <implementation class="tw.idempiere.invoice.tax.callout.InvoicePrefixMapValidator"/>
+    <service>
+        <provide interface="org.compiere.model.ModelValidator"/>
+    </service>
+</scr:component>

@@ -11,8 +11,4 @@
 
     <implementation class="tw.idempiere.invoice.tax.TaiwanInvoiceTaxActivator"/>
 
-    <service>
-        <provide interface="tw.idempiere.invoice.tax.TaiwanInvoiceTaxActivator"/>
-    </service>
-
 </scr:component>

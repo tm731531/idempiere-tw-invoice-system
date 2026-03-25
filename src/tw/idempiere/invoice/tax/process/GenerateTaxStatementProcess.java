@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import java.util.logging.Logger;
 import org.compiere.process.ProcessInfoParameter;
 import org.compiere.process.SvrProcess;
+import tw.idempiere.invoice.tax.service.MixedBusinessService;
 
 public class GenerateTaxStatementProcess extends SvrProcess {
 
@@ -16,8 +17,13 @@ public class GenerateTaxStatementProcess extends SvrProcess {
 
     public static BigDecimal calcNetTaxPayable(BigDecimal outputTax,
                                                 BigDecimal adjustedInputTax,
+                                                BigDecimal nonDeductibleInputTax,
                                                 BigDecimal carryOverCredit) {
-        return outputTax.subtract(adjustedInputTax).subtract(carryOverCredit);
+        // Per Taiwan VAT Act Art. 19:
+        // deductibleInput = adjustedInputTax - nonDeductibleInputTax
+        // netTaxPayable = outputTax - deductibleInput - carryOverCredit
+        BigDecimal deductibleInput = adjustedInputTax.subtract(nonDeductibleInputTax);
+        return outputTax.subtract(deductibleInput).subtract(carryOverCredit);
     }
 
     public static int[] getMonthsForPeriod(int period) {
@@ -40,8 +46,20 @@ public class GenerateTaxStatementProcess extends SvrProcess {
     @Override
     protected String doIt() throws Exception {
         log.info("GenerateTaxStatement: year=" + p_TaxYear + " period=" + p_TaxPeriod);
+
         // TODO: Phase 4 full implementation — query TW_Invoice_Prefix_Map,
-        // aggregate OutputTax, InputTax, apply MixedBusiness ratio, create TW_TaxStatement
+        // aggregate OutputTax, InputTax from TW_Invoice_Prefix_Map records for the period,
+        // then create/update TW_TaxStatement record.
+
+        // Calculation pipeline (values will be retrieved from MTaxStatement in Phase 4):
+        // BigDecimal inputTax = ...; // from MTaxStatement.getInputTax()
+        // BigDecimal ratio = ...; // from MTaxStatement.getMixedBusinessRatio()
+        // BigDecimal adjustedInputTax = MixedBusinessService.adjustInputTax(inputTax, ratio);
+        // BigDecimal nonDeductible = ...; // from MTaxStatement.getNonDeductibleInputTax()
+        // BigDecimal carryOver = ...; // from MTaxStatement.getCarryOverTaxCredit()
+        // BigDecimal output = ...; // from MTaxStatement.getOutputTax()
+        // BigDecimal net = calcNetTaxPayable(output, adjustedInputTax, nonDeductible, carryOver);
+
         return "@TaxYear@=" + p_TaxYear + " @StatementPeriod@=" + p_TaxPeriod;
     }
 }

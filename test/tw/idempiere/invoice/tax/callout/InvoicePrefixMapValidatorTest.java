@@ -36,4 +36,28 @@ public class InvoicePrefixMapValidatorTest {
         String result = InvoicePrefixMapValidator.validateBuyerTaxIDStatic("SALES_TRIPART", "12345678");
         assertNull("TRIPART with TaxID should pass", result);
     }
+
+    @Test
+    public void testTripartBuyerTaxID_sevenDigits_fails() {
+        String result = InvoicePrefixMapValidator.validateBuyerTaxIDStatic("SALES_TRIPART", "1234567");
+        assertNotNull("7-digit TaxID should fail", result);
+    }
+
+    @Test
+    public void testTripartBuyerTaxID_nineDigits_fails() {
+        String result = InvoicePrefixMapValidator.validateBuyerTaxIDStatic("SALES_TRIPART", "123456789");
+        assertNotNull("9-digit TaxID should fail", result);
+    }
+
+    @Test
+    public void testTripartBuyerTaxID_eightLetters_fails() {
+        String result = InvoicePrefixMapValidator.validateBuyerTaxIDStatic("SALES_TRIPART", "ABCDEFGH");
+        assertNotNull("8-letter TaxID should fail", result);
+    }
+
+    @Test
+    public void testTripartBuyerTaxID_valid8Digits_passes() {
+        String result = InvoicePrefixMapValidator.validateBuyerTaxIDStatic("SALES_TRIPART", "12345678");
+        assertNull("Valid 8-digit TaxID should pass", result);
+    }
 }
