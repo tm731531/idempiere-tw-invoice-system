@@ -14,7 +14,7 @@ public class TaxCalculationService {
     }
 
     public static BigDecimal calcGrossAmount(BigDecimal saleAmount) {
-        return saleAmount.multiply(ONE_PLUS_VAT).setScale(2, RoundingMode.FLOOR);
+        return saleAmount.add(calcOutputTax(saleAmount));
     }
 
     public static TaxResult calcFromGross(BigDecimal grossAmount) {

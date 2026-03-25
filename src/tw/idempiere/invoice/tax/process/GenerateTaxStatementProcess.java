@@ -27,6 +27,8 @@ public class GenerateTaxStatementProcess extends SvrProcess {
     }
 
     public static int[] getMonthsForPeriod(int period) {
+        if (period < 1 || period > 6)
+            throw new IllegalArgumentException("Tax period must be 1-6, got: " + period);
         int startMonth = (period - 1) * 2 + 1;
         return new int[]{startMonth, startMonth + 1};
     }
@@ -41,6 +43,8 @@ public class GenerateTaxStatementProcess extends SvrProcess {
             else if ("TaxPeriod".equals(para.getParameterName()))
                 p_TaxPeriod = para.getParameterAsInt();
         }
+        if (p_TaxPeriod < 1 || p_TaxPeriod > 6)
+            throw new IllegalArgumentException("TaxPeriod must be between 1 and 6");
     }
 
     @Override

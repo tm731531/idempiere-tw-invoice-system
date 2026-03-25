@@ -17,7 +17,15 @@ public class TaxCalculationServiceTest {
     @Test
     public void testTripartGrossAmount() {
         BigDecimal gross = TaxCalculationService.calcGrossAmount(new BigDecimal("100000"));
-        assertEquals(new BigDecimal("105000.00"), gross);
+        assertEquals(new BigDecimal("105000"), gross);
+    }
+
+    @Test
+    public void testCalcGrossAmount_returnsWholeNTDollar() {
+        // floor(100001 * 0.05) = floor(5000.05) = 5000, gross = 100001 + 5000 = 105001
+        BigDecimal gross = TaxCalculationService.calcGrossAmount(new BigDecimal("100001"));
+        assertEquals(new BigDecimal("105001"), gross);
+        assertEquals(0, gross.scale());
     }
 
     @Test

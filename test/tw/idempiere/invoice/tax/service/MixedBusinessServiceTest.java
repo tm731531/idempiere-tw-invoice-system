@@ -39,7 +39,15 @@ public class MixedBusinessServiceTest {
     public void testAdjustInputTax() {
         BigDecimal adjusted = MixedBusinessService.adjustInputTax(
             new BigDecimal("100000"), new BigDecimal("0.8000"));
-        assertEquals(new BigDecimal("80000.0000"), adjusted);
+        assertEquals(new BigDecimal("80000"), adjusted);
+    }
+
+    @Test
+    public void testAdjustInputTax_floorRounding() {
+        // 100000 * 0.6666 = 66660.0000 → FLOOR → 66660 (not 66661)
+        BigDecimal result = MixedBusinessService.adjustInputTax(
+            new BigDecimal("100000"), new BigDecimal("0.6666"));
+        assertEquals(new BigDecimal("66660"), result);
     }
 
     @Test

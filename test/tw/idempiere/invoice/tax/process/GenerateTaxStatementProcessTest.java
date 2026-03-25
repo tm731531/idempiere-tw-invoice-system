@@ -53,4 +53,14 @@ public class GenerateTaxStatementProcessTest {
         assertEquals(11, months[0]);  // November
         assertEquals(12, months[1]);  // December
     }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testGetMonthsForPeriod_invalidPeriod_throws() {
+        GenerateTaxStatementProcess.getMonthsForPeriod(0);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testGetMonthsForPeriod_periodTooHigh_throws() {
+        GenerateTaxStatementProcess.getMonthsForPeriod(7);
+    }
 }

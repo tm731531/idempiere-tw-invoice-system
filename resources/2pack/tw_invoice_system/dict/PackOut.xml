@@ -1291,6 +1291,23 @@
     </AD_Column>
 
     <AD_Column>
+      <ColumnName>ExemptSalesAmount</ColumnName>
+      <Name>ExemptSalesAmount</Name>
+      <Description>免稅銷售額</Description>
+      <EntityType>TW</EntityType>
+      <FieldLength>22</FieldLength>
+      <IsKey>N</IsKey>
+      <IsParent>N</IsParent>
+      <IsMandatory>N</IsMandatory>
+      <IsUpdateable>Y</IsUpdateable>
+      <IsIdentifier>N</IsIdentifier>
+      <IsActive>true</IsActive>
+      <DefaultValue>0</DefaultValue>
+      <AD_Reference_ID reference="id" reference-key="AD_Reference">12</AD_Reference_ID>
+      <AD_Column_UU>3e7f91a2-c4b5-48d9-b210-5d6e8f1a0c47</AD_Column_UU>
+    </AD_Column>
+
+    <AD_Column>
       <ColumnName>ExemptRevenue</ColumnName>
       <Name>免稅銷售額</Name>
       <Description>Exempt revenue (not subject to VAT)</Description>
