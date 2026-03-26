@@ -37,7 +37,7 @@ public class TaiwanInvoiceTaxActivator extends Incremental2PackActivator {
                 + "  (AD_Window_ID, AD_Role_ID, AD_Client_ID, AD_Org_ID, "
                 + "   IsActive, Created, CreatedBy, Updated, UpdatedBy, "
                 + "   IsReadWrite, AD_Window_Access_UU) "
-                + "SELECT w.AD_Window_ID, r.AD_Role_ID, r.AD_Client_ID, r.AD_Org_ID, "
+                + "SELECT w.AD_Window_ID, r.AD_Role_ID, r.AD_Client_ID, 0, "
                 + "       'Y', NOW(), 100, NOW(), 100, "
                 + "       'Y', gen_random_uuid() "
                 + "FROM AD_Window w "
