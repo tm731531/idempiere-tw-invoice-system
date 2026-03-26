@@ -26,14 +26,14 @@ public class MInvoiceAdjustment extends PO {
 
     // Column name constants
     public static final String COLUMNNAME_TW_InvoiceAdjustment_ID = "TW_InvoiceAdjustment_ID";
-    public static final String COLUMNNAME_OriginalInvoiceNo        = "OriginalInvoiceNo";
-    public static final String COLUMNNAME_AdjustmentDirection      = "AdjustmentDirection";
-    public static final String COLUMNNAME_AdjustmentAmount         = "AdjustmentAmount";
-    public static final String COLUMNNAME_TaxAmount                = "TaxAmount";
-    public static final String COLUMNNAME_AdjustmentDate           = "AdjustmentDate";
-    public static final String COLUMNNAME_TaxPeriod                = "TaxPeriod";
-    public static final String COLUMNNAME_InputTaxExpiry           = "InputTaxExpiry";
-    public static final String COLUMNNAME_IsActive                 = "IsActive";
+    public static final String COLUMNNAME_C_Invoice_ID            = "C_Invoice_ID";
+    public static final String COLUMNNAME_AdjustmentType          = "AdjustmentType";
+    public static final String COLUMNNAME_AdjustmentDirection     = "AdjustmentDirection";
+    public static final String COLUMNNAME_AdjustmentDate          = "AdjustmentDate";
+    public static final String COLUMNNAME_AdjustedTaxAmount       = "AdjustedTaxAmount";
+    public static final String COLUMNNAME_TaxPeriod               = "TaxPeriod";
+    public static final String COLUMNNAME_IsOverduePeriod         = "IsOverduePeriod";
+    public static final String COLUMNNAME_IsActive                = "IsActive";
 
     /** Adjustment direction: we issue a credit note to the buyer */
     public static final String ADJUSTMENTDIRECTION_Sales    = "SALES";
@@ -67,19 +67,28 @@ public class MInvoiceAdjustment extends PO {
     public String toString() {
         return "MInvoiceAdjustment[" + get_ID()
             + ", Direction=" + getAdjustmentDirection()
-            + ", Amount=" + getAdjustmentAmount() + "]";
+            + ", AdjustedTax=" + getAdjustedTaxAmount() + "]";
     }
 
     // -------------------------------------------------------------------------
     // Getters / Setters
     // -------------------------------------------------------------------------
 
-    public String getOriginalInvoiceNo() {
-        return (String) get_Value(COLUMNNAME_OriginalInvoiceNo);
+    public int getC_Invoice_ID() {
+        Integer ii = (Integer) get_Value(COLUMNNAME_C_Invoice_ID);
+        return ii == null ? 0 : ii;
     }
 
-    public void setOriginalInvoiceNo(String OriginalInvoiceNo) {
-        set_Value(COLUMNNAME_OriginalInvoiceNo, OriginalInvoiceNo);
+    public void setC_Invoice_ID(int C_Invoice_ID) {
+        set_Value(COLUMNNAME_C_Invoice_ID, C_Invoice_ID);
+    }
+
+    public String getAdjustmentType() {
+        return (String) get_Value(COLUMNNAME_AdjustmentType);
+    }
+
+    public void setAdjustmentType(String AdjustmentType) {
+        set_Value(COLUMNNAME_AdjustmentType, AdjustmentType);
     }
 
     /**
@@ -93,30 +102,21 @@ public class MInvoiceAdjustment extends PO {
         set_Value(COLUMNNAME_AdjustmentDirection, AdjustmentDirection);
     }
 
-    public BigDecimal getAdjustmentAmount() {
-        BigDecimal bd = (BigDecimal) get_Value(COLUMNNAME_AdjustmentAmount);
-        return bd == null ? BigDecimal.ZERO : bd;
-    }
-
-    public void setAdjustmentAmount(BigDecimal AdjustmentAmount) {
-        set_Value(COLUMNNAME_AdjustmentAmount, AdjustmentAmount);
-    }
-
-    public BigDecimal getTaxAmount() {
-        BigDecimal bd = (BigDecimal) get_Value(COLUMNNAME_TaxAmount);
-        return bd == null ? BigDecimal.ZERO : bd;
-    }
-
-    public void setTaxAmount(BigDecimal TaxAmount) {
-        set_Value(COLUMNNAME_TaxAmount, TaxAmount);
-    }
-
     public java.sql.Timestamp getAdjustmentDate() {
         return (java.sql.Timestamp) get_Value(COLUMNNAME_AdjustmentDate);
     }
 
     public void setAdjustmentDate(java.sql.Timestamp AdjustmentDate) {
         set_Value(COLUMNNAME_AdjustmentDate, AdjustmentDate);
+    }
+
+    public BigDecimal getAdjustedTaxAmount() {
+        BigDecimal bd = (BigDecimal) get_Value(COLUMNNAME_AdjustedTaxAmount);
+        return bd == null ? BigDecimal.ZERO : bd;
+    }
+
+    public void setAdjustedTaxAmount(BigDecimal AdjustedTaxAmount) {
+        set_Value(COLUMNNAME_AdjustedTaxAmount, AdjustedTaxAmount);
     }
 
     public String getTaxPeriod() {
@@ -127,12 +127,15 @@ public class MInvoiceAdjustment extends PO {
         set_Value(COLUMNNAME_TaxPeriod, TaxPeriod);
     }
 
-    public java.sql.Timestamp getInputTaxExpiry() {
-        return (java.sql.Timestamp) get_Value(COLUMNNAME_InputTaxExpiry);
+    public boolean isOverduePeriod() {
+        Object oo = get_Value(COLUMNNAME_IsOverduePeriod);
+        if (oo != null && oo instanceof Boolean)
+            return (Boolean) oo;
+        return "Y".equals(oo);
     }
 
-    public void setInputTaxExpiry(java.sql.Timestamp InputTaxExpiry) {
-        set_Value(COLUMNNAME_InputTaxExpiry, InputTaxExpiry);
+    public void setIsOverduePeriod(boolean IsOverduePeriod) {
+        set_Value(COLUMNNAME_IsOverduePeriod, IsOverduePeriod ? "Y" : "N");
     }
 
 }

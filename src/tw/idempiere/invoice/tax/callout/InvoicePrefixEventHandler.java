@@ -48,8 +48,8 @@ public class InvoicePrefixEventHandler extends AbstractEventHandler {
         // Validate status transition (only on change, not new)
         String topic = event.getTopic();
         if (topic != null && topic.endsWith("po_before_change")) {
-            String oldStatus = (String) prefix.get_ValueOld(MInvoicePrefix.COLUMNNAME_PrefixStatus);
-            String newStatus = prefix.getPrefixStatus();
+            String oldStatus = (String) prefix.get_ValueOld(MInvoicePrefix.COLUMNNAME_Status);
+            String newStatus = prefix.getStatus();
             if (InvoicePrefixValidator.isInvalidStatusTransition(oldStatus, newStatus)) {
                 addErrorMessage(event, "字軌狀態不可逆轉，必須依 I→A→C 順序推進，已完成狀態不可回退");
             }

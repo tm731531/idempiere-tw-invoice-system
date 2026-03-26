@@ -10,8 +10,8 @@ public class GenerateTaxStatementProcess extends SvrProcess {
 
     private static final Logger log = Logger.getLogger(GenerateTaxStatementProcess.class.getName());
 
-    private int p_TaxYear;
-    private int p_TaxPeriod;
+    private int p_StatementYear;
+    private int p_StatementPeriod;
 
     // --- Static helper methods (unit-testable) ---
 
@@ -38,32 +38,32 @@ public class GenerateTaxStatementProcess extends SvrProcess {
     @Override
     protected void prepare() {
         for (ProcessInfoParameter para : getParameter()) {
-            if ("TaxYear".equals(para.getParameterName()))
-                p_TaxYear = para.getParameterAsInt();
-            else if ("TaxPeriod".equals(para.getParameterName()))
-                p_TaxPeriod = para.getParameterAsInt();
+            if ("StatementYear".equals(para.getParameterName()))
+                p_StatementYear = para.getParameterAsInt();
+            else if ("StatementPeriod".equals(para.getParameterName()))
+                p_StatementPeriod = para.getParameterAsInt();
         }
-        if (p_TaxPeriod < 1 || p_TaxPeriod > 6)
-            throw new IllegalArgumentException("TaxPeriod must be between 1 and 6");
+        if (p_StatementPeriod < 1 || p_StatementPeriod > 6)
+            throw new IllegalArgumentException("StatementPeriod must be between 1 and 6");
     }
 
     @Override
     protected String doIt() throws Exception {
-        log.info("GenerateTaxStatement: year=" + p_TaxYear + " period=" + p_TaxPeriod);
+        log.info("GenerateTaxStatement: year=" + p_StatementYear + " period=" + p_StatementPeriod);
 
         // TODO: Phase 4 full implementation — query TW_Invoice_Prefix_Map,
-        // aggregate OutputTax, InputTax from TW_Invoice_Prefix_Map records for the period,
+        // aggregate OutputTaxAmount, InputTaxAmount from TW_Invoice_Prefix_Map records for the period,
         // then create/update TW_TaxStatement record.
 
         // Calculation pipeline (values will be retrieved from MTaxStatement in Phase 4):
-        // BigDecimal inputTax = ...; // from MTaxStatement.getInputTax()
-        // BigDecimal ratio = ...; // from MTaxStatement.getMixedBusinessRatio()
+        // BigDecimal inputTax = ...; // from MTaxStatement.getInputTaxAmount()
+        // BigDecimal ratio = ...; // from MTaxStatement.getTaxableRatio()
         // BigDecimal adjustedInputTax = MixedBusinessService.adjustInputTax(inputTax, ratio);
         // BigDecimal nonDeductible = ...; // from MTaxStatement.getNonDeductibleInputTax()
         // BigDecimal carryOver = ...; // from MTaxStatement.getCarryOverTaxCredit()
-        // BigDecimal output = ...; // from MTaxStatement.getOutputTax()
+        // BigDecimal output = ...; // from MTaxStatement.getOutputTaxAmount()
         // BigDecimal net = calcNetTaxPayable(output, adjustedInputTax, nonDeductible, carryOver);
 
-        return "@TaxYear@=" + p_TaxYear + " @StatementPeriod@=" + p_TaxPeriod;
+        return "@StatementYear@=" + p_StatementYear + " @StatementPeriod@=" + p_StatementPeriod;
     }
 }

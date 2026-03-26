@@ -41,12 +41,20 @@ public class InvoicePrefixMapValidator implements ModelValidator {
         MInvoicePrefixMap map = (MInvoicePrefixMap) po;
 
         if (type == ModelValidator.TYPE_BEFORE_NEW || type == ModelValidator.TYPE_BEFORE_CHANGE) {
-            Timestamp ts = map.getDateInvoiced();
+            Timestamp ts = map.getInvoiceDate();
             if (ts != null) {
                 String dateError = validateInvoiceDateStatic(ts.toLocalDateTime().toLocalDate());
                 if (dateError != null) return dateError;
             }
-            String taxIdError = validateBuyerTaxIDStatic(map.getInvoiceType(), map.getBuyerTaxID());
+            // InvoiceType is on the parent TW_InvoicePrefix — load it for validation
+            String invoiceType = null;
+            int prefixId = map.getTW_InvoicePrefix_ID();
+            if (prefixId > 0) {
+                tw.idempiere.invoice.tax.model.MInvoicePrefix prefix =
+                    new tw.idempiere.invoice.tax.model.MInvoicePrefix(map.getCtx(), prefixId, map.get_TrxName());
+                invoiceType = prefix.getInvoiceType();
+            }
+            String taxIdError = validateBuyerTaxIDStatic(invoiceType, map.getBuyerTaxID());
             if (taxIdError != null) return taxIdError;
         }
         return null;

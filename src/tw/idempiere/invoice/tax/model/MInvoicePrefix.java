@@ -23,15 +23,18 @@ public class MInvoicePrefix extends PO {
     public static int Table_ID = 0;
 
     // Column name constants
-    public static final String COLUMNNAME_TW_InvoicePrefix_ID = "TW_InvoicePrefix_ID";
-    public static final String COLUMNNAME_PrefixCode           = "PrefixCode";
-    public static final String COLUMNNAME_PrefixStatus         = "PrefixStatus";
-    public static final String COLUMNNAME_PrefixStartDate      = "PrefixStartDate";
-    public static final String COLUMNNAME_PrefixEndDate        = "PrefixEndDate";
-    public static final String COLUMNNAME_StartNumber          = "StartNumber";
-    public static final String COLUMNNAME_EndNumber            = "EndNumber";
-    public static final String COLUMNNAME_CurrentNumber        = "CurrentNumber";
-    public static final String COLUMNNAME_IsActive             = "IsActive";
+    public static final String COLUMNNAME_TW_InvoicePrefix_ID    = "TW_InvoicePrefix_ID";
+    public static final String COLUMNNAME_PrefixCode             = "PrefixCode";
+    public static final String COLUMNNAME_InvoiceType            = "InvoiceType";
+    public static final String COLUMNNAME_Status                 = "Status";
+    public static final String COLUMNNAME_PrefixStartDate        = "PrefixStartDate";
+    public static final String COLUMNNAME_PrefixEndDate          = "PrefixEndDate";
+    public static final String COLUMNNAME_StartNumber            = "StartNumber";
+    public static final String COLUMNNAME_EndNumber              = "EndNumber";
+    public static final String COLUMNNAME_CurrentNumber          = "CurrentNumber";
+    public static final String COLUMNNAME_LastInvoiceNumber      = "LastInvoiceNumber";
+    public static final String COLUMNNAME_LastIssuedInvoiceDate  = "LastIssuedInvoiceDate";
+    public static final String COLUMNNAME_IsActive               = "IsActive";
 
     public MInvoicePrefix(Properties ctx, int TW_InvoicePrefix_ID, String trxName) {
         super(ctx, TW_InvoicePrefix_ID, trxName);
@@ -73,12 +76,20 @@ public class MInvoicePrefix extends PO {
         set_Value(COLUMNNAME_PrefixCode, PrefixCode);
     }
 
-    public String getPrefixStatus() {
-        return (String) get_Value(COLUMNNAME_PrefixStatus);
+    public String getInvoiceType() {
+        return (String) get_Value(COLUMNNAME_InvoiceType);
     }
 
-    public void setPrefixStatus(String PrefixStatus) {
-        set_Value(COLUMNNAME_PrefixStatus, PrefixStatus);
+    public void setInvoiceType(String InvoiceType) {
+        set_Value(COLUMNNAME_InvoiceType, InvoiceType);
+    }
+
+    public String getStatus() {
+        return (String) get_Value(COLUMNNAME_Status);
+    }
+
+    public void setStatus(String Status) {
+        set_Value(COLUMNNAME_Status, Status);
     }
 
     public java.sql.Timestamp getPrefixStartDate() {
@@ -122,6 +133,23 @@ public class MInvoicePrefix extends PO {
 
     public void setCurrentNumber(int CurrentNumber) {
         set_Value(COLUMNNAME_CurrentNumber, CurrentNumber);
+    }
+
+    public int getLastInvoiceNumber() {
+        Integer ii = (Integer) get_Value(COLUMNNAME_LastInvoiceNumber);
+        return ii == null ? 0 : ii;
+    }
+
+    public void setLastInvoiceNumber(int LastInvoiceNumber) {
+        set_Value(COLUMNNAME_LastInvoiceNumber, LastInvoiceNumber);
+    }
+
+    public java.sql.Timestamp getLastIssuedInvoiceDate() {
+        return (java.sql.Timestamp) get_Value(COLUMNNAME_LastIssuedInvoiceDate);
+    }
+
+    public void setLastIssuedInvoiceDate(java.sql.Timestamp LastIssuedInvoiceDate) {
+        set_Value(COLUMNNAME_LastIssuedInvoiceDate, LastIssuedInvoiceDate);
     }
 
 }

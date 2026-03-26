@@ -25,20 +25,22 @@ public class MTaxStatement extends PO {
     public static int Table_ID = 0;
 
     // Column name constants
-    public static final String COLUMNNAME_TW_TaxStatement_ID     = "TW_TaxStatement_ID";
-    public static final String COLUMNNAME_TaxYear                = "TaxYear";
-    public static final String COLUMNNAME_TaxPeriod              = "TaxPeriod";
-    public static final String COLUMNNAME_StatementStatus        = "StatementStatus";
-    public static final String COLUMNNAME_TaxableSalesAmount     = "TaxableSalesAmount";
-    public static final String COLUMNNAME_ZeroRateSalesAmount    = "ZeroRateSalesAmount";
-    public static final String COLUMNNAME_ExemptSalesAmount      = "ExemptSalesAmount";
-    public static final String COLUMNNAME_OutputTax              = "OutputTax";
-    public static final String COLUMNNAME_InputTax               = "InputTax";
-    public static final String COLUMNNAME_NonDeductibleInputTax  = "NonDeductibleInputTax";
-    public static final String COLUMNNAME_CarryOverTaxCredit     = "CarryOverTaxCredit";
-    public static final String COLUMNNAME_MixedBusinessRatio     = "MixedBusinessRatio";
-    public static final String COLUMNNAME_NetTaxPayable          = "NetTaxPayable";
-    public static final String COLUMNNAME_IsActive               = "IsActive";
+    public static final String COLUMNNAME_TW_TaxStatement_ID    = "TW_TaxStatement_ID";
+    public static final String COLUMNNAME_StatementYear         = "StatementYear";
+    public static final String COLUMNNAME_StatementPeriod       = "StatementPeriod";
+    public static final String COLUMNNAME_TaxableRevenue        = "TaxableRevenue";
+    public static final String COLUMNNAME_ZeroRateSalesAmount   = "ZeroRateSalesAmount";
+    public static final String COLUMNNAME_ExemptRevenue         = "ExemptRevenue";
+    public static final String COLUMNNAME_OutputTaxAmount       = "OutputTaxAmount";
+    public static final String COLUMNNAME_InputTaxAmount        = "InputTaxAmount";
+    public static final String COLUMNNAME_NonDeductibleInputTax = "NonDeductibleInputTax";
+    public static final String COLUMNNAME_CarryOverTaxCredit    = "CarryOverTaxCredit";
+    public static final String COLUMNNAME_TaxableRatio          = "TaxableRatio";
+    public static final String COLUMNNAME_AdjustedInputTax      = "AdjustedInputTax";
+    public static final String COLUMNNAME_TaxPayable            = "TaxPayable";
+    public static final String COLUMNNAME_IsMixedBusiness       = "IsMixedBusiness";
+    public static final String COLUMNNAME_FilingDueDate         = "FilingDueDate";
+    public static final String COLUMNNAME_IsActive              = "IsActive";
 
     public MTaxStatement(Properties ctx, int TW_TaxStatement_ID, String trxName) {
         super(ctx, TW_TaxStatement_ID, trxName);
@@ -66,47 +68,38 @@ public class MTaxStatement extends PO {
     @Override
     public String toString() {
         return "MTaxStatement[" + get_ID()
-            + ", Period=" + getTaxYear() + "-" + getTaxPeriod()
-            + ", Status=" + getStatementStatus() + "]";
+            + ", Period=" + getStatementYear() + "-" + getStatementPeriod() + "]";
     }
 
     // -------------------------------------------------------------------------
     // Getters / Setters
     // -------------------------------------------------------------------------
 
-    public int getTaxYear() {
-        Integer ii = (Integer) get_Value(COLUMNNAME_TaxYear);
+    public int getStatementYear() {
+        Integer ii = (Integer) get_Value(COLUMNNAME_StatementYear);
         return ii == null ? 0 : ii;
     }
 
-    public void setTaxYear(int TaxYear) {
-        set_Value(COLUMNNAME_TaxYear, TaxYear);
+    public void setStatementYear(int StatementYear) {
+        set_Value(COLUMNNAME_StatementYear, StatementYear);
     }
 
-    public int getTaxPeriod() {
-        Integer ii = (Integer) get_Value(COLUMNNAME_TaxPeriod);
+    public int getStatementPeriod() {
+        Integer ii = (Integer) get_Value(COLUMNNAME_StatementPeriod);
         return ii == null ? 0 : ii;
     }
 
-    public void setTaxPeriod(int TaxPeriod) {
-        set_Value(COLUMNNAME_TaxPeriod, TaxPeriod);
+    public void setStatementPeriod(int StatementPeriod) {
+        set_Value(COLUMNNAME_StatementPeriod, StatementPeriod);
     }
 
-    public String getStatementStatus() {
-        return (String) get_Value(COLUMNNAME_StatementStatus);
-    }
-
-    public void setStatementStatus(String StatementStatus) {
-        set_Value(COLUMNNAME_StatementStatus, StatementStatus);
-    }
-
-    public BigDecimal getTaxableSalesAmount() {
-        BigDecimal bd = (BigDecimal) get_Value(COLUMNNAME_TaxableSalesAmount);
+    public BigDecimal getTaxableRevenue() {
+        BigDecimal bd = (BigDecimal) get_Value(COLUMNNAME_TaxableRevenue);
         return bd == null ? BigDecimal.ZERO : bd;
     }
 
-    public void setTaxableSalesAmount(BigDecimal TaxableSalesAmount) {
-        set_Value(COLUMNNAME_TaxableSalesAmount, TaxableSalesAmount);
+    public void setTaxableRevenue(BigDecimal TaxableRevenue) {
+        set_Value(COLUMNNAME_TaxableRevenue, TaxableRevenue);
     }
 
     /**
@@ -122,31 +115,31 @@ public class MTaxStatement extends PO {
         set_Value(COLUMNNAME_ZeroRateSalesAmount, ZeroRateSalesAmount);
     }
 
-    public BigDecimal getExemptSalesAmount() {
-        BigDecimal bd = (BigDecimal) get_Value(COLUMNNAME_ExemptSalesAmount);
+    public BigDecimal getExemptRevenue() {
+        BigDecimal bd = (BigDecimal) get_Value(COLUMNNAME_ExemptRevenue);
         return bd == null ? BigDecimal.ZERO : bd;
     }
 
-    public void setExemptSalesAmount(BigDecimal ExemptSalesAmount) {
-        set_Value(COLUMNNAME_ExemptSalesAmount, ExemptSalesAmount);
+    public void setExemptRevenue(BigDecimal ExemptRevenue) {
+        set_Value(COLUMNNAME_ExemptRevenue, ExemptRevenue);
     }
 
-    public BigDecimal getOutputTax() {
-        BigDecimal bd = (BigDecimal) get_Value(COLUMNNAME_OutputTax);
+    public BigDecimal getOutputTaxAmount() {
+        BigDecimal bd = (BigDecimal) get_Value(COLUMNNAME_OutputTaxAmount);
         return bd == null ? BigDecimal.ZERO : bd;
     }
 
-    public void setOutputTax(BigDecimal OutputTax) {
-        set_Value(COLUMNNAME_OutputTax, OutputTax);
+    public void setOutputTaxAmount(BigDecimal OutputTaxAmount) {
+        set_Value(COLUMNNAME_OutputTaxAmount, OutputTaxAmount);
     }
 
-    public BigDecimal getInputTax() {
-        BigDecimal bd = (BigDecimal) get_Value(COLUMNNAME_InputTax);
+    public BigDecimal getInputTaxAmount() {
+        BigDecimal bd = (BigDecimal) get_Value(COLUMNNAME_InputTaxAmount);
         return bd == null ? BigDecimal.ZERO : bd;
     }
 
-    public void setInputTax(BigDecimal InputTax) {
-        set_Value(COLUMNNAME_InputTax, InputTax);
+    public void setInputTaxAmount(BigDecimal InputTaxAmount) {
+        set_Value(COLUMNNAME_InputTaxAmount, InputTaxAmount);
     }
 
     /**
@@ -173,22 +166,50 @@ public class MTaxStatement extends PO {
         set_Value(COLUMNNAME_CarryOverTaxCredit, CarryOverTaxCredit);
     }
 
-    public BigDecimal getMixedBusinessRatio() {
-        BigDecimal bd = (BigDecimal) get_Value(COLUMNNAME_MixedBusinessRatio);
+    public BigDecimal getTaxableRatio() {
+        BigDecimal bd = (BigDecimal) get_Value(COLUMNNAME_TaxableRatio);
         return bd == null ? BigDecimal.ZERO : bd;
     }
 
-    public void setMixedBusinessRatio(BigDecimal MixedBusinessRatio) {
-        set_Value(COLUMNNAME_MixedBusinessRatio, MixedBusinessRatio);
+    public void setTaxableRatio(BigDecimal TaxableRatio) {
+        set_Value(COLUMNNAME_TaxableRatio, TaxableRatio);
     }
 
-    public BigDecimal getNetTaxPayable() {
-        BigDecimal bd = (BigDecimal) get_Value(COLUMNNAME_NetTaxPayable);
+    public BigDecimal getAdjustedInputTax() {
+        BigDecimal bd = (BigDecimal) get_Value(COLUMNNAME_AdjustedInputTax);
         return bd == null ? BigDecimal.ZERO : bd;
     }
 
-    public void setNetTaxPayable(BigDecimal NetTaxPayable) {
-        set_Value(COLUMNNAME_NetTaxPayable, NetTaxPayable);
+    public void setAdjustedInputTax(BigDecimal AdjustedInputTax) {
+        set_Value(COLUMNNAME_AdjustedInputTax, AdjustedInputTax);
+    }
+
+    public BigDecimal getTaxPayable() {
+        BigDecimal bd = (BigDecimal) get_Value(COLUMNNAME_TaxPayable);
+        return bd == null ? BigDecimal.ZERO : bd;
+    }
+
+    public void setTaxPayable(BigDecimal TaxPayable) {
+        set_Value(COLUMNNAME_TaxPayable, TaxPayable);
+    }
+
+    public boolean isMixedBusiness() {
+        Object oo = get_Value(COLUMNNAME_IsMixedBusiness);
+        if (oo != null && oo instanceof Boolean)
+            return (Boolean) oo;
+        return "Y".equals(oo);
+    }
+
+    public void setIsMixedBusiness(boolean IsMixedBusiness) {
+        set_Value(COLUMNNAME_IsMixedBusiness, IsMixedBusiness ? "Y" : "N");
+    }
+
+    public java.sql.Timestamp getFilingDueDate() {
+        return (java.sql.Timestamp) get_Value(COLUMNNAME_FilingDueDate);
+    }
+
+    public void setFilingDueDate(java.sql.Timestamp FilingDueDate) {
+        set_Value(COLUMNNAME_FilingDueDate, FilingDueDate);
     }
 
 }

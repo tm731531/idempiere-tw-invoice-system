@@ -25,10 +25,11 @@ public class MInvoicePrefixMap extends PO {
     // Column name constants
     public static final String COLUMNNAME_TW_Invoice_Prefix_Map_ID = "TW_Invoice_Prefix_Map_ID";
     public static final String COLUMNNAME_TW_InvoicePrefix_ID      = "TW_InvoicePrefix_ID";
+    public static final String COLUMNNAME_C_Invoice_ID             = "C_Invoice_ID";
+    public static final String COLUMNNAME_InvoiceDate              = "InvoiceDate";
     public static final String COLUMNNAME_InvoiceNumber            = "InvoiceNumber";
     public static final String COLUMNNAME_BuyerTaxID               = "BuyerTaxID";
-    public static final String COLUMNNAME_InvoiceType              = "InvoiceType";
-    public static final String COLUMNNAME_DateInvoiced             = "DateInvoiced";
+    public static final String COLUMNNAME_IsExpiryWarning          = "IsExpiryWarning";
     public static final String COLUMNNAME_IsActive                 = "IsActive";
 
     public MInvoicePrefixMap(Properties ctx, int TW_Invoice_Prefix_Map_ID, String trxName) {
@@ -72,6 +73,23 @@ public class MInvoicePrefixMap extends PO {
         set_Value(COLUMNNAME_TW_InvoicePrefix_ID, TW_InvoicePrefix_ID);
     }
 
+    public int getC_Invoice_ID() {
+        Integer ii = (Integer) get_Value(COLUMNNAME_C_Invoice_ID);
+        return ii == null ? 0 : ii;
+    }
+
+    public void setC_Invoice_ID(int C_Invoice_ID) {
+        set_Value(COLUMNNAME_C_Invoice_ID, C_Invoice_ID);
+    }
+
+    public java.sql.Timestamp getInvoiceDate() {
+        return (java.sql.Timestamp) get_Value(COLUMNNAME_InvoiceDate);
+    }
+
+    public void setInvoiceDate(java.sql.Timestamp InvoiceDate) {
+        set_Value(COLUMNNAME_InvoiceDate, InvoiceDate);
+    }
+
     public String getInvoiceNumber() {
         return (String) get_Value(COLUMNNAME_InvoiceNumber);
     }
@@ -91,20 +109,15 @@ public class MInvoicePrefixMap extends PO {
         set_Value(COLUMNNAME_BuyerTaxID, BuyerTaxID);
     }
 
-    public String getInvoiceType() {
-        return (String) get_Value(COLUMNNAME_InvoiceType);
+    public boolean isExpiryWarning() {
+        Object oo = get_Value(COLUMNNAME_IsExpiryWarning);
+        if (oo != null && oo instanceof Boolean)
+            return (Boolean) oo;
+        return "Y".equals(oo);
     }
 
-    public void setInvoiceType(String InvoiceType) {
-        set_Value(COLUMNNAME_InvoiceType, InvoiceType);
-    }
-
-    public java.sql.Timestamp getDateInvoiced() {
-        return (java.sql.Timestamp) get_Value(COLUMNNAME_DateInvoiced);
-    }
-
-    public void setDateInvoiced(java.sql.Timestamp DateInvoiced) {
-        set_Value(COLUMNNAME_DateInvoiced, DateInvoiced);
+    public void setIsExpiryWarning(boolean IsExpiryWarning) {
+        set_Value(COLUMNNAME_IsExpiryWarning, IsExpiryWarning ? "Y" : "N");
     }
 
 }

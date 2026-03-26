@@ -37,7 +37,7 @@ public class InvoicePrefixMapEventHandler extends AbstractEventHandler {
         MInvoicePrefixMap map = (MInvoicePrefixMap) po;
 
         // Validate invoice date (no future dates)
-        Timestamp ts = map.getDateInvoiced();
+        Timestamp ts = map.getInvoiceDate();
         if (ts != null) {
             LocalDate invoiceDate = ts.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
             String dateError = InvoicePrefixMapValidator.validateInvoiceDateStatic(invoiceDate);
@@ -47,9 +47,16 @@ public class InvoicePrefixMapEventHandler extends AbstractEventHandler {
             }
         }
 
-        // Validate buyer tax ID for B2B invoices
+        // Validate buyer tax ID for B2B invoices (InvoiceType is on the parent TW_InvoicePrefix)
+        String invoiceType = null;
+        int prefixId = map.getTW_InvoicePrefix_ID();
+        if (prefixId > 0) {
+            tw.idempiere.invoice.tax.model.MInvoicePrefix prefix =
+                new tw.idempiere.invoice.tax.model.MInvoicePrefix(map.getCtx(), prefixId, map.get_TrxName());
+            invoiceType = prefix.getInvoiceType();
+        }
         String buyerTaxIdError = InvoicePrefixMapValidator.validateBuyerTaxIDStatic(
-            map.getInvoiceType(), map.getBuyerTaxID());
+            invoiceType, map.getBuyerTaxID());
         if (buyerTaxIdError != null) {
             addErrorMessage(event, buyerTaxIdError);
         }

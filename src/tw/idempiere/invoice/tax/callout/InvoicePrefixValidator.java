@@ -54,8 +54,8 @@ public class InvoicePrefixValidator implements ModelValidator {
 
             // Rule 3: Status C cannot revert to A
             if (type == ModelValidator.TYPE_BEFORE_CHANGE) {
-                String oldStatus = (String) prefix.get_ValueOld(MInvoicePrefix.COLUMNNAME_PrefixStatus);
-                String newStatus = prefix.getPrefixStatus();
+                String oldStatus = (String) prefix.get_ValueOld(MInvoicePrefix.COLUMNNAME_Status);
+                String newStatus = prefix.getStatus();
                 if (isInvalidStatusTransition(oldStatus, newStatus))
                     return "字軌狀態轉換不合規：已完成狀態不可回退，且必須依 I→A→C 順序推進";
             }
