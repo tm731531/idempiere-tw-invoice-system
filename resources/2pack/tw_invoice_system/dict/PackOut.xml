@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <idempiere
     Name="TW Invoice Tax System"
-    Version="1.0.8"
+    Version="1.0.9"
     idempiereVersion="12.0.0"
     DataBaseVersion="12.0.0"
     Description="Taiwan Unified Invoice and Business Tax System"
@@ -758,7 +758,7 @@
         <IsKey>N</IsKey>
         <IsParent>N</IsParent>
         <IsMandatory>N</IsMandatory>
-        <IsUpdateable>N</IsUpdateable>
+        <IsUpdateable>Y</IsUpdateable>
         <IsIdentifier>N</IsIdentifier>
         <IsActive>Y</IsActive>
         <AD_Reference_ID reference="id" reference-key="AD_Reference">10</AD_Reference_ID>
@@ -1547,7 +1547,7 @@
         <IsKey>N</IsKey>
         <IsParent>N</IsParent>
         <IsMandatory>N</IsMandatory>
-        <IsUpdateable>N</IsUpdateable>
+        <IsUpdateable>Y</IsUpdateable>
         <IsIdentifier>N</IsIdentifier>
         <IsActive>Y</IsActive>
         <AD_Reference_ID reference="id" reference-key="AD_Reference">10</AD_Reference_ID>
@@ -2182,7 +2182,7 @@
         <IsKey>N</IsKey>
         <IsParent>N</IsParent>
         <IsMandatory>N</IsMandatory>
-        <IsUpdateable>N</IsUpdateable>
+        <IsUpdateable>Y</IsUpdateable>
         <IsIdentifier>N</IsIdentifier>
         <IsActive>Y</IsActive>
         <AD_Reference_ID reference="id" reference-key="AD_Reference">10</AD_Reference_ID>
@@ -2857,7 +2857,7 @@
         <IsKey>N</IsKey>
         <IsParent>N</IsParent>
         <IsMandatory>N</IsMandatory>
-        <IsUpdateable>N</IsUpdateable>
+        <IsUpdateable>Y</IsUpdateable>
         <IsIdentifier>N</IsIdentifier>
         <IsActive>Y</IsActive>
         <AD_Reference_ID reference="id" reference-key="AD_Reference">10</AD_Reference_ID>

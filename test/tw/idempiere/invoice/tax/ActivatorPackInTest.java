@@ -7,7 +7,7 @@ public class ActivatorPackInTest {
     @Test
     public void testPackInResourceExists() {
         java.net.URL zipUrl = TaiwanInvoiceTaxActivator.class
-            .getResource("/META-INF/2Pack_1.0.8.zip");
-        assertNotNull("2Pack ZIP must exist at /META-INF/2Pack_1.0.8.zip", zipUrl);
+            .getResource("/META-INF/2Pack_1.0.9.zip");
+        assertNotNull("2Pack ZIP must exist at /META-INF/2Pack_1.0.9.zip", zipUrl);
     }
 }
