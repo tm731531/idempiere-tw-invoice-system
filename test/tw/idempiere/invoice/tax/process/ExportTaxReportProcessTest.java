@@ -41,12 +41,12 @@ public class ExportTaxReportProcessTest {
     @Test
     public void testCSVHeader_hasRequiredColumns() {
         String header = ExportTaxReportProcess.getCSVHeader();
-        assertTrue(header.contains("TaxYear"));
-        assertTrue(header.contains("OutputTax"));
-        assertTrue(header.contains("InputTax"));
+        assertTrue(header.contains("StatementYear"));
+        assertTrue(header.contains("OutputTaxAmount"));
+        assertTrue(header.contains("InputTaxAmount"));
         assertTrue(header.contains("TaxPayable"));
         assertTrue(header.contains("ZeroRateSalesAmount"));
-        assertTrue(header.contains("ExemptSalesAmount"));
+        assertTrue(header.contains("ExemptRevenue"));
         assertTrue(header.contains("NonDeductibleInputTax"));
         assertTrue(header.contains("CarryOverTaxCredit"));
     }

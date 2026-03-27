@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <idempiere
     Name="TW Invoice Tax System"
-    Version="1.0.4"
+    Version="1.0.7"
     idempiereVersion="12.0.0"
     DataBaseVersion="12.0.0"
     Description="Taiwan Unified Invoice and Business Tax System"
@@ -772,6 +772,7 @@
         <Name>Client</Name>
         <EntityType>TW</EntityType>
         <FieldLength>10</FieldLength>
+        <DefaultValue>@#AD_Client_ID@</DefaultValue>
         <IsKey>N</IsKey>
         <IsParent>N</IsParent>
         <IsMandatory>Y</IsMandatory>
@@ -789,6 +790,7 @@
         <Name>Organization</Name>
         <EntityType>TW</EntityType>
         <FieldLength>10</FieldLength>
+        <DefaultValue>@#AD_Org_ID@</DefaultValue>
         <IsKey>N</IsKey>
         <IsParent>N</IsParent>
         <IsMandatory>Y</IsMandatory>
@@ -1089,6 +1091,69 @@
       <AD_Field type="table">
           <AD_Client_ID reference="id">0</AD_Client_ID>
           <AD_Org_ID reference="id">0</AD_Org_ID>
+          <Name>廠商</Name>
+          <Description>Tenant</Description>
+          <EntityType>TW</EntityType>
+          <SeqNo>1</SeqNo>
+          <IsActive>Y</IsActive>
+          <IsDisplayed>Y</IsDisplayed>
+          <IsReadOnly>Y</IsReadOnly>
+          <IsMandatory>Y</IsMandatory>
+          <IsSameLine>N</IsSameLine>
+          <IsHeading>N</IsHeading>
+          <IsFieldOnly>N</IsFieldOnly>
+          <IsEncrypted>N</IsEncrypted>
+          <IsCentrallyMaintained>Y</IsCentrallyMaintained>
+          <DisplayLogic/>
+          <AD_Tab_ID reference="uuid" reference-key="AD_Tab">d53983bc-2ec4-420e-8539-ae71376aae19</AD_Tab_ID>
+          <AD_Column_ID reference="uuid" reference-key="AD_Column">a7828d0d-7fad-4ce0-a9d6-a9a01405512b</AD_Column_ID>
+          <AD_Field_UU>aa000001-0001-0001-0001-000000000001</AD_Field_UU>
+      </AD_Field>
+      <AD_Field type="table">
+          <AD_Client_ID reference="id">0</AD_Client_ID>
+          <AD_Org_ID reference="id">0</AD_Org_ID>
+          <Name>組織</Name>
+          <Description>Organization</Description>
+          <EntityType>TW</EntityType>
+          <SeqNo>2</SeqNo>
+          <IsActive>Y</IsActive>
+          <IsDisplayed>Y</IsDisplayed>
+          <IsReadOnly>N</IsReadOnly>
+          <IsMandatory>Y</IsMandatory>
+          <IsSameLine>N</IsSameLine>
+          <IsHeading>N</IsHeading>
+          <IsFieldOnly>N</IsFieldOnly>
+          <IsEncrypted>N</IsEncrypted>
+          <IsCentrallyMaintained>Y</IsCentrallyMaintained>
+          <DisplayLogic/>
+          <AD_Tab_ID reference="uuid" reference-key="AD_Tab">d53983bc-2ec4-420e-8539-ae71376aae19</AD_Tab_ID>
+          <AD_Column_ID reference="uuid" reference-key="AD_Column">67abc226-cdc4-4c65-8e6a-73b82b04eb50</AD_Column_ID>
+          <AD_Field_UU>aa000001-0001-0001-0001-000000000002</AD_Field_UU>
+      </AD_Field>
+      <AD_Field type="table">
+          <AD_Client_ID reference="id">0</AD_Client_ID>
+          <AD_Org_ID reference="id">0</AD_Org_ID>
+          <Name>啟用</Name>
+          <Description>Active</Description>
+          <EntityType>TW</EntityType>
+          <SeqNo>3</SeqNo>
+          <IsActive>Y</IsActive>
+          <IsDisplayed>Y</IsDisplayed>
+          <IsReadOnly>N</IsReadOnly>
+          <IsMandatory>N</IsMandatory>
+          <IsSameLine>N</IsSameLine>
+          <IsHeading>N</IsHeading>
+          <IsFieldOnly>N</IsFieldOnly>
+          <IsEncrypted>N</IsEncrypted>
+          <IsCentrallyMaintained>Y</IsCentrallyMaintained>
+          <DisplayLogic/>
+          <AD_Tab_ID reference="uuid" reference-key="AD_Tab">d53983bc-2ec4-420e-8539-ae71376aae19</AD_Tab_ID>
+          <AD_Column_ID reference="uuid" reference-key="AD_Column">aecbe185-0ddf-425b-8c71-cf4abc1fdbce</AD_Column_ID>
+          <AD_Field_UU>aa000001-0001-0001-0001-000000000003</AD_Field_UU>
+      </AD_Field>
+      <AD_Field type="table">
+          <AD_Client_ID reference="id">0</AD_Client_ID>
+          <AD_Org_ID reference="id">0</AD_Org_ID>
           <Name>字軌代號</Name>
           <Description>Invoice prefix code</Description>
           <EntityType>TW</EntityType>
@@ -1376,6 +1441,7 @@
         <Name>Client</Name>
         <EntityType>TW</EntityType>
         <FieldLength>10</FieldLength>
+        <DefaultValue>@#AD_Client_ID@</DefaultValue>
         <IsKey>N</IsKey>
         <IsParent>N</IsParent>
         <IsMandatory>Y</IsMandatory>
@@ -1393,6 +1459,7 @@
         <Name>Organization</Name>
         <EntityType>TW</EntityType>
         <FieldLength>10</FieldLength>
+        <DefaultValue>@#AD_Org_ID@</DefaultValue>
         <IsKey>N</IsKey>
         <IsParent>N</IsParent>
         <IsMandatory>Y</IsMandatory>
@@ -1623,6 +1690,69 @@
       <AD_Field type="table">
           <AD_Client_ID reference="id">0</AD_Client_ID>
           <AD_Org_ID reference="id">0</AD_Org_ID>
+          <Name>廠商</Name>
+          <Description>Tenant</Description>
+          <EntityType>TW</EntityType>
+          <SeqNo>1</SeqNo>
+          <IsActive>Y</IsActive>
+          <IsDisplayed>Y</IsDisplayed>
+          <IsReadOnly>Y</IsReadOnly>
+          <IsMandatory>Y</IsMandatory>
+          <IsSameLine>N</IsSameLine>
+          <IsHeading>N</IsHeading>
+          <IsFieldOnly>N</IsFieldOnly>
+          <IsEncrypted>N</IsEncrypted>
+          <IsCentrallyMaintained>Y</IsCentrallyMaintained>
+          <DisplayLogic/>
+          <AD_Tab_ID reference="uuid" reference-key="AD_Tab">ea25fd07-0aee-4889-8db2-da7d0ffd79cf</AD_Tab_ID>
+          <AD_Column_ID reference="uuid" reference-key="AD_Column">350185e0-d736-45e7-9f91-83f636816ad4</AD_Column_ID>
+          <AD_Field_UU>aa000002-0001-0001-0001-000000000001</AD_Field_UU>
+      </AD_Field>
+      <AD_Field type="table">
+          <AD_Client_ID reference="id">0</AD_Client_ID>
+          <AD_Org_ID reference="id">0</AD_Org_ID>
+          <Name>組織</Name>
+          <Description>Organization</Description>
+          <EntityType>TW</EntityType>
+          <SeqNo>2</SeqNo>
+          <IsActive>Y</IsActive>
+          <IsDisplayed>Y</IsDisplayed>
+          <IsReadOnly>N</IsReadOnly>
+          <IsMandatory>Y</IsMandatory>
+          <IsSameLine>N</IsSameLine>
+          <IsHeading>N</IsHeading>
+          <IsFieldOnly>N</IsFieldOnly>
+          <IsEncrypted>N</IsEncrypted>
+          <IsCentrallyMaintained>Y</IsCentrallyMaintained>
+          <DisplayLogic/>
+          <AD_Tab_ID reference="uuid" reference-key="AD_Tab">ea25fd07-0aee-4889-8db2-da7d0ffd79cf</AD_Tab_ID>
+          <AD_Column_ID reference="uuid" reference-key="AD_Column">8149ee5e-ecb0-4274-a1a5-d640f510092b</AD_Column_ID>
+          <AD_Field_UU>aa000002-0001-0001-0001-000000000002</AD_Field_UU>
+      </AD_Field>
+      <AD_Field type="table">
+          <AD_Client_ID reference="id">0</AD_Client_ID>
+          <AD_Org_ID reference="id">0</AD_Org_ID>
+          <Name>啟用</Name>
+          <Description>Active</Description>
+          <EntityType>TW</EntityType>
+          <SeqNo>3</SeqNo>
+          <IsActive>Y</IsActive>
+          <IsDisplayed>Y</IsDisplayed>
+          <IsReadOnly>N</IsReadOnly>
+          <IsMandatory>N</IsMandatory>
+          <IsSameLine>N</IsSameLine>
+          <IsHeading>N</IsHeading>
+          <IsFieldOnly>N</IsFieldOnly>
+          <IsEncrypted>N</IsEncrypted>
+          <IsCentrallyMaintained>Y</IsCentrallyMaintained>
+          <DisplayLogic/>
+          <AD_Tab_ID reference="uuid" reference-key="AD_Tab">ea25fd07-0aee-4889-8db2-da7d0ffd79cf</AD_Tab_ID>
+          <AD_Column_ID reference="uuid" reference-key="AD_Column">1c3d8b10-1d48-4dd0-a8de-2a3580e9b303</AD_Column_ID>
+          <AD_Field_UU>aa000002-0001-0001-0001-000000000003</AD_Field_UU>
+      </AD_Field>
+      <AD_Field type="table">
+          <AD_Client_ID reference="id">0</AD_Client_ID>
+          <AD_Org_ID reference="id">0</AD_Org_ID>
           <Name>發票字軌</Name>
           <Description>Invoice prefix</Description>
           <EntityType>TW</EntityType>
@@ -1826,6 +1956,7 @@
         <Name>Client</Name>
         <EntityType>TW</EntityType>
         <FieldLength>10</FieldLength>
+        <DefaultValue>@#AD_Client_ID@</DefaultValue>
         <IsKey>N</IsKey>
         <IsParent>N</IsParent>
         <IsMandatory>Y</IsMandatory>
@@ -1843,6 +1974,7 @@
         <Name>Organization</Name>
         <EntityType>TW</EntityType>
         <FieldLength>10</FieldLength>
+        <DefaultValue>@#AD_Org_ID@</DefaultValue>
         <IsKey>N</IsKey>
         <IsParent>N</IsParent>
         <IsMandatory>Y</IsMandatory>
@@ -2092,6 +2224,69 @@
       <AD_Field type="table">
           <AD_Client_ID reference="id">0</AD_Client_ID>
           <AD_Org_ID reference="id">0</AD_Org_ID>
+          <Name>廠商</Name>
+          <Description>Tenant</Description>
+          <EntityType>TW</EntityType>
+          <SeqNo>1</SeqNo>
+          <IsActive>Y</IsActive>
+          <IsDisplayed>Y</IsDisplayed>
+          <IsReadOnly>Y</IsReadOnly>
+          <IsMandatory>Y</IsMandatory>
+          <IsSameLine>N</IsSameLine>
+          <IsHeading>N</IsHeading>
+          <IsFieldOnly>N</IsFieldOnly>
+          <IsEncrypted>N</IsEncrypted>
+          <IsCentrallyMaintained>Y</IsCentrallyMaintained>
+          <DisplayLogic/>
+          <AD_Tab_ID reference="uuid" reference-key="AD_Tab">30928dd8-6524-4d45-8fef-1ff140038d48</AD_Tab_ID>
+          <AD_Column_ID reference="uuid" reference-key="AD_Column">94c28529-0605-43b9-ae0f-514b9a4b8b1f</AD_Column_ID>
+          <AD_Field_UU>aa000003-0001-0001-0001-000000000001</AD_Field_UU>
+      </AD_Field>
+      <AD_Field type="table">
+          <AD_Client_ID reference="id">0</AD_Client_ID>
+          <AD_Org_ID reference="id">0</AD_Org_ID>
+          <Name>組織</Name>
+          <Description>Organization</Description>
+          <EntityType>TW</EntityType>
+          <SeqNo>2</SeqNo>
+          <IsActive>Y</IsActive>
+          <IsDisplayed>Y</IsDisplayed>
+          <IsReadOnly>N</IsReadOnly>
+          <IsMandatory>Y</IsMandatory>
+          <IsSameLine>N</IsSameLine>
+          <IsHeading>N</IsHeading>
+          <IsFieldOnly>N</IsFieldOnly>
+          <IsEncrypted>N</IsEncrypted>
+          <IsCentrallyMaintained>Y</IsCentrallyMaintained>
+          <DisplayLogic/>
+          <AD_Tab_ID reference="uuid" reference-key="AD_Tab">30928dd8-6524-4d45-8fef-1ff140038d48</AD_Tab_ID>
+          <AD_Column_ID reference="uuid" reference-key="AD_Column">26979631-b041-4827-af82-dbe399a456ed</AD_Column_ID>
+          <AD_Field_UU>aa000003-0001-0001-0001-000000000002</AD_Field_UU>
+      </AD_Field>
+      <AD_Field type="table">
+          <AD_Client_ID reference="id">0</AD_Client_ID>
+          <AD_Org_ID reference="id">0</AD_Org_ID>
+          <Name>啟用</Name>
+          <Description>Active</Description>
+          <EntityType>TW</EntityType>
+          <SeqNo>3</SeqNo>
+          <IsActive>Y</IsActive>
+          <IsDisplayed>Y</IsDisplayed>
+          <IsReadOnly>N</IsReadOnly>
+          <IsMandatory>N</IsMandatory>
+          <IsSameLine>N</IsSameLine>
+          <IsHeading>N</IsHeading>
+          <IsFieldOnly>N</IsFieldOnly>
+          <IsEncrypted>N</IsEncrypted>
+          <IsCentrallyMaintained>Y</IsCentrallyMaintained>
+          <DisplayLogic/>
+          <AD_Tab_ID reference="uuid" reference-key="AD_Tab">30928dd8-6524-4d45-8fef-1ff140038d48</AD_Tab_ID>
+          <AD_Column_ID reference="uuid" reference-key="AD_Column">90de368e-7ac2-494d-a20a-56c4ead8aec0</AD_Column_ID>
+          <AD_Field_UU>aa000003-0001-0001-0001-000000000003</AD_Field_UU>
+      </AD_Field>
+      <AD_Field type="table">
+          <AD_Client_ID reference="id">0</AD_Client_ID>
+          <AD_Org_ID reference="id">0</AD_Org_ID>
           <Name>原始發票</Name>
           <Description>Original invoice</Description>
           <EntityType>TW</EntityType>
@@ -2316,6 +2511,7 @@
         <Name>Client</Name>
         <EntityType>TW</EntityType>
         <FieldLength>10</FieldLength>
+        <DefaultValue>@#AD_Client_ID@</DefaultValue>
         <IsKey>N</IsKey>
         <IsParent>N</IsParent>
         <IsMandatory>Y</IsMandatory>
@@ -2333,6 +2529,7 @@
         <Name>Organization</Name>
         <EntityType>TW</EntityType>
         <FieldLength>10</FieldLength>
+        <DefaultValue>@#AD_Org_ID@</DefaultValue>
         <IsKey>N</IsKey>
         <IsParent>N</IsParent>
         <IsMandatory>Y</IsMandatory>
@@ -2698,6 +2895,69 @@
         <AD_Window_ID reference="uuid" reference-key="AD_Window">c47e9d6d-e1d5-422b-aeee-3b26ba1ae9a0</AD_Window_ID>
         <AD_Table_ID reference="uuid" reference-key="AD_Table">d419afea-bc00-4040-ab7d-9b247a533aca</AD_Table_ID>
         <AD_Tab_UU>e43ec7f4-682f-47ae-bcfe-a176c205e05b</AD_Tab_UU>
+      <AD_Field type="table">
+          <AD_Client_ID reference="id">0</AD_Client_ID>
+          <AD_Org_ID reference="id">0</AD_Org_ID>
+          <Name>廠商</Name>
+          <Description>Tenant</Description>
+          <EntityType>TW</EntityType>
+          <SeqNo>1</SeqNo>
+          <IsActive>Y</IsActive>
+          <IsDisplayed>Y</IsDisplayed>
+          <IsReadOnly>Y</IsReadOnly>
+          <IsMandatory>Y</IsMandatory>
+          <IsSameLine>N</IsSameLine>
+          <IsHeading>N</IsHeading>
+          <IsFieldOnly>N</IsFieldOnly>
+          <IsEncrypted>N</IsEncrypted>
+          <IsCentrallyMaintained>Y</IsCentrallyMaintained>
+          <DisplayLogic/>
+          <AD_Tab_ID reference="uuid" reference-key="AD_Tab">e43ec7f4-682f-47ae-bcfe-a176c205e05b</AD_Tab_ID>
+          <AD_Column_ID reference="uuid" reference-key="AD_Column">35d436d5-8345-46ea-8db2-1cc00a07c71f</AD_Column_ID>
+          <AD_Field_UU>aa000004-0001-0001-0001-000000000001</AD_Field_UU>
+      </AD_Field>
+      <AD_Field type="table">
+          <AD_Client_ID reference="id">0</AD_Client_ID>
+          <AD_Org_ID reference="id">0</AD_Org_ID>
+          <Name>組織</Name>
+          <Description>Organization</Description>
+          <EntityType>TW</EntityType>
+          <SeqNo>2</SeqNo>
+          <IsActive>Y</IsActive>
+          <IsDisplayed>Y</IsDisplayed>
+          <IsReadOnly>N</IsReadOnly>
+          <IsMandatory>Y</IsMandatory>
+          <IsSameLine>N</IsSameLine>
+          <IsHeading>N</IsHeading>
+          <IsFieldOnly>N</IsFieldOnly>
+          <IsEncrypted>N</IsEncrypted>
+          <IsCentrallyMaintained>Y</IsCentrallyMaintained>
+          <DisplayLogic/>
+          <AD_Tab_ID reference="uuid" reference-key="AD_Tab">e43ec7f4-682f-47ae-bcfe-a176c205e05b</AD_Tab_ID>
+          <AD_Column_ID reference="uuid" reference-key="AD_Column">4ac6c1e5-b433-4d8e-a6dd-850015852723</AD_Column_ID>
+          <AD_Field_UU>aa000004-0001-0001-0001-000000000002</AD_Field_UU>
+      </AD_Field>
+      <AD_Field type="table">
+          <AD_Client_ID reference="id">0</AD_Client_ID>
+          <AD_Org_ID reference="id">0</AD_Org_ID>
+          <Name>啟用</Name>
+          <Description>Active</Description>
+          <EntityType>TW</EntityType>
+          <SeqNo>3</SeqNo>
+          <IsActive>Y</IsActive>
+          <IsDisplayed>Y</IsDisplayed>
+          <IsReadOnly>N</IsReadOnly>
+          <IsMandatory>N</IsMandatory>
+          <IsSameLine>N</IsSameLine>
+          <IsHeading>N</IsHeading>
+          <IsFieldOnly>N</IsFieldOnly>
+          <IsEncrypted>N</IsEncrypted>
+          <IsCentrallyMaintained>Y</IsCentrallyMaintained>
+          <DisplayLogic/>
+          <AD_Tab_ID reference="uuid" reference-key="AD_Tab">e43ec7f4-682f-47ae-bcfe-a176c205e05b</AD_Tab_ID>
+          <AD_Column_ID reference="uuid" reference-key="AD_Column">c7396842-9bf7-419d-a42d-c078965b0c2a</AD_Column_ID>
+          <AD_Field_UU>aa000004-0001-0001-0001-000000000003</AD_Field_UU>
+      </AD_Field>
       <AD_Field type="table">
           <AD_Client_ID reference="id">0</AD_Client_ID>
           <AD_Org_ID reference="id">0</AD_Org_ID>
