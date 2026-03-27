@@ -1,20 +1,6 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<idempiere
-    Name="TW Invoice Tax System"
-    Version="1.0.9"
-    idempiereVersion="12.0.0"
-    DataBaseVersion="12.0.0"
-    Description="Taiwan Unified Invoice and Business Tax System"
-    Author="TW iDempiere Community"
-    AuthorEmail="dev@tw-idempiere.org"
-    CreatedDate="2026-03-25 00:00:00"
-    UpdatedDate="2026-03-26 00:00:00"
-    PackOutVersion="100"
-    UpdateDictionary="true"
-    Client="0"
-    AD_Client_UU="11111111-1111-1111-1111-111111111111">
+<idempiere Name="TW Invoice Tax System" Version="1.0.9" idempiereVersion="12.0.0" DataBaseVersion="12.0.0" Description="Taiwan Unified Invoice and Business Tax System" Author="TW iDempiere Community" AuthorEmail="dev@tw-idempiere.org" CreatedDate="2026-03-25 00:00:00" UpdatedDate="2026-03-26 00:00:00" PackOutVersion="100" UpdateDictionary="true" Client="0" AD_Client_UU="11111111-1111-1111-1111-111111111111">
 
-  <!-- AD_EntityType -->
+  
   <AD_EntityType type="table">
     <AD_Client_ID reference="id">0</AD_Client_ID>
     <AD_Org_ID reference="id">0</AD_Org_ID>
@@ -26,7 +12,7 @@
     <AD_EntityType_UU>d9b958f3-8873-4074-99ea-2eb2f9ffa095</AD_EntityType_UU>
   </AD_EntityType>
 
-  <!-- AD_Reference: TW_InvoiceType -->
+  
   <AD_Reference type="table">
     <AD_Client_ID reference="id">0</AD_Client_ID>
     <AD_Org_ID reference="id">0</AD_Org_ID>
@@ -57,7 +43,7 @@
     </AD_Ref_List>
   </AD_Reference>
 
-  <!-- AD_Reference: TW_InvoicePrefixStatus -->
+  
   <AD_Reference type="table">
     <AD_Client_ID reference="id">0</AD_Client_ID>
     <AD_Org_ID reference="id">0</AD_Org_ID>
@@ -98,7 +84,7 @@
     </AD_Ref_List>
   </AD_Reference>
 
-  <!-- AD_Reference: TW_AdjustmentType -->
+  
   <AD_Reference type="table">
     <AD_Client_ID reference="id">0</AD_Client_ID>
     <AD_Org_ID reference="id">0</AD_Org_ID>
@@ -129,7 +115,7 @@
     </AD_Ref_List>
   </AD_Reference>
 
-  <!-- AD_Reference: TW_AdjustmentDirection -->
+  
   <AD_Reference type="table">
     <AD_Client_ID reference="id">0</AD_Client_ID>
     <AD_Org_ID reference="id">0</AD_Org_ID>
@@ -160,7 +146,7 @@
     </AD_Ref_List>
   </AD_Reference>
 
-  <!-- AD_Reference: TW_TaxPeriod -->
+  
   <AD_Reference type="table">
     <AD_Client_ID reference="id">0</AD_Client_ID>
     <AD_Org_ID reference="id">0</AD_Org_ID>
@@ -219,7 +205,7 @@
     </AD_Ref_List>
   </AD_Reference>
 
-  <!-- AD_Element definitions for custom TW columns -->
+  
   <AD_Element type="table">
     <AD_Client_ID reference="id">0</AD_Client_ID>
     <AD_Org_ID reference="id">0</AD_Org_ID>
@@ -631,7 +617,7 @@
     <AD_Element_UU>ea000416-0000-4000-8000-000000000001</AD_Element_UU>
   </AD_Element>
 
-  <!-- AD_Sequences -->
+  
   <AD_Sequence type="table">
     <AD_Client_ID reference="id">0</AD_Client_ID>
     <AD_Org_ID reference="id">0</AD_Org_ID>
@@ -685,7 +671,7 @@
     <AD_Sequence_UU>8be893ab-9491-4f1b-88bd-019b3fbf3f43</AD_Sequence_UU>
   </AD_Sequence>
 
-  <!-- Parent summary menu containing all 4 windows -->
+  
   <AD_Menu type="table">
     <AD_Client_ID reference="id">0</AD_Client_ID>
     <AD_Org_ID reference="id">0</AD_Org_ID>
@@ -693,7 +679,7 @@
     <EntityType>TW</EntityType>
     <IsSummary>Y</IsSummary>
     <IsActive>Y</IsActive>
-    <Action/>
+    <Action />
     <AD_Menu_UU>a1b2c3d4-e5f6-7890-abcd-ef1234567890</AD_Menu_UU>
 
   <AD_Menu type="table">
@@ -1080,11 +1066,11 @@
         <IsInsertRecord>Y</IsInsertRecord>
         <IsSortTab>N</IsSortTab>
         <Processing>N</Processing>
-        <AD_Column_ID reference="id"/>
-        <AD_Process_ID reference="id"/>
-        <WhereClause/>
-        <OrderByClause/>
-        <CommitWarning/>
+        <AD_Column_ID reference="id" />
+        <AD_Process_ID reference="id" />
+        <WhereClause />
+        <OrderByClause />
+        <CommitWarning />
         <AD_Window_ID reference="uuid" reference-key="AD_Window">6006f77e-91ea-40ca-86cb-c9c61880437b</AD_Window_ID>
         <AD_Table_ID reference="uuid" reference-key="AD_Table">019e1ac0-58f9-4705-8da7-4e73f83901e7</AD_Table_ID>
         <AD_Tab_UU>d53983bc-2ec4-420e-8539-ae71376aae19</AD_Tab_UU>
@@ -1095,7 +1081,7 @@
           <Description>Tenant</Description>
           <EntityType>TW</EntityType>
           <SeqNo>1</SeqNo>
-          <IsActive>Y</IsActive>
+          <SeqNoGrid>1</SeqNoGrid><IsDisplayedGrid>Y</IsDisplayedGrid><IsActive>Y</IsActive>
           <IsDisplayed>Y</IsDisplayed>
           <IsReadOnly>Y</IsReadOnly>
           <IsMandatory>Y</IsMandatory>
@@ -1104,7 +1090,7 @@
           <IsFieldOnly>N</IsFieldOnly>
           <IsEncrypted>N</IsEncrypted>
           <IsCentrallyMaintained>Y</IsCentrallyMaintained>
-          <DisplayLogic/>
+          <DisplayLogic />
           <AD_Tab_ID reference="uuid" reference-key="AD_Tab">d53983bc-2ec4-420e-8539-ae71376aae19</AD_Tab_ID>
           <AD_Column_ID reference="uuid" reference-key="AD_Column">a7828d0d-7fad-4ce0-a9d6-a9a01405512b</AD_Column_ID>
           <AD_Field_UU>aa000001-0001-0001-0001-000000000001</AD_Field_UU>
@@ -1116,7 +1102,7 @@
           <Description>Organization</Description>
           <EntityType>TW</EntityType>
           <SeqNo>2</SeqNo>
-          <IsActive>Y</IsActive>
+          <SeqNoGrid>2</SeqNoGrid><IsDisplayedGrid>Y</IsDisplayedGrid><IsActive>Y</IsActive>
           <IsDisplayed>Y</IsDisplayed>
           <IsReadOnly>N</IsReadOnly>
           <IsMandatory>Y</IsMandatory>
@@ -1125,7 +1111,7 @@
           <IsFieldOnly>N</IsFieldOnly>
           <IsEncrypted>N</IsEncrypted>
           <IsCentrallyMaintained>Y</IsCentrallyMaintained>
-          <DisplayLogic/>
+          <DisplayLogic />
           <AD_Tab_ID reference="uuid" reference-key="AD_Tab">d53983bc-2ec4-420e-8539-ae71376aae19</AD_Tab_ID>
           <AD_Column_ID reference="uuid" reference-key="AD_Column">67abc226-cdc4-4c65-8e6a-73b82b04eb50</AD_Column_ID>
           <AD_Field_UU>aa000001-0001-0001-0001-000000000002</AD_Field_UU>
@@ -1137,7 +1123,7 @@
           <Description>Active</Description>
           <EntityType>TW</EntityType>
           <SeqNo>3</SeqNo>
-          <IsActive>Y</IsActive>
+          <SeqNoGrid>3</SeqNoGrid><IsDisplayedGrid>Y</IsDisplayedGrid><IsActive>Y</IsActive>
           <IsDisplayed>Y</IsDisplayed>
           <IsReadOnly>N</IsReadOnly>
           <IsMandatory>N</IsMandatory>
@@ -1146,7 +1132,7 @@
           <IsFieldOnly>N</IsFieldOnly>
           <IsEncrypted>N</IsEncrypted>
           <IsCentrallyMaintained>Y</IsCentrallyMaintained>
-          <DisplayLogic/>
+          <DisplayLogic />
           <AD_Tab_ID reference="uuid" reference-key="AD_Tab">d53983bc-2ec4-420e-8539-ae71376aae19</AD_Tab_ID>
           <AD_Column_ID reference="uuid" reference-key="AD_Column">aecbe185-0ddf-425b-8c71-cf4abc1fdbce</AD_Column_ID>
           <AD_Field_UU>aa000001-0001-0001-0001-000000000003</AD_Field_UU>
@@ -1157,7 +1143,7 @@
           <Name>ID</Name>
           <EntityType>TW</EntityType>
           <SeqNo>0</SeqNo>
-          <IsActive>Y</IsActive>
+          <SeqNoGrid>0</SeqNoGrid><IsDisplayedGrid>N</IsDisplayedGrid><IsActive>Y</IsActive>
           <IsDisplayed>N</IsDisplayed>
           <IsReadOnly>N</IsReadOnly>
           <IsMandatory>N</IsMandatory>
@@ -1166,7 +1152,7 @@
           <IsFieldOnly>N</IsFieldOnly>
           <IsEncrypted>N</IsEncrypted>
           <IsCentrallyMaintained>Y</IsCentrallyMaintained>
-          <DisplayLogic/>
+          <DisplayLogic />
           <AD_Tab_ID reference="uuid" reference-key="AD_Tab">d53983bc-2ec4-420e-8539-ae71376aae19</AD_Tab_ID>
           <AD_Column_ID reference="uuid" reference-key="AD_Column">809fa0d8-9ef6-451c-9c1f-30cf85097eed</AD_Column_ID>
           <AD_Field_UU>0ac6c2fc-38ea-4be9-abe8-2d7918dd3dd4</AD_Field_UU>
@@ -1177,7 +1163,7 @@
           <Name>UUID</Name>
           <EntityType>TW</EntityType>
           <SeqNo>0</SeqNo>
-          <IsActive>Y</IsActive>
+          <SeqNoGrid>0</SeqNoGrid><IsDisplayedGrid>N</IsDisplayedGrid><IsActive>Y</IsActive>
           <IsDisplayed>N</IsDisplayed>
           <IsReadOnly>N</IsReadOnly>
           <IsMandatory>N</IsMandatory>
@@ -1186,7 +1172,7 @@
           <IsFieldOnly>N</IsFieldOnly>
           <IsEncrypted>N</IsEncrypted>
           <IsCentrallyMaintained>Y</IsCentrallyMaintained>
-          <DisplayLogic/>
+          <DisplayLogic />
           <AD_Tab_ID reference="uuid" reference-key="AD_Tab">d53983bc-2ec4-420e-8539-ae71376aae19</AD_Tab_ID>
           <AD_Column_ID reference="uuid" reference-key="AD_Column">4973a358-13c7-4adf-8bcb-8d522a0e1bdd</AD_Column_ID>
           <AD_Field_UU>c9e06eeb-1168-49b2-8f10-1d752684169a</AD_Field_UU>
@@ -1197,7 +1183,7 @@
           <Name>Created</Name>
           <EntityType>TW</EntityType>
           <SeqNo>0</SeqNo>
-          <IsActive>Y</IsActive>
+          <SeqNoGrid>0</SeqNoGrid><IsDisplayedGrid>N</IsDisplayedGrid><IsActive>Y</IsActive>
           <IsDisplayed>N</IsDisplayed>
           <IsReadOnly>N</IsReadOnly>
           <IsMandatory>N</IsMandatory>
@@ -1206,7 +1192,7 @@
           <IsFieldOnly>N</IsFieldOnly>
           <IsEncrypted>N</IsEncrypted>
           <IsCentrallyMaintained>Y</IsCentrallyMaintained>
-          <DisplayLogic/>
+          <DisplayLogic />
           <AD_Tab_ID reference="uuid" reference-key="AD_Tab">d53983bc-2ec4-420e-8539-ae71376aae19</AD_Tab_ID>
           <AD_Column_ID reference="uuid" reference-key="AD_Column">7dfe5f7a-cdae-49d4-899a-16db78d8bc96</AD_Column_ID>
           <AD_Field_UU>071c6f76-8cb4-4f1c-8cea-d34344513b87</AD_Field_UU>
@@ -1217,7 +1203,7 @@
           <Name>CreatedBy</Name>
           <EntityType>TW</EntityType>
           <SeqNo>0</SeqNo>
-          <IsActive>Y</IsActive>
+          <SeqNoGrid>0</SeqNoGrid><IsDisplayedGrid>N</IsDisplayedGrid><IsActive>Y</IsActive>
           <IsDisplayed>N</IsDisplayed>
           <IsReadOnly>N</IsReadOnly>
           <IsMandatory>N</IsMandatory>
@@ -1226,7 +1212,7 @@
           <IsFieldOnly>N</IsFieldOnly>
           <IsEncrypted>N</IsEncrypted>
           <IsCentrallyMaintained>Y</IsCentrallyMaintained>
-          <DisplayLogic/>
+          <DisplayLogic />
           <AD_Tab_ID reference="uuid" reference-key="AD_Tab">d53983bc-2ec4-420e-8539-ae71376aae19</AD_Tab_ID>
           <AD_Column_ID reference="uuid" reference-key="AD_Column">a58f3146-fea2-4284-b1fd-1719a4c80ea1</AD_Column_ID>
           <AD_Field_UU>49a67024-19b4-49f4-a53f-7fa02422aaaa</AD_Field_UU>
@@ -1237,7 +1223,7 @@
           <Name>Updated</Name>
           <EntityType>TW</EntityType>
           <SeqNo>0</SeqNo>
-          <IsActive>Y</IsActive>
+          <SeqNoGrid>0</SeqNoGrid><IsDisplayedGrid>N</IsDisplayedGrid><IsActive>Y</IsActive>
           <IsDisplayed>N</IsDisplayed>
           <IsReadOnly>N</IsReadOnly>
           <IsMandatory>N</IsMandatory>
@@ -1246,7 +1232,7 @@
           <IsFieldOnly>N</IsFieldOnly>
           <IsEncrypted>N</IsEncrypted>
           <IsCentrallyMaintained>Y</IsCentrallyMaintained>
-          <DisplayLogic/>
+          <DisplayLogic />
           <AD_Tab_ID reference="uuid" reference-key="AD_Tab">d53983bc-2ec4-420e-8539-ae71376aae19</AD_Tab_ID>
           <AD_Column_ID reference="uuid" reference-key="AD_Column">144d9964-04d2-4500-8cf7-d89f9e417761</AD_Column_ID>
           <AD_Field_UU>a33bea83-289f-4aae-86d0-33a7b7d84a57</AD_Field_UU>
@@ -1257,7 +1243,7 @@
           <Name>UpdatedBy</Name>
           <EntityType>TW</EntityType>
           <SeqNo>0</SeqNo>
-          <IsActive>Y</IsActive>
+          <SeqNoGrid>0</SeqNoGrid><IsDisplayedGrid>N</IsDisplayedGrid><IsActive>Y</IsActive>
           <IsDisplayed>N</IsDisplayed>
           <IsReadOnly>N</IsReadOnly>
           <IsMandatory>N</IsMandatory>
@@ -1266,7 +1252,7 @@
           <IsFieldOnly>N</IsFieldOnly>
           <IsEncrypted>N</IsEncrypted>
           <IsCentrallyMaintained>Y</IsCentrallyMaintained>
-          <DisplayLogic/>
+          <DisplayLogic />
           <AD_Tab_ID reference="uuid" reference-key="AD_Tab">d53983bc-2ec4-420e-8539-ae71376aae19</AD_Tab_ID>
           <AD_Column_ID reference="uuid" reference-key="AD_Column">4013cf9c-e7f6-4c17-8216-a9d3feaa91ef</AD_Column_ID>
           <AD_Field_UU>b32661e9-d902-46c6-b3a2-a04040b41479</AD_Field_UU>
@@ -1278,7 +1264,7 @@
           <Description>Invoice prefix code</Description>
           <EntityType>TW</EntityType>
           <SeqNo>10</SeqNo>
-          <IsActive>Y</IsActive>
+          <SeqNoGrid>10</SeqNoGrid><IsDisplayedGrid>Y</IsDisplayedGrid><IsActive>Y</IsActive>
           <IsDisplayed>Y</IsDisplayed>
           <IsReadOnly>N</IsReadOnly>
           <IsMandatory>Y</IsMandatory>
@@ -1287,7 +1273,7 @@
           <IsFieldOnly>N</IsFieldOnly>
           <IsEncrypted>N</IsEncrypted>
           <IsCentrallyMaintained>Y</IsCentrallyMaintained>
-          <DisplayLogic/>
+          <DisplayLogic />
           <AD_Tab_ID reference="uuid" reference-key="AD_Tab">d53983bc-2ec4-420e-8539-ae71376aae19</AD_Tab_ID>
           <AD_Column_ID reference="uuid" reference-key="AD_Column">75c777ad-85d7-45be-9f1c-754efc2e0b02</AD_Column_ID>
           <AD_Field_UU>038f7fba-9471-42d1-b954-af95b6df6b86</AD_Field_UU>
@@ -1299,7 +1285,7 @@
           <Description>Invoice type</Description>
           <EntityType>TW</EntityType>
           <SeqNo>20</SeqNo>
-          <IsActive>Y</IsActive>
+          <SeqNoGrid>20</SeqNoGrid><IsDisplayedGrid>Y</IsDisplayedGrid><IsActive>Y</IsActive>
           <IsDisplayed>Y</IsDisplayed>
           <IsReadOnly>N</IsReadOnly>
           <IsMandatory>Y</IsMandatory>
@@ -1308,7 +1294,7 @@
           <IsFieldOnly>N</IsFieldOnly>
           <IsEncrypted>N</IsEncrypted>
           <IsCentrallyMaintained>Y</IsCentrallyMaintained>
-          <DisplayLogic/>
+          <DisplayLogic />
           <AD_Tab_ID reference="uuid" reference-key="AD_Tab">d53983bc-2ec4-420e-8539-ae71376aae19</AD_Tab_ID>
           <AD_Column_ID reference="uuid" reference-key="AD_Column">60f1b6bb-54c0-4df7-915c-7b22dd2e81ce</AD_Column_ID>
           <AD_Field_UU>d29daee8-2e4e-4cd3-a590-eb7b14548c8a</AD_Field_UU>
@@ -1320,7 +1306,7 @@
           <Description>Prefix status</Description>
           <EntityType>TW</EntityType>
           <SeqNo>30</SeqNo>
-          <IsActive>Y</IsActive>
+          <SeqNoGrid>30</SeqNoGrid><IsDisplayedGrid>Y</IsDisplayedGrid><IsActive>Y</IsActive>
           <IsDisplayed>Y</IsDisplayed>
           <IsReadOnly>N</IsReadOnly>
           <IsMandatory>Y</IsMandatory>
@@ -1329,7 +1315,7 @@
           <IsFieldOnly>N</IsFieldOnly>
           <IsEncrypted>N</IsEncrypted>
           <IsCentrallyMaintained>Y</IsCentrallyMaintained>
-          <DisplayLogic/>
+          <DisplayLogic />
           <AD_Tab_ID reference="uuid" reference-key="AD_Tab">d53983bc-2ec4-420e-8539-ae71376aae19</AD_Tab_ID>
           <AD_Column_ID reference="uuid" reference-key="AD_Column">4492c8af-5b3d-496e-a252-4587bff39197</AD_Column_ID>
           <AD_Field_UU>dc868dea-dc81-4e65-84b6-32bd1d37fa02</AD_Field_UU>
@@ -1341,7 +1327,7 @@
           <Description>Prefix start date</Description>
           <EntityType>TW</EntityType>
           <SeqNo>40</SeqNo>
-          <IsActive>Y</IsActive>
+          <SeqNoGrid>40</SeqNoGrid><IsDisplayedGrid>Y</IsDisplayedGrid><IsActive>Y</IsActive>
           <IsDisplayed>Y</IsDisplayed>
           <IsReadOnly>N</IsReadOnly>
           <IsMandatory>Y</IsMandatory>
@@ -1350,7 +1336,7 @@
           <IsFieldOnly>N</IsFieldOnly>
           <IsEncrypted>N</IsEncrypted>
           <IsCentrallyMaintained>Y</IsCentrallyMaintained>
-          <DisplayLogic/>
+          <DisplayLogic />
           <AD_Tab_ID reference="uuid" reference-key="AD_Tab">d53983bc-2ec4-420e-8539-ae71376aae19</AD_Tab_ID>
           <AD_Column_ID reference="uuid" reference-key="AD_Column">74a4b971-eb37-4d95-b331-abc942302050</AD_Column_ID>
           <AD_Field_UU>afd96fe3-c0b3-49ee-b239-cac741147329</AD_Field_UU>
@@ -1362,7 +1348,7 @@
           <Description>Prefix end date</Description>
           <EntityType>TW</EntityType>
           <SeqNo>50</SeqNo>
-          <IsActive>Y</IsActive>
+          <SeqNoGrid>50</SeqNoGrid><IsDisplayedGrid>Y</IsDisplayedGrid><IsActive>Y</IsActive>
           <IsDisplayed>Y</IsDisplayed>
           <IsReadOnly>N</IsReadOnly>
           <IsMandatory>Y</IsMandatory>
@@ -1371,7 +1357,7 @@
           <IsFieldOnly>N</IsFieldOnly>
           <IsEncrypted>N</IsEncrypted>
           <IsCentrallyMaintained>Y</IsCentrallyMaintained>
-          <DisplayLogic/>
+          <DisplayLogic />
           <AD_Tab_ID reference="uuid" reference-key="AD_Tab">d53983bc-2ec4-420e-8539-ae71376aae19</AD_Tab_ID>
           <AD_Column_ID reference="uuid" reference-key="AD_Column">c5d9a2cb-7030-42ad-bd06-a3a6479c0beb</AD_Column_ID>
           <AD_Field_UU>1f278df3-4119-4253-bdf3-74fbef152ded</AD_Field_UU>
@@ -1383,7 +1369,7 @@
           <Description>First invoice number</Description>
           <EntityType>TW</EntityType>
           <SeqNo>60</SeqNo>
-          <IsActive>Y</IsActive>
+          <SeqNoGrid>60</SeqNoGrid><IsDisplayedGrid>Y</IsDisplayedGrid><IsActive>Y</IsActive>
           <IsDisplayed>Y</IsDisplayed>
           <IsReadOnly>N</IsReadOnly>
           <IsMandatory>Y</IsMandatory>
@@ -1392,7 +1378,7 @@
           <IsFieldOnly>N</IsFieldOnly>
           <IsEncrypted>N</IsEncrypted>
           <IsCentrallyMaintained>Y</IsCentrallyMaintained>
-          <DisplayLogic/>
+          <DisplayLogic />
           <AD_Tab_ID reference="uuid" reference-key="AD_Tab">d53983bc-2ec4-420e-8539-ae71376aae19</AD_Tab_ID>
           <AD_Column_ID reference="uuid" reference-key="AD_Column">b92f686d-a682-4f34-aba2-0a5a44fc68e7</AD_Column_ID>
           <AD_Field_UU>60691aa8-d988-46ec-9c50-ae707baec1e3</AD_Field_UU>
@@ -1404,7 +1390,7 @@
           <Description>Last invoice number</Description>
           <EntityType>TW</EntityType>
           <SeqNo>70</SeqNo>
-          <IsActive>Y</IsActive>
+          <SeqNoGrid>70</SeqNoGrid><IsDisplayedGrid>Y</IsDisplayedGrid><IsActive>Y</IsActive>
           <IsDisplayed>Y</IsDisplayed>
           <IsReadOnly>N</IsReadOnly>
           <IsMandatory>Y</IsMandatory>
@@ -1413,7 +1399,7 @@
           <IsFieldOnly>N</IsFieldOnly>
           <IsEncrypted>N</IsEncrypted>
           <IsCentrallyMaintained>Y</IsCentrallyMaintained>
-          <DisplayLogic/>
+          <DisplayLogic />
           <AD_Tab_ID reference="uuid" reference-key="AD_Tab">d53983bc-2ec4-420e-8539-ae71376aae19</AD_Tab_ID>
           <AD_Column_ID reference="uuid" reference-key="AD_Column">dfcd8e50-5c24-4f1b-b370-0612030b0627</AD_Column_ID>
           <AD_Field_UU>a0c74560-5d0b-4217-a485-74f390ae9e95</AD_Field_UU>
@@ -1425,7 +1411,7 @@
           <Description>Current invoice number</Description>
           <EntityType>TW</EntityType>
           <SeqNo>80</SeqNo>
-          <IsActive>Y</IsActive>
+          <SeqNoGrid>80</SeqNoGrid><IsDisplayedGrid>Y</IsDisplayedGrid><IsActive>Y</IsActive>
           <IsDisplayed>Y</IsDisplayed>
           <IsReadOnly>N</IsReadOnly>
           <IsMandatory>Y</IsMandatory>
@@ -1434,7 +1420,7 @@
           <IsFieldOnly>N</IsFieldOnly>
           <IsEncrypted>N</IsEncrypted>
           <IsCentrallyMaintained>Y</IsCentrallyMaintained>
-          <DisplayLogic/>
+          <DisplayLogic />
           <AD_Tab_ID reference="uuid" reference-key="AD_Tab">d53983bc-2ec4-420e-8539-ae71376aae19</AD_Tab_ID>
           <AD_Column_ID reference="uuid" reference-key="AD_Column">2f30cf68-8acc-4fd8-8a5e-c8d79d84445d</AD_Column_ID>
           <AD_Field_UU>be225820-dc8f-4da5-83c8-5822600ece0d</AD_Field_UU>
@@ -1446,7 +1432,7 @@
           <Description>Last issued invoice number</Description>
           <EntityType>TW</EntityType>
           <SeqNo>90</SeqNo>
-          <IsActive>Y</IsActive>
+          <SeqNoGrid>90</SeqNoGrid><IsDisplayedGrid>Y</IsDisplayedGrid><IsActive>Y</IsActive>
           <IsDisplayed>Y</IsDisplayed>
           <IsReadOnly>N</IsReadOnly>
           <IsMandatory>N</IsMandatory>
@@ -1455,7 +1441,7 @@
           <IsFieldOnly>N</IsFieldOnly>
           <IsEncrypted>N</IsEncrypted>
           <IsCentrallyMaintained>Y</IsCentrallyMaintained>
-          <DisplayLogic/>
+          <DisplayLogic />
           <AD_Tab_ID reference="uuid" reference-key="AD_Tab">d53983bc-2ec4-420e-8539-ae71376aae19</AD_Tab_ID>
           <AD_Column_ID reference="uuid" reference-key="AD_Column">bea5e450-83de-4448-8bbb-2a991df091a3</AD_Column_ID>
           <AD_Field_UU>0103b00d-e143-483a-9cb3-4aeeb9ad3cc8</AD_Field_UU>
@@ -1467,7 +1453,7 @@
           <Description>Date of last issued invoice</Description>
           <EntityType>TW</EntityType>
           <SeqNo>100</SeqNo>
-          <IsActive>Y</IsActive>
+          <SeqNoGrid>100</SeqNoGrid><IsDisplayedGrid>Y</IsDisplayedGrid><IsActive>Y</IsActive>
           <IsDisplayed>Y</IsDisplayed>
           <IsReadOnly>N</IsReadOnly>
           <IsMandatory>N</IsMandatory>
@@ -1476,7 +1462,7 @@
           <IsFieldOnly>N</IsFieldOnly>
           <IsEncrypted>N</IsEncrypted>
           <IsCentrallyMaintained>Y</IsCentrallyMaintained>
-          <DisplayLogic/>
+          <DisplayLogic />
           <AD_Tab_ID reference="uuid" reference-key="AD_Tab">d53983bc-2ec4-420e-8539-ae71376aae19</AD_Tab_ID>
           <AD_Column_ID reference="uuid" reference-key="AD_Column">adbba354-34c2-4a52-978b-46bf4c860bd1</AD_Column_ID>
           <AD_Field_UU>e5122395-4c20-4ca0-98bb-355d08d70c8a</AD_Field_UU>
@@ -1799,11 +1785,11 @@
         <IsInsertRecord>Y</IsInsertRecord>
         <IsSortTab>N</IsSortTab>
         <Processing>N</Processing>
-        <AD_Column_ID reference="id"/>
-        <AD_Process_ID reference="id"/>
-        <WhereClause/>
-        <OrderByClause/>
-        <CommitWarning/>
+        <AD_Column_ID reference="id" />
+        <AD_Process_ID reference="id" />
+        <WhereClause />
+        <OrderByClause />
+        <CommitWarning />
         <AD_Window_ID reference="uuid" reference-key="AD_Window">bc490b51-b6d9-4e52-9939-235876051874</AD_Window_ID>
         <AD_Table_ID reference="uuid" reference-key="AD_Table">1c099039-3941-4059-9938-9d476296dfad</AD_Table_ID>
         <AD_Tab_UU>ea25fd07-0aee-4889-8db2-da7d0ffd79cf</AD_Tab_UU>
@@ -1814,7 +1800,7 @@
           <Description>Tenant</Description>
           <EntityType>TW</EntityType>
           <SeqNo>1</SeqNo>
-          <IsActive>Y</IsActive>
+          <SeqNoGrid>1</SeqNoGrid><IsDisplayedGrid>Y</IsDisplayedGrid><IsActive>Y</IsActive>
           <IsDisplayed>Y</IsDisplayed>
           <IsReadOnly>Y</IsReadOnly>
           <IsMandatory>Y</IsMandatory>
@@ -1823,7 +1809,7 @@
           <IsFieldOnly>N</IsFieldOnly>
           <IsEncrypted>N</IsEncrypted>
           <IsCentrallyMaintained>Y</IsCentrallyMaintained>
-          <DisplayLogic/>
+          <DisplayLogic />
           <AD_Tab_ID reference="uuid" reference-key="AD_Tab">ea25fd07-0aee-4889-8db2-da7d0ffd79cf</AD_Tab_ID>
           <AD_Column_ID reference="uuid" reference-key="AD_Column">350185e0-d736-45e7-9f91-83f636816ad4</AD_Column_ID>
           <AD_Field_UU>aa000002-0001-0001-0001-000000000001</AD_Field_UU>
@@ -1835,7 +1821,7 @@
           <Description>Organization</Description>
           <EntityType>TW</EntityType>
           <SeqNo>2</SeqNo>
-          <IsActive>Y</IsActive>
+          <SeqNoGrid>2</SeqNoGrid><IsDisplayedGrid>Y</IsDisplayedGrid><IsActive>Y</IsActive>
           <IsDisplayed>Y</IsDisplayed>
           <IsReadOnly>N</IsReadOnly>
           <IsMandatory>Y</IsMandatory>
@@ -1844,7 +1830,7 @@
           <IsFieldOnly>N</IsFieldOnly>
           <IsEncrypted>N</IsEncrypted>
           <IsCentrallyMaintained>Y</IsCentrallyMaintained>
-          <DisplayLogic/>
+          <DisplayLogic />
           <AD_Tab_ID reference="uuid" reference-key="AD_Tab">ea25fd07-0aee-4889-8db2-da7d0ffd79cf</AD_Tab_ID>
           <AD_Column_ID reference="uuid" reference-key="AD_Column">8149ee5e-ecb0-4274-a1a5-d640f510092b</AD_Column_ID>
           <AD_Field_UU>aa000002-0001-0001-0001-000000000002</AD_Field_UU>
@@ -1856,7 +1842,7 @@
           <Description>Active</Description>
           <EntityType>TW</EntityType>
           <SeqNo>3</SeqNo>
-          <IsActive>Y</IsActive>
+          <SeqNoGrid>3</SeqNoGrid><IsDisplayedGrid>Y</IsDisplayedGrid><IsActive>Y</IsActive>
           <IsDisplayed>Y</IsDisplayed>
           <IsReadOnly>N</IsReadOnly>
           <IsMandatory>N</IsMandatory>
@@ -1865,7 +1851,7 @@
           <IsFieldOnly>N</IsFieldOnly>
           <IsEncrypted>N</IsEncrypted>
           <IsCentrallyMaintained>Y</IsCentrallyMaintained>
-          <DisplayLogic/>
+          <DisplayLogic />
           <AD_Tab_ID reference="uuid" reference-key="AD_Tab">ea25fd07-0aee-4889-8db2-da7d0ffd79cf</AD_Tab_ID>
           <AD_Column_ID reference="uuid" reference-key="AD_Column">1c3d8b10-1d48-4dd0-a8de-2a3580e9b303</AD_Column_ID>
           <AD_Field_UU>aa000002-0001-0001-0001-000000000003</AD_Field_UU>
@@ -1876,7 +1862,7 @@
           <Name>ID</Name>
           <EntityType>TW</EntityType>
           <SeqNo>0</SeqNo>
-          <IsActive>Y</IsActive>
+          <SeqNoGrid>0</SeqNoGrid><IsDisplayedGrid>N</IsDisplayedGrid><IsActive>Y</IsActive>
           <IsDisplayed>N</IsDisplayed>
           <IsReadOnly>N</IsReadOnly>
           <IsMandatory>N</IsMandatory>
@@ -1885,7 +1871,7 @@
           <IsFieldOnly>N</IsFieldOnly>
           <IsEncrypted>N</IsEncrypted>
           <IsCentrallyMaintained>Y</IsCentrallyMaintained>
-          <DisplayLogic/>
+          <DisplayLogic />
           <AD_Tab_ID reference="uuid" reference-key="AD_Tab">ea25fd07-0aee-4889-8db2-da7d0ffd79cf</AD_Tab_ID>
           <AD_Column_ID reference="uuid" reference-key="AD_Column">72b7fd05-31d9-4f29-a372-56eb4453fa38</AD_Column_ID>
           <AD_Field_UU>15f7be11-a8c2-45f7-8ceb-0132a52031d3</AD_Field_UU>
@@ -1896,7 +1882,7 @@
           <Name>UUID</Name>
           <EntityType>TW</EntityType>
           <SeqNo>0</SeqNo>
-          <IsActive>Y</IsActive>
+          <SeqNoGrid>0</SeqNoGrid><IsDisplayedGrid>N</IsDisplayedGrid><IsActive>Y</IsActive>
           <IsDisplayed>N</IsDisplayed>
           <IsReadOnly>N</IsReadOnly>
           <IsMandatory>N</IsMandatory>
@@ -1905,7 +1891,7 @@
           <IsFieldOnly>N</IsFieldOnly>
           <IsEncrypted>N</IsEncrypted>
           <IsCentrallyMaintained>Y</IsCentrallyMaintained>
-          <DisplayLogic/>
+          <DisplayLogic />
           <AD_Tab_ID reference="uuid" reference-key="AD_Tab">ea25fd07-0aee-4889-8db2-da7d0ffd79cf</AD_Tab_ID>
           <AD_Column_ID reference="uuid" reference-key="AD_Column">9c0510b1-8dc1-4ee8-8fab-d3cf2a6d5535</AD_Column_ID>
           <AD_Field_UU>f91ac4c9-d95f-4c1a-9653-5c454f714d93</AD_Field_UU>
@@ -1916,7 +1902,7 @@
           <Name>Created</Name>
           <EntityType>TW</EntityType>
           <SeqNo>0</SeqNo>
-          <IsActive>Y</IsActive>
+          <SeqNoGrid>0</SeqNoGrid><IsDisplayedGrid>N</IsDisplayedGrid><IsActive>Y</IsActive>
           <IsDisplayed>N</IsDisplayed>
           <IsReadOnly>N</IsReadOnly>
           <IsMandatory>N</IsMandatory>
@@ -1925,7 +1911,7 @@
           <IsFieldOnly>N</IsFieldOnly>
           <IsEncrypted>N</IsEncrypted>
           <IsCentrallyMaintained>Y</IsCentrallyMaintained>
-          <DisplayLogic/>
+          <DisplayLogic />
           <AD_Tab_ID reference="uuid" reference-key="AD_Tab">ea25fd07-0aee-4889-8db2-da7d0ffd79cf</AD_Tab_ID>
           <AD_Column_ID reference="uuid" reference-key="AD_Column">1eee2999-c520-43f0-a797-ab549642f928</AD_Column_ID>
           <AD_Field_UU>7a006f11-99b1-4052-a684-fc4189837f5c</AD_Field_UU>
@@ -1936,7 +1922,7 @@
           <Name>CreatedBy</Name>
           <EntityType>TW</EntityType>
           <SeqNo>0</SeqNo>
-          <IsActive>Y</IsActive>
+          <SeqNoGrid>0</SeqNoGrid><IsDisplayedGrid>N</IsDisplayedGrid><IsActive>Y</IsActive>
           <IsDisplayed>N</IsDisplayed>
           <IsReadOnly>N</IsReadOnly>
           <IsMandatory>N</IsMandatory>
@@ -1945,7 +1931,7 @@
           <IsFieldOnly>N</IsFieldOnly>
           <IsEncrypted>N</IsEncrypted>
           <IsCentrallyMaintained>Y</IsCentrallyMaintained>
-          <DisplayLogic/>
+          <DisplayLogic />
           <AD_Tab_ID reference="uuid" reference-key="AD_Tab">ea25fd07-0aee-4889-8db2-da7d0ffd79cf</AD_Tab_ID>
           <AD_Column_ID reference="uuid" reference-key="AD_Column">e30eed21-1f79-4376-813f-848a0f0fdf6e</AD_Column_ID>
           <AD_Field_UU>d1330dc8-6a5a-4a78-8a46-6e504ebfbb8f</AD_Field_UU>
@@ -1956,7 +1942,7 @@
           <Name>Updated</Name>
           <EntityType>TW</EntityType>
           <SeqNo>0</SeqNo>
-          <IsActive>Y</IsActive>
+          <SeqNoGrid>0</SeqNoGrid><IsDisplayedGrid>N</IsDisplayedGrid><IsActive>Y</IsActive>
           <IsDisplayed>N</IsDisplayed>
           <IsReadOnly>N</IsReadOnly>
           <IsMandatory>N</IsMandatory>
@@ -1965,7 +1951,7 @@
           <IsFieldOnly>N</IsFieldOnly>
           <IsEncrypted>N</IsEncrypted>
           <IsCentrallyMaintained>Y</IsCentrallyMaintained>
-          <DisplayLogic/>
+          <DisplayLogic />
           <AD_Tab_ID reference="uuid" reference-key="AD_Tab">ea25fd07-0aee-4889-8db2-da7d0ffd79cf</AD_Tab_ID>
           <AD_Column_ID reference="uuid" reference-key="AD_Column">2e0d1374-612d-4195-b52a-53bbbfd40f82</AD_Column_ID>
           <AD_Field_UU>70344942-25c3-4fbd-b418-2f52025616d1</AD_Field_UU>
@@ -1976,7 +1962,7 @@
           <Name>UpdatedBy</Name>
           <EntityType>TW</EntityType>
           <SeqNo>0</SeqNo>
-          <IsActive>Y</IsActive>
+          <SeqNoGrid>0</SeqNoGrid><IsDisplayedGrid>N</IsDisplayedGrid><IsActive>Y</IsActive>
           <IsDisplayed>N</IsDisplayed>
           <IsReadOnly>N</IsReadOnly>
           <IsMandatory>N</IsMandatory>
@@ -1985,7 +1971,7 @@
           <IsFieldOnly>N</IsFieldOnly>
           <IsEncrypted>N</IsEncrypted>
           <IsCentrallyMaintained>Y</IsCentrallyMaintained>
-          <DisplayLogic/>
+          <DisplayLogic />
           <AD_Tab_ID reference="uuid" reference-key="AD_Tab">ea25fd07-0aee-4889-8db2-da7d0ffd79cf</AD_Tab_ID>
           <AD_Column_ID reference="uuid" reference-key="AD_Column">d7d053db-3940-4168-b4a8-df1f624430c0</AD_Column_ID>
           <AD_Field_UU>5e3862c6-f358-423d-be8b-aaa3009eb0f8</AD_Field_UU>
@@ -1997,7 +1983,7 @@
           <Description>Invoice prefix</Description>
           <EntityType>TW</EntityType>
           <SeqNo>10</SeqNo>
-          <IsActive>Y</IsActive>
+          <SeqNoGrid>10</SeqNoGrid><IsDisplayedGrid>Y</IsDisplayedGrid><IsActive>Y</IsActive>
           <IsDisplayed>Y</IsDisplayed>
           <IsReadOnly>N</IsReadOnly>
           <IsMandatory>Y</IsMandatory>
@@ -2006,7 +1992,7 @@
           <IsFieldOnly>N</IsFieldOnly>
           <IsEncrypted>N</IsEncrypted>
           <IsCentrallyMaintained>Y</IsCentrallyMaintained>
-          <DisplayLogic/>
+          <DisplayLogic />
           <AD_Tab_ID reference="uuid" reference-key="AD_Tab">ea25fd07-0aee-4889-8db2-da7d0ffd79cf</AD_Tab_ID>
           <AD_Column_ID reference="uuid" reference-key="AD_Column">c1627cfb-11e8-49d6-863a-b0d5d1444006</AD_Column_ID>
           <AD_Field_UU>b2e44c76-c216-41b0-9608-007edf80a0ed</AD_Field_UU>
@@ -2018,7 +2004,7 @@
           <Description>iDempiere Invoice</Description>
           <EntityType>TW</EntityType>
           <SeqNo>20</SeqNo>
-          <IsActive>Y</IsActive>
+          <SeqNoGrid>20</SeqNoGrid><IsDisplayedGrid>Y</IsDisplayedGrid><IsActive>Y</IsActive>
           <IsDisplayed>Y</IsDisplayed>
           <IsReadOnly>N</IsReadOnly>
           <IsMandatory>Y</IsMandatory>
@@ -2027,7 +2013,7 @@
           <IsFieldOnly>N</IsFieldOnly>
           <IsEncrypted>N</IsEncrypted>
           <IsCentrallyMaintained>Y</IsCentrallyMaintained>
-          <DisplayLogic/>
+          <DisplayLogic />
           <AD_Tab_ID reference="uuid" reference-key="AD_Tab">ea25fd07-0aee-4889-8db2-da7d0ffd79cf</AD_Tab_ID>
           <AD_Column_ID reference="uuid" reference-key="AD_Column">0dbc228b-64c9-4c01-b984-3243b6b6b658</AD_Column_ID>
           <AD_Field_UU>482b3407-cda7-4c88-9a01-bb1625411a4f</AD_Field_UU>
@@ -2039,7 +2025,7 @@
           <Description>Invoice date</Description>
           <EntityType>TW</EntityType>
           <SeqNo>30</SeqNo>
-          <IsActive>Y</IsActive>
+          <SeqNoGrid>30</SeqNoGrid><IsDisplayedGrid>Y</IsDisplayedGrid><IsActive>Y</IsActive>
           <IsDisplayed>Y</IsDisplayed>
           <IsReadOnly>N</IsReadOnly>
           <IsMandatory>Y</IsMandatory>
@@ -2048,7 +2034,7 @@
           <IsFieldOnly>N</IsFieldOnly>
           <IsEncrypted>N</IsEncrypted>
           <IsCentrallyMaintained>Y</IsCentrallyMaintained>
-          <DisplayLogic/>
+          <DisplayLogic />
           <AD_Tab_ID reference="uuid" reference-key="AD_Tab">ea25fd07-0aee-4889-8db2-da7d0ffd79cf</AD_Tab_ID>
           <AD_Column_ID reference="uuid" reference-key="AD_Column">a654f729-4dfb-4fb0-9d4a-ce70b675cdd8</AD_Column_ID>
           <AD_Field_UU>91e892a1-708e-4db9-bdc4-e7d15ece24d4</AD_Field_UU>
@@ -2060,7 +2046,7 @@
           <Description>Invoice number</Description>
           <EntityType>TW</EntityType>
           <SeqNo>40</SeqNo>
-          <IsActive>Y</IsActive>
+          <SeqNoGrid>40</SeqNoGrid><IsDisplayedGrid>Y</IsDisplayedGrid><IsActive>Y</IsActive>
           <IsDisplayed>Y</IsDisplayed>
           <IsReadOnly>N</IsReadOnly>
           <IsMandatory>Y</IsMandatory>
@@ -2069,7 +2055,7 @@
           <IsFieldOnly>N</IsFieldOnly>
           <IsEncrypted>N</IsEncrypted>
           <IsCentrallyMaintained>Y</IsCentrallyMaintained>
-          <DisplayLogic/>
+          <DisplayLogic />
           <AD_Tab_ID reference="uuid" reference-key="AD_Tab">ea25fd07-0aee-4889-8db2-da7d0ffd79cf</AD_Tab_ID>
           <AD_Column_ID reference="uuid" reference-key="AD_Column">03fc7aec-c621-417c-8942-5439d7562971</AD_Column_ID>
           <AD_Field_UU>9e39c384-91f3-4b83-b0ef-598bfcb3acbf</AD_Field_UU>
@@ -2081,7 +2067,7 @@
           <Description>Buyer tax ID (B2B required)</Description>
           <EntityType>TW</EntityType>
           <SeqNo>50</SeqNo>
-          <IsActive>Y</IsActive>
+          <SeqNoGrid>50</SeqNoGrid><IsDisplayedGrid>Y</IsDisplayedGrid><IsActive>Y</IsActive>
           <IsDisplayed>Y</IsDisplayed>
           <IsReadOnly>N</IsReadOnly>
           <IsMandatory>N</IsMandatory>
@@ -2090,7 +2076,7 @@
           <IsFieldOnly>N</IsFieldOnly>
           <IsEncrypted>N</IsEncrypted>
           <IsCentrallyMaintained>Y</IsCentrallyMaintained>
-          <DisplayLogic/>
+          <DisplayLogic />
           <AD_Tab_ID reference="uuid" reference-key="AD_Tab">ea25fd07-0aee-4889-8db2-da7d0ffd79cf</AD_Tab_ID>
           <AD_Column_ID reference="uuid" reference-key="AD_Column">4ef7daf9-bab9-414b-9ac0-a732ed01c25c</AD_Column_ID>
           <AD_Field_UU>939a31ad-7596-42a7-8a73-837c1ca1885d</AD_Field_UU>
@@ -2102,7 +2088,7 @@
           <Description>Expiry warning flag</Description>
           <EntityType>TW</EntityType>
           <SeqNo>60</SeqNo>
-          <IsActive>Y</IsActive>
+          <SeqNoGrid>60</SeqNoGrid><IsDisplayedGrid>Y</IsDisplayedGrid><IsActive>Y</IsActive>
           <IsDisplayed>Y</IsDisplayed>
           <IsReadOnly>N</IsReadOnly>
           <IsMandatory>Y</IsMandatory>
@@ -2111,7 +2097,7 @@
           <IsFieldOnly>N</IsFieldOnly>
           <IsEncrypted>N</IsEncrypted>
           <IsCentrallyMaintained>Y</IsCentrallyMaintained>
-          <DisplayLogic/>
+          <DisplayLogic />
           <AD_Tab_ID reference="uuid" reference-key="AD_Tab">ea25fd07-0aee-4889-8db2-da7d0ffd79cf</AD_Tab_ID>
           <AD_Column_ID reference="uuid" reference-key="AD_Column">4d5d80ef-42e3-4f27-ad60-5031b7f40074</AD_Column_ID>
           <AD_Field_UU>d84b5640-4634-4465-88cc-893b4d1dc31c</AD_Field_UU>
@@ -2453,11 +2439,11 @@
         <IsInsertRecord>Y</IsInsertRecord>
         <IsSortTab>N</IsSortTab>
         <Processing>N</Processing>
-        <AD_Column_ID reference="id"/>
-        <AD_Process_ID reference="id"/>
-        <WhereClause/>
-        <OrderByClause/>
-        <CommitWarning/>
+        <AD_Column_ID reference="id" />
+        <AD_Process_ID reference="id" />
+        <WhereClause />
+        <OrderByClause />
+        <CommitWarning />
         <AD_Window_ID reference="uuid" reference-key="AD_Window">bc9a9e5a-ddee-464a-bb60-6fb57d1500f7</AD_Window_ID>
         <AD_Table_ID reference="uuid" reference-key="AD_Table">d29f8934-8e44-44ae-b147-2caa2f2f72f4</AD_Table_ID>
         <AD_Tab_UU>30928dd8-6524-4d45-8fef-1ff140038d48</AD_Tab_UU>
@@ -2468,7 +2454,7 @@
           <Description>Tenant</Description>
           <EntityType>TW</EntityType>
           <SeqNo>1</SeqNo>
-          <IsActive>Y</IsActive>
+          <SeqNoGrid>1</SeqNoGrid><IsDisplayedGrid>Y</IsDisplayedGrid><IsActive>Y</IsActive>
           <IsDisplayed>Y</IsDisplayed>
           <IsReadOnly>Y</IsReadOnly>
           <IsMandatory>Y</IsMandatory>
@@ -2477,7 +2463,7 @@
           <IsFieldOnly>N</IsFieldOnly>
           <IsEncrypted>N</IsEncrypted>
           <IsCentrallyMaintained>Y</IsCentrallyMaintained>
-          <DisplayLogic/>
+          <DisplayLogic />
           <AD_Tab_ID reference="uuid" reference-key="AD_Tab">30928dd8-6524-4d45-8fef-1ff140038d48</AD_Tab_ID>
           <AD_Column_ID reference="uuid" reference-key="AD_Column">94c28529-0605-43b9-ae0f-514b9a4b8b1f</AD_Column_ID>
           <AD_Field_UU>aa000003-0001-0001-0001-000000000001</AD_Field_UU>
@@ -2489,7 +2475,7 @@
           <Description>Organization</Description>
           <EntityType>TW</EntityType>
           <SeqNo>2</SeqNo>
-          <IsActive>Y</IsActive>
+          <SeqNoGrid>2</SeqNoGrid><IsDisplayedGrid>Y</IsDisplayedGrid><IsActive>Y</IsActive>
           <IsDisplayed>Y</IsDisplayed>
           <IsReadOnly>N</IsReadOnly>
           <IsMandatory>Y</IsMandatory>
@@ -2498,7 +2484,7 @@
           <IsFieldOnly>N</IsFieldOnly>
           <IsEncrypted>N</IsEncrypted>
           <IsCentrallyMaintained>Y</IsCentrallyMaintained>
-          <DisplayLogic/>
+          <DisplayLogic />
           <AD_Tab_ID reference="uuid" reference-key="AD_Tab">30928dd8-6524-4d45-8fef-1ff140038d48</AD_Tab_ID>
           <AD_Column_ID reference="uuid" reference-key="AD_Column">26979631-b041-4827-af82-dbe399a456ed</AD_Column_ID>
           <AD_Field_UU>aa000003-0001-0001-0001-000000000002</AD_Field_UU>
@@ -2510,7 +2496,7 @@
           <Description>Active</Description>
           <EntityType>TW</EntityType>
           <SeqNo>3</SeqNo>
-          <IsActive>Y</IsActive>
+          <SeqNoGrid>3</SeqNoGrid><IsDisplayedGrid>Y</IsDisplayedGrid><IsActive>Y</IsActive>
           <IsDisplayed>Y</IsDisplayed>
           <IsReadOnly>N</IsReadOnly>
           <IsMandatory>N</IsMandatory>
@@ -2519,7 +2505,7 @@
           <IsFieldOnly>N</IsFieldOnly>
           <IsEncrypted>N</IsEncrypted>
           <IsCentrallyMaintained>Y</IsCentrallyMaintained>
-          <DisplayLogic/>
+          <DisplayLogic />
           <AD_Tab_ID reference="uuid" reference-key="AD_Tab">30928dd8-6524-4d45-8fef-1ff140038d48</AD_Tab_ID>
           <AD_Column_ID reference="uuid" reference-key="AD_Column">90de368e-7ac2-494d-a20a-56c4ead8aec0</AD_Column_ID>
           <AD_Field_UU>aa000003-0001-0001-0001-000000000003</AD_Field_UU>
@@ -2530,7 +2516,7 @@
           <Name>ID</Name>
           <EntityType>TW</EntityType>
           <SeqNo>0</SeqNo>
-          <IsActive>Y</IsActive>
+          <SeqNoGrid>0</SeqNoGrid><IsDisplayedGrid>N</IsDisplayedGrid><IsActive>Y</IsActive>
           <IsDisplayed>N</IsDisplayed>
           <IsReadOnly>N</IsReadOnly>
           <IsMandatory>N</IsMandatory>
@@ -2539,7 +2525,7 @@
           <IsFieldOnly>N</IsFieldOnly>
           <IsEncrypted>N</IsEncrypted>
           <IsCentrallyMaintained>Y</IsCentrallyMaintained>
-          <DisplayLogic/>
+          <DisplayLogic />
           <AD_Tab_ID reference="uuid" reference-key="AD_Tab">30928dd8-6524-4d45-8fef-1ff140038d48</AD_Tab_ID>
           <AD_Column_ID reference="uuid" reference-key="AD_Column">5b68e04f-ac5d-4fef-b757-c402a6090a1a</AD_Column_ID>
           <AD_Field_UU>bb9c4690-5a9f-42e6-9916-4a48f16d3ff8</AD_Field_UU>
@@ -2550,7 +2536,7 @@
           <Name>UUID</Name>
           <EntityType>TW</EntityType>
           <SeqNo>0</SeqNo>
-          <IsActive>Y</IsActive>
+          <SeqNoGrid>0</SeqNoGrid><IsDisplayedGrid>N</IsDisplayedGrid><IsActive>Y</IsActive>
           <IsDisplayed>N</IsDisplayed>
           <IsReadOnly>N</IsReadOnly>
           <IsMandatory>N</IsMandatory>
@@ -2559,7 +2545,7 @@
           <IsFieldOnly>N</IsFieldOnly>
           <IsEncrypted>N</IsEncrypted>
           <IsCentrallyMaintained>Y</IsCentrallyMaintained>
-          <DisplayLogic/>
+          <DisplayLogic />
           <AD_Tab_ID reference="uuid" reference-key="AD_Tab">30928dd8-6524-4d45-8fef-1ff140038d48</AD_Tab_ID>
           <AD_Column_ID reference="uuid" reference-key="AD_Column">a2fd3820-44fd-482d-9855-db4aad8c43b7</AD_Column_ID>
           <AD_Field_UU>562e4be3-55a6-4764-9076-68fd1376997a</AD_Field_UU>
@@ -2570,7 +2556,7 @@
           <Name>Created</Name>
           <EntityType>TW</EntityType>
           <SeqNo>0</SeqNo>
-          <IsActive>Y</IsActive>
+          <SeqNoGrid>0</SeqNoGrid><IsDisplayedGrid>N</IsDisplayedGrid><IsActive>Y</IsActive>
           <IsDisplayed>N</IsDisplayed>
           <IsReadOnly>N</IsReadOnly>
           <IsMandatory>N</IsMandatory>
@@ -2579,7 +2565,7 @@
           <IsFieldOnly>N</IsFieldOnly>
           <IsEncrypted>N</IsEncrypted>
           <IsCentrallyMaintained>Y</IsCentrallyMaintained>
-          <DisplayLogic/>
+          <DisplayLogic />
           <AD_Tab_ID reference="uuid" reference-key="AD_Tab">30928dd8-6524-4d45-8fef-1ff140038d48</AD_Tab_ID>
           <AD_Column_ID reference="uuid" reference-key="AD_Column">4b5137e3-8601-4d36-9570-f52dfc6f2044</AD_Column_ID>
           <AD_Field_UU>a6d42d68-09df-4d4a-9abd-a1d3df3b8eef</AD_Field_UU>
@@ -2590,7 +2576,7 @@
           <Name>CreatedBy</Name>
           <EntityType>TW</EntityType>
           <SeqNo>0</SeqNo>
-          <IsActive>Y</IsActive>
+          <SeqNoGrid>0</SeqNoGrid><IsDisplayedGrid>N</IsDisplayedGrid><IsActive>Y</IsActive>
           <IsDisplayed>N</IsDisplayed>
           <IsReadOnly>N</IsReadOnly>
           <IsMandatory>N</IsMandatory>
@@ -2599,7 +2585,7 @@
           <IsFieldOnly>N</IsFieldOnly>
           <IsEncrypted>N</IsEncrypted>
           <IsCentrallyMaintained>Y</IsCentrallyMaintained>
-          <DisplayLogic/>
+          <DisplayLogic />
           <AD_Tab_ID reference="uuid" reference-key="AD_Tab">30928dd8-6524-4d45-8fef-1ff140038d48</AD_Tab_ID>
           <AD_Column_ID reference="uuid" reference-key="AD_Column">132777c0-bbad-412b-a661-20f8e81e17c9</AD_Column_ID>
           <AD_Field_UU>aa87285c-76b6-46c0-9e30-2068417ccaa6</AD_Field_UU>
@@ -2610,7 +2596,7 @@
           <Name>Updated</Name>
           <EntityType>TW</EntityType>
           <SeqNo>0</SeqNo>
-          <IsActive>Y</IsActive>
+          <SeqNoGrid>0</SeqNoGrid><IsDisplayedGrid>N</IsDisplayedGrid><IsActive>Y</IsActive>
           <IsDisplayed>N</IsDisplayed>
           <IsReadOnly>N</IsReadOnly>
           <IsMandatory>N</IsMandatory>
@@ -2619,7 +2605,7 @@
           <IsFieldOnly>N</IsFieldOnly>
           <IsEncrypted>N</IsEncrypted>
           <IsCentrallyMaintained>Y</IsCentrallyMaintained>
-          <DisplayLogic/>
+          <DisplayLogic />
           <AD_Tab_ID reference="uuid" reference-key="AD_Tab">30928dd8-6524-4d45-8fef-1ff140038d48</AD_Tab_ID>
           <AD_Column_ID reference="uuid" reference-key="AD_Column">66a8c288-60f4-4d74-b3d1-6c045abf4d56</AD_Column_ID>
           <AD_Field_UU>755f68d0-c39f-4be8-981e-d61ad4dfab4a</AD_Field_UU>
@@ -2630,7 +2616,7 @@
           <Name>UpdatedBy</Name>
           <EntityType>TW</EntityType>
           <SeqNo>0</SeqNo>
-          <IsActive>Y</IsActive>
+          <SeqNoGrid>0</SeqNoGrid><IsDisplayedGrid>N</IsDisplayedGrid><IsActive>Y</IsActive>
           <IsDisplayed>N</IsDisplayed>
           <IsReadOnly>N</IsReadOnly>
           <IsMandatory>N</IsMandatory>
@@ -2639,7 +2625,7 @@
           <IsFieldOnly>N</IsFieldOnly>
           <IsEncrypted>N</IsEncrypted>
           <IsCentrallyMaintained>Y</IsCentrallyMaintained>
-          <DisplayLogic/>
+          <DisplayLogic />
           <AD_Tab_ID reference="uuid" reference-key="AD_Tab">30928dd8-6524-4d45-8fef-1ff140038d48</AD_Tab_ID>
           <AD_Column_ID reference="uuid" reference-key="AD_Column">b4f7ed43-11ce-4847-a073-0b724b924089</AD_Column_ID>
           <AD_Field_UU>f4a0430c-620d-43c3-9c4b-7eae10b324cd</AD_Field_UU>
@@ -2651,7 +2637,7 @@
           <Description>Original invoice</Description>
           <EntityType>TW</EntityType>
           <SeqNo>10</SeqNo>
-          <IsActive>Y</IsActive>
+          <SeqNoGrid>10</SeqNoGrid><IsDisplayedGrid>Y</IsDisplayedGrid><IsActive>Y</IsActive>
           <IsDisplayed>Y</IsDisplayed>
           <IsReadOnly>N</IsReadOnly>
           <IsMandatory>N</IsMandatory>
@@ -2660,7 +2646,7 @@
           <IsFieldOnly>N</IsFieldOnly>
           <IsEncrypted>N</IsEncrypted>
           <IsCentrallyMaintained>Y</IsCentrallyMaintained>
-          <DisplayLogic/>
+          <DisplayLogic />
           <AD_Tab_ID reference="uuid" reference-key="AD_Tab">30928dd8-6524-4d45-8fef-1ff140038d48</AD_Tab_ID>
           <AD_Column_ID reference="uuid" reference-key="AD_Column">15e4ce2c-7b84-42b7-85ae-ec0f5295f1df</AD_Column_ID>
           <AD_Field_UU>fa804310-4960-473b-a40b-8bf525bb4fe4</AD_Field_UU>
@@ -2672,7 +2658,7 @@
           <Description>Adjustment type</Description>
           <EntityType>TW</EntityType>
           <SeqNo>20</SeqNo>
-          <IsActive>Y</IsActive>
+          <SeqNoGrid>20</SeqNoGrid><IsDisplayedGrid>Y</IsDisplayedGrid><IsActive>Y</IsActive>
           <IsDisplayed>Y</IsDisplayed>
           <IsReadOnly>N</IsReadOnly>
           <IsMandatory>Y</IsMandatory>
@@ -2681,7 +2667,7 @@
           <IsFieldOnly>N</IsFieldOnly>
           <IsEncrypted>N</IsEncrypted>
           <IsCentrallyMaintained>Y</IsCentrallyMaintained>
-          <DisplayLogic/>
+          <DisplayLogic />
           <AD_Tab_ID reference="uuid" reference-key="AD_Tab">30928dd8-6524-4d45-8fef-1ff140038d48</AD_Tab_ID>
           <AD_Column_ID reference="uuid" reference-key="AD_Column">50984e03-0147-4109-b7e4-6c095e407fc4</AD_Column_ID>
           <AD_Field_UU>532b62c5-dbfb-41f5-8eef-fbc8d54b9b48</AD_Field_UU>
@@ -2693,7 +2679,7 @@
           <Description>Adjustment direction</Description>
           <EntityType>TW</EntityType>
           <SeqNo>30</SeqNo>
-          <IsActive>Y</IsActive>
+          <SeqNoGrid>30</SeqNoGrid><IsDisplayedGrid>Y</IsDisplayedGrid><IsActive>Y</IsActive>
           <IsDisplayed>Y</IsDisplayed>
           <IsReadOnly>N</IsReadOnly>
           <IsMandatory>Y</IsMandatory>
@@ -2702,7 +2688,7 @@
           <IsFieldOnly>N</IsFieldOnly>
           <IsEncrypted>N</IsEncrypted>
           <IsCentrallyMaintained>Y</IsCentrallyMaintained>
-          <DisplayLogic/>
+          <DisplayLogic />
           <AD_Tab_ID reference="uuid" reference-key="AD_Tab">30928dd8-6524-4d45-8fef-1ff140038d48</AD_Tab_ID>
           <AD_Column_ID reference="uuid" reference-key="AD_Column">8a6b4619-8051-479c-b8b2-2da92b4dcb3c</AD_Column_ID>
           <AD_Field_UU>a67e0bc5-e076-47d1-ad94-f3deecffb400</AD_Field_UU>
@@ -2714,7 +2700,7 @@
           <Description>Adjustment date</Description>
           <EntityType>TW</EntityType>
           <SeqNo>40</SeqNo>
-          <IsActive>Y</IsActive>
+          <SeqNoGrid>40</SeqNoGrid><IsDisplayedGrid>Y</IsDisplayedGrid><IsActive>Y</IsActive>
           <IsDisplayed>Y</IsDisplayed>
           <IsReadOnly>N</IsReadOnly>
           <IsMandatory>Y</IsMandatory>
@@ -2723,7 +2709,7 @@
           <IsFieldOnly>N</IsFieldOnly>
           <IsEncrypted>N</IsEncrypted>
           <IsCentrallyMaintained>Y</IsCentrallyMaintained>
-          <DisplayLogic/>
+          <DisplayLogic />
           <AD_Tab_ID reference="uuid" reference-key="AD_Tab">30928dd8-6524-4d45-8fef-1ff140038d48</AD_Tab_ID>
           <AD_Column_ID reference="uuid" reference-key="AD_Column">a70d4866-fc10-4142-820a-2a629069448b</AD_Column_ID>
           <AD_Field_UU>0b37901d-e557-46a8-ac03-705d0f00d612</AD_Field_UU>
@@ -2735,7 +2721,7 @@
           <Description>Adjusted tax amount</Description>
           <EntityType>TW</EntityType>
           <SeqNo>50</SeqNo>
-          <IsActive>Y</IsActive>
+          <SeqNoGrid>50</SeqNoGrid><IsDisplayedGrid>Y</IsDisplayedGrid><IsActive>Y</IsActive>
           <IsDisplayed>Y</IsDisplayed>
           <IsReadOnly>N</IsReadOnly>
           <IsMandatory>Y</IsMandatory>
@@ -2744,7 +2730,7 @@
           <IsFieldOnly>N</IsFieldOnly>
           <IsEncrypted>N</IsEncrypted>
           <IsCentrallyMaintained>Y</IsCentrallyMaintained>
-          <DisplayLogic/>
+          <DisplayLogic />
           <AD_Tab_ID reference="uuid" reference-key="AD_Tab">30928dd8-6524-4d45-8fef-1ff140038d48</AD_Tab_ID>
           <AD_Column_ID reference="uuid" reference-key="AD_Column">afa2493e-c31f-4cb0-81bf-950da4a6cd98</AD_Column_ID>
           <AD_Field_UU>392e8c7f-9684-4a14-aa09-b564b76edce7</AD_Field_UU>
@@ -2756,7 +2742,7 @@
           <Description>Tax period</Description>
           <EntityType>TW</EntityType>
           <SeqNo>60</SeqNo>
-          <IsActive>Y</IsActive>
+          <SeqNoGrid>60</SeqNoGrid><IsDisplayedGrid>Y</IsDisplayedGrid><IsActive>Y</IsActive>
           <IsDisplayed>Y</IsDisplayed>
           <IsReadOnly>N</IsReadOnly>
           <IsMandatory>Y</IsMandatory>
@@ -2765,7 +2751,7 @@
           <IsFieldOnly>N</IsFieldOnly>
           <IsEncrypted>N</IsEncrypted>
           <IsCentrallyMaintained>Y</IsCentrallyMaintained>
-          <DisplayLogic/>
+          <DisplayLogic />
           <AD_Tab_ID reference="uuid" reference-key="AD_Tab">30928dd8-6524-4d45-8fef-1ff140038d48</AD_Tab_ID>
           <AD_Column_ID reference="uuid" reference-key="AD_Column">796e61c3-0c54-44e1-ac34-584a32510173</AD_Column_ID>
           <AD_Field_UU>dd3407b8-33df-4db1-9b0f-1b6650f5d8f8</AD_Field_UU>
@@ -2777,7 +2763,7 @@
           <Description>Overdue period flag</Description>
           <EntityType>TW</EntityType>
           <SeqNo>70</SeqNo>
-          <IsActive>Y</IsActive>
+          <SeqNoGrid>70</SeqNoGrid><IsDisplayedGrid>Y</IsDisplayedGrid><IsActive>Y</IsActive>
           <IsDisplayed>Y</IsDisplayed>
           <IsReadOnly>N</IsReadOnly>
           <IsMandatory>Y</IsMandatory>
@@ -2786,7 +2772,7 @@
           <IsFieldOnly>N</IsFieldOnly>
           <IsEncrypted>N</IsEncrypted>
           <IsCentrallyMaintained>Y</IsCentrallyMaintained>
-          <DisplayLogic/>
+          <DisplayLogic />
           <AD_Tab_ID reference="uuid" reference-key="AD_Tab">30928dd8-6524-4d45-8fef-1ff140038d48</AD_Tab_ID>
           <AD_Column_ID reference="uuid" reference-key="AD_Column">b55ba037-aafa-410b-a37a-e689f3b3bc65</AD_Column_ID>
           <AD_Field_UU>ba59e857-5d42-4cfa-90d6-7a1cd348c4f5</AD_Field_UU>
@@ -3247,11 +3233,11 @@
         <IsInsertRecord>Y</IsInsertRecord>
         <IsSortTab>N</IsSortTab>
         <Processing>N</Processing>
-        <AD_Column_ID reference="id"/>
-        <AD_Process_ID reference="id"/>
-        <WhereClause/>
-        <OrderByClause/>
-        <CommitWarning/>
+        <AD_Column_ID reference="id" />
+        <AD_Process_ID reference="id" />
+        <WhereClause />
+        <OrderByClause />
+        <CommitWarning />
         <AD_Window_ID reference="uuid" reference-key="AD_Window">c47e9d6d-e1d5-422b-aeee-3b26ba1ae9a0</AD_Window_ID>
         <AD_Table_ID reference="uuid" reference-key="AD_Table">d419afea-bc00-4040-ab7d-9b247a533aca</AD_Table_ID>
         <AD_Tab_UU>e43ec7f4-682f-47ae-bcfe-a176c205e05b</AD_Tab_UU>
@@ -3262,7 +3248,7 @@
           <Description>Tenant</Description>
           <EntityType>TW</EntityType>
           <SeqNo>1</SeqNo>
-          <IsActive>Y</IsActive>
+          <SeqNoGrid>1</SeqNoGrid><IsDisplayedGrid>Y</IsDisplayedGrid><IsActive>Y</IsActive>
           <IsDisplayed>Y</IsDisplayed>
           <IsReadOnly>Y</IsReadOnly>
           <IsMandatory>Y</IsMandatory>
@@ -3271,7 +3257,7 @@
           <IsFieldOnly>N</IsFieldOnly>
           <IsEncrypted>N</IsEncrypted>
           <IsCentrallyMaintained>Y</IsCentrallyMaintained>
-          <DisplayLogic/>
+          <DisplayLogic />
           <AD_Tab_ID reference="uuid" reference-key="AD_Tab">e43ec7f4-682f-47ae-bcfe-a176c205e05b</AD_Tab_ID>
           <AD_Column_ID reference="uuid" reference-key="AD_Column">35d436d5-8345-46ea-8db2-1cc00a07c71f</AD_Column_ID>
           <AD_Field_UU>aa000004-0001-0001-0001-000000000001</AD_Field_UU>
@@ -3283,7 +3269,7 @@
           <Description>Organization</Description>
           <EntityType>TW</EntityType>
           <SeqNo>2</SeqNo>
-          <IsActive>Y</IsActive>
+          <SeqNoGrid>2</SeqNoGrid><IsDisplayedGrid>Y</IsDisplayedGrid><IsActive>Y</IsActive>
           <IsDisplayed>Y</IsDisplayed>
           <IsReadOnly>N</IsReadOnly>
           <IsMandatory>Y</IsMandatory>
@@ -3292,7 +3278,7 @@
           <IsFieldOnly>N</IsFieldOnly>
           <IsEncrypted>N</IsEncrypted>
           <IsCentrallyMaintained>Y</IsCentrallyMaintained>
-          <DisplayLogic/>
+          <DisplayLogic />
           <AD_Tab_ID reference="uuid" reference-key="AD_Tab">e43ec7f4-682f-47ae-bcfe-a176c205e05b</AD_Tab_ID>
           <AD_Column_ID reference="uuid" reference-key="AD_Column">4ac6c1e5-b433-4d8e-a6dd-850015852723</AD_Column_ID>
           <AD_Field_UU>aa000004-0001-0001-0001-000000000002</AD_Field_UU>
@@ -3304,7 +3290,7 @@
           <Description>Active</Description>
           <EntityType>TW</EntityType>
           <SeqNo>3</SeqNo>
-          <IsActive>Y</IsActive>
+          <SeqNoGrid>3</SeqNoGrid><IsDisplayedGrid>Y</IsDisplayedGrid><IsActive>Y</IsActive>
           <IsDisplayed>Y</IsDisplayed>
           <IsReadOnly>N</IsReadOnly>
           <IsMandatory>N</IsMandatory>
@@ -3313,7 +3299,7 @@
           <IsFieldOnly>N</IsFieldOnly>
           <IsEncrypted>N</IsEncrypted>
           <IsCentrallyMaintained>Y</IsCentrallyMaintained>
-          <DisplayLogic/>
+          <DisplayLogic />
           <AD_Tab_ID reference="uuid" reference-key="AD_Tab">e43ec7f4-682f-47ae-bcfe-a176c205e05b</AD_Tab_ID>
           <AD_Column_ID reference="uuid" reference-key="AD_Column">c7396842-9bf7-419d-a42d-c078965b0c2a</AD_Column_ID>
           <AD_Field_UU>aa000004-0001-0001-0001-000000000003</AD_Field_UU>
@@ -3324,7 +3310,7 @@
           <Name>ID</Name>
           <EntityType>TW</EntityType>
           <SeqNo>0</SeqNo>
-          <IsActive>Y</IsActive>
+          <SeqNoGrid>0</SeqNoGrid><IsDisplayedGrid>N</IsDisplayedGrid><IsActive>Y</IsActive>
           <IsDisplayed>N</IsDisplayed>
           <IsReadOnly>N</IsReadOnly>
           <IsMandatory>N</IsMandatory>
@@ -3333,7 +3319,7 @@
           <IsFieldOnly>N</IsFieldOnly>
           <IsEncrypted>N</IsEncrypted>
           <IsCentrallyMaintained>Y</IsCentrallyMaintained>
-          <DisplayLogic/>
+          <DisplayLogic />
           <AD_Tab_ID reference="uuid" reference-key="AD_Tab">e43ec7f4-682f-47ae-bcfe-a176c205e05b</AD_Tab_ID>
           <AD_Column_ID reference="uuid" reference-key="AD_Column">712ed415-1161-41e7-a3c0-a709d605c891</AD_Column_ID>
           <AD_Field_UU>6478991a-1082-421d-82ab-d73df1ffc078</AD_Field_UU>
@@ -3344,7 +3330,7 @@
           <Name>UUID</Name>
           <EntityType>TW</EntityType>
           <SeqNo>0</SeqNo>
-          <IsActive>Y</IsActive>
+          <SeqNoGrid>0</SeqNoGrid><IsDisplayedGrid>N</IsDisplayedGrid><IsActive>Y</IsActive>
           <IsDisplayed>N</IsDisplayed>
           <IsReadOnly>N</IsReadOnly>
           <IsMandatory>N</IsMandatory>
@@ -3353,7 +3339,7 @@
           <IsFieldOnly>N</IsFieldOnly>
           <IsEncrypted>N</IsEncrypted>
           <IsCentrallyMaintained>Y</IsCentrallyMaintained>
-          <DisplayLogic/>
+          <DisplayLogic />
           <AD_Tab_ID reference="uuid" reference-key="AD_Tab">e43ec7f4-682f-47ae-bcfe-a176c205e05b</AD_Tab_ID>
           <AD_Column_ID reference="uuid" reference-key="AD_Column">b29dad19-d8ed-4d67-a4b7-1f123be22a72</AD_Column_ID>
           <AD_Field_UU>df57134f-d0ee-4b30-acfe-f47b51ebc4aa</AD_Field_UU>
@@ -3364,7 +3350,7 @@
           <Name>Created</Name>
           <EntityType>TW</EntityType>
           <SeqNo>0</SeqNo>
-          <IsActive>Y</IsActive>
+          <SeqNoGrid>0</SeqNoGrid><IsDisplayedGrid>N</IsDisplayedGrid><IsActive>Y</IsActive>
           <IsDisplayed>N</IsDisplayed>
           <IsReadOnly>N</IsReadOnly>
           <IsMandatory>N</IsMandatory>
@@ -3373,7 +3359,7 @@
           <IsFieldOnly>N</IsFieldOnly>
           <IsEncrypted>N</IsEncrypted>
           <IsCentrallyMaintained>Y</IsCentrallyMaintained>
-          <DisplayLogic/>
+          <DisplayLogic />
           <AD_Tab_ID reference="uuid" reference-key="AD_Tab">e43ec7f4-682f-47ae-bcfe-a176c205e05b</AD_Tab_ID>
           <AD_Column_ID reference="uuid" reference-key="AD_Column">9984d119-1b59-45bd-af36-1b0a992e6956</AD_Column_ID>
           <AD_Field_UU>011158b0-20f8-4d02-b6c4-68287dc67706</AD_Field_UU>
@@ -3384,7 +3370,7 @@
           <Name>CreatedBy</Name>
           <EntityType>TW</EntityType>
           <SeqNo>0</SeqNo>
-          <IsActive>Y</IsActive>
+          <SeqNoGrid>0</SeqNoGrid><IsDisplayedGrid>N</IsDisplayedGrid><IsActive>Y</IsActive>
           <IsDisplayed>N</IsDisplayed>
           <IsReadOnly>N</IsReadOnly>
           <IsMandatory>N</IsMandatory>
@@ -3393,7 +3379,7 @@
           <IsFieldOnly>N</IsFieldOnly>
           <IsEncrypted>N</IsEncrypted>
           <IsCentrallyMaintained>Y</IsCentrallyMaintained>
-          <DisplayLogic/>
+          <DisplayLogic />
           <AD_Tab_ID reference="uuid" reference-key="AD_Tab">e43ec7f4-682f-47ae-bcfe-a176c205e05b</AD_Tab_ID>
           <AD_Column_ID reference="uuid" reference-key="AD_Column">9bda1398-47d3-4b0f-a171-793b4ac2cb48</AD_Column_ID>
           <AD_Field_UU>b8643e5d-4dfe-4c5f-b16c-acda9ec8d4ae</AD_Field_UU>
@@ -3404,7 +3390,7 @@
           <Name>Updated</Name>
           <EntityType>TW</EntityType>
           <SeqNo>0</SeqNo>
-          <IsActive>Y</IsActive>
+          <SeqNoGrid>0</SeqNoGrid><IsDisplayedGrid>N</IsDisplayedGrid><IsActive>Y</IsActive>
           <IsDisplayed>N</IsDisplayed>
           <IsReadOnly>N</IsReadOnly>
           <IsMandatory>N</IsMandatory>
@@ -3413,7 +3399,7 @@
           <IsFieldOnly>N</IsFieldOnly>
           <IsEncrypted>N</IsEncrypted>
           <IsCentrallyMaintained>Y</IsCentrallyMaintained>
-          <DisplayLogic/>
+          <DisplayLogic />
           <AD_Tab_ID reference="uuid" reference-key="AD_Tab">e43ec7f4-682f-47ae-bcfe-a176c205e05b</AD_Tab_ID>
           <AD_Column_ID reference="uuid" reference-key="AD_Column">e4a70319-1dbd-4b78-8572-22529e84bc18</AD_Column_ID>
           <AD_Field_UU>fbbdf5f4-7d93-4233-bafe-a85494a05f2c</AD_Field_UU>
@@ -3424,7 +3410,7 @@
           <Name>UpdatedBy</Name>
           <EntityType>TW</EntityType>
           <SeqNo>0</SeqNo>
-          <IsActive>Y</IsActive>
+          <SeqNoGrid>0</SeqNoGrid><IsDisplayedGrid>N</IsDisplayedGrid><IsActive>Y</IsActive>
           <IsDisplayed>N</IsDisplayed>
           <IsReadOnly>N</IsReadOnly>
           <IsMandatory>N</IsMandatory>
@@ -3433,7 +3419,7 @@
           <IsFieldOnly>N</IsFieldOnly>
           <IsEncrypted>N</IsEncrypted>
           <IsCentrallyMaintained>Y</IsCentrallyMaintained>
-          <DisplayLogic/>
+          <DisplayLogic />
           <AD_Tab_ID reference="uuid" reference-key="AD_Tab">e43ec7f4-682f-47ae-bcfe-a176c205e05b</AD_Tab_ID>
           <AD_Column_ID reference="uuid" reference-key="AD_Column">48692fc6-f562-4a07-8b3d-d3fa0cf3dc1b</AD_Column_ID>
           <AD_Field_UU>7eb6cd1b-03f1-409f-8da5-08cd40a8dee7</AD_Field_UU>
@@ -3445,7 +3431,7 @@
           <Description>Statement year</Description>
           <EntityType>TW</EntityType>
           <SeqNo>10</SeqNo>
-          <IsActive>Y</IsActive>
+          <SeqNoGrid>10</SeqNoGrid><IsDisplayedGrid>Y</IsDisplayedGrid><IsActive>Y</IsActive>
           <IsDisplayed>Y</IsDisplayed>
           <IsReadOnly>N</IsReadOnly>
           <IsMandatory>Y</IsMandatory>
@@ -3454,7 +3440,7 @@
           <IsFieldOnly>N</IsFieldOnly>
           <IsEncrypted>N</IsEncrypted>
           <IsCentrallyMaintained>Y</IsCentrallyMaintained>
-          <DisplayLogic/>
+          <DisplayLogic />
           <AD_Tab_ID reference="uuid" reference-key="AD_Tab">e43ec7f4-682f-47ae-bcfe-a176c205e05b</AD_Tab_ID>
           <AD_Column_ID reference="uuid" reference-key="AD_Column">e99dbee5-4e09-4e60-8ff8-112cea1951c4</AD_Column_ID>
           <AD_Field_UU>2d28cc93-ce38-4272-9a4d-3522bc5061d0</AD_Field_UU>
@@ -3466,7 +3452,7 @@
           <Description>Filing period</Description>
           <EntityType>TW</EntityType>
           <SeqNo>20</SeqNo>
-          <IsActive>Y</IsActive>
+          <SeqNoGrid>20</SeqNoGrid><IsDisplayedGrid>Y</IsDisplayedGrid><IsActive>Y</IsActive>
           <IsDisplayed>Y</IsDisplayed>
           <IsReadOnly>N</IsReadOnly>
           <IsMandatory>Y</IsMandatory>
@@ -3475,7 +3461,7 @@
           <IsFieldOnly>N</IsFieldOnly>
           <IsEncrypted>N</IsEncrypted>
           <IsCentrallyMaintained>Y</IsCentrallyMaintained>
-          <DisplayLogic/>
+          <DisplayLogic />
           <AD_Tab_ID reference="uuid" reference-key="AD_Tab">e43ec7f4-682f-47ae-bcfe-a176c205e05b</AD_Tab_ID>
           <AD_Column_ID reference="uuid" reference-key="AD_Column">11ad8727-e431-408b-a7b3-bf5022931251</AD_Column_ID>
           <AD_Field_UU>539b0b10-d33e-496a-afa0-623efe3d87fa</AD_Field_UU>
@@ -3487,7 +3473,7 @@
           <Description>Taxable revenue</Description>
           <EntityType>TW</EntityType>
           <SeqNo>30</SeqNo>
-          <IsActive>Y</IsActive>
+          <SeqNoGrid>30</SeqNoGrid><IsDisplayedGrid>Y</IsDisplayedGrid><IsActive>Y</IsActive>
           <IsDisplayed>Y</IsDisplayed>
           <IsReadOnly>N</IsReadOnly>
           <IsMandatory>Y</IsMandatory>
@@ -3496,7 +3482,7 @@
           <IsFieldOnly>N</IsFieldOnly>
           <IsEncrypted>N</IsEncrypted>
           <IsCentrallyMaintained>Y</IsCentrallyMaintained>
-          <DisplayLogic/>
+          <DisplayLogic />
           <AD_Tab_ID reference="uuid" reference-key="AD_Tab">e43ec7f4-682f-47ae-bcfe-a176c205e05b</AD_Tab_ID>
           <AD_Column_ID reference="uuid" reference-key="AD_Column">c69629fa-6775-45c4-9108-2c15f86f7c2a</AD_Column_ID>
           <AD_Field_UU>5b9e66d5-9ae7-4364-bef6-1eeb99bc6111</AD_Field_UU>
@@ -3508,7 +3494,7 @@
           <Description>Zero-rate sales (exports)</Description>
           <EntityType>TW</EntityType>
           <SeqNo>40</SeqNo>
-          <IsActive>Y</IsActive>
+          <SeqNoGrid>40</SeqNoGrid><IsDisplayedGrid>Y</IsDisplayedGrid><IsActive>Y</IsActive>
           <IsDisplayed>Y</IsDisplayed>
           <IsReadOnly>N</IsReadOnly>
           <IsMandatory>Y</IsMandatory>
@@ -3517,7 +3503,7 @@
           <IsFieldOnly>N</IsFieldOnly>
           <IsEncrypted>N</IsEncrypted>
           <IsCentrallyMaintained>Y</IsCentrallyMaintained>
-          <DisplayLogic/>
+          <DisplayLogic />
           <AD_Tab_ID reference="uuid" reference-key="AD_Tab">e43ec7f4-682f-47ae-bcfe-a176c205e05b</AD_Tab_ID>
           <AD_Column_ID reference="uuid" reference-key="AD_Column">f887a4b1-787d-476f-9708-e09b2a6f3650</AD_Column_ID>
           <AD_Field_UU>56bbebaa-ec67-4b4c-9d9f-da4c544e70e4</AD_Field_UU>
@@ -3529,7 +3515,7 @@
           <Description>Exempt revenue</Description>
           <EntityType>TW</EntityType>
           <SeqNo>50</SeqNo>
-          <IsActive>Y</IsActive>
+          <SeqNoGrid>50</SeqNoGrid><IsDisplayedGrid>Y</IsDisplayedGrid><IsActive>Y</IsActive>
           <IsDisplayed>Y</IsDisplayed>
           <IsReadOnly>N</IsReadOnly>
           <IsMandatory>Y</IsMandatory>
@@ -3538,7 +3524,7 @@
           <IsFieldOnly>N</IsFieldOnly>
           <IsEncrypted>N</IsEncrypted>
           <IsCentrallyMaintained>Y</IsCentrallyMaintained>
-          <DisplayLogic/>
+          <DisplayLogic />
           <AD_Tab_ID reference="uuid" reference-key="AD_Tab">e43ec7f4-682f-47ae-bcfe-a176c205e05b</AD_Tab_ID>
           <AD_Column_ID reference="uuid" reference-key="AD_Column">9a01f9c3-91fe-4d26-af0a-a1aa2d7fa97b</AD_Column_ID>
           <AD_Field_UU>5ccb542d-07ac-4165-968d-a1ef8e6e1e63</AD_Field_UU>
@@ -3550,7 +3536,7 @@
           <Description>Output tax amount</Description>
           <EntityType>TW</EntityType>
           <SeqNo>60</SeqNo>
-          <IsActive>Y</IsActive>
+          <SeqNoGrid>60</SeqNoGrid><IsDisplayedGrid>Y</IsDisplayedGrid><IsActive>Y</IsActive>
           <IsDisplayed>Y</IsDisplayed>
           <IsReadOnly>N</IsReadOnly>
           <IsMandatory>Y</IsMandatory>
@@ -3559,7 +3545,7 @@
           <IsFieldOnly>N</IsFieldOnly>
           <IsEncrypted>N</IsEncrypted>
           <IsCentrallyMaintained>Y</IsCentrallyMaintained>
-          <DisplayLogic/>
+          <DisplayLogic />
           <AD_Tab_ID reference="uuid" reference-key="AD_Tab">e43ec7f4-682f-47ae-bcfe-a176c205e05b</AD_Tab_ID>
           <AD_Column_ID reference="uuid" reference-key="AD_Column">5b40235f-ca3c-4674-a63c-75fc0a79c1f5</AD_Column_ID>
           <AD_Field_UU>64ce6db6-133d-4661-9b09-c17f1f142b77</AD_Field_UU>
@@ -3571,7 +3557,7 @@
           <Description>Input tax amount</Description>
           <EntityType>TW</EntityType>
           <SeqNo>70</SeqNo>
-          <IsActive>Y</IsActive>
+          <SeqNoGrid>70</SeqNoGrid><IsDisplayedGrid>Y</IsDisplayedGrid><IsActive>Y</IsActive>
           <IsDisplayed>Y</IsDisplayed>
           <IsReadOnly>N</IsReadOnly>
           <IsMandatory>Y</IsMandatory>
@@ -3580,7 +3566,7 @@
           <IsFieldOnly>N</IsFieldOnly>
           <IsEncrypted>N</IsEncrypted>
           <IsCentrallyMaintained>Y</IsCentrallyMaintained>
-          <DisplayLogic/>
+          <DisplayLogic />
           <AD_Tab_ID reference="uuid" reference-key="AD_Tab">e43ec7f4-682f-47ae-bcfe-a176c205e05b</AD_Tab_ID>
           <AD_Column_ID reference="uuid" reference-key="AD_Column">33860910-3bd0-455d-a779-3ef7ba4570a8</AD_Column_ID>
           <AD_Field_UU>d8b1a6d1-8fa4-4f09-9136-5e44363427a0</AD_Field_UU>
@@ -3592,7 +3578,7 @@
           <Description>Non-deductible input tax</Description>
           <EntityType>TW</EntityType>
           <SeqNo>80</SeqNo>
-          <IsActive>Y</IsActive>
+          <SeqNoGrid>80</SeqNoGrid><IsDisplayedGrid>Y</IsDisplayedGrid><IsActive>Y</IsActive>
           <IsDisplayed>Y</IsDisplayed>
           <IsReadOnly>N</IsReadOnly>
           <IsMandatory>Y</IsMandatory>
@@ -3601,7 +3587,7 @@
           <IsFieldOnly>N</IsFieldOnly>
           <IsEncrypted>N</IsEncrypted>
           <IsCentrallyMaintained>Y</IsCentrallyMaintained>
-          <DisplayLogic/>
+          <DisplayLogic />
           <AD_Tab_ID reference="uuid" reference-key="AD_Tab">e43ec7f4-682f-47ae-bcfe-a176c205e05b</AD_Tab_ID>
           <AD_Column_ID reference="uuid" reference-key="AD_Column">87f926f3-0800-4a7f-8c68-cbb478509f3e</AD_Column_ID>
           <AD_Field_UU>2799ebf7-2676-48ec-98e9-f4abeb678850</AD_Field_UU>
@@ -3613,7 +3599,7 @@
           <Description>Carry-over tax credit</Description>
           <EntityType>TW</EntityType>
           <SeqNo>90</SeqNo>
-          <IsActive>Y</IsActive>
+          <SeqNoGrid>90</SeqNoGrid><IsDisplayedGrid>Y</IsDisplayedGrid><IsActive>Y</IsActive>
           <IsDisplayed>Y</IsDisplayed>
           <IsReadOnly>N</IsReadOnly>
           <IsMandatory>Y</IsMandatory>
@@ -3622,7 +3608,7 @@
           <IsFieldOnly>N</IsFieldOnly>
           <IsEncrypted>N</IsEncrypted>
           <IsCentrallyMaintained>Y</IsCentrallyMaintained>
-          <DisplayLogic/>
+          <DisplayLogic />
           <AD_Tab_ID reference="uuid" reference-key="AD_Tab">e43ec7f4-682f-47ae-bcfe-a176c205e05b</AD_Tab_ID>
           <AD_Column_ID reference="uuid" reference-key="AD_Column">da4d300d-cce2-4189-a793-6d17d2aa8cec</AD_Column_ID>
           <AD_Field_UU>762360a4-d0ba-4f03-b83e-d500d6e82071</AD_Field_UU>
@@ -3634,7 +3620,7 @@
           <Description>Mixed business flag</Description>
           <EntityType>TW</EntityType>
           <SeqNo>100</SeqNo>
-          <IsActive>Y</IsActive>
+          <SeqNoGrid>100</SeqNoGrid><IsDisplayedGrid>Y</IsDisplayedGrid><IsActive>Y</IsActive>
           <IsDisplayed>Y</IsDisplayed>
           <IsReadOnly>N</IsReadOnly>
           <IsMandatory>Y</IsMandatory>
@@ -3643,7 +3629,7 @@
           <IsFieldOnly>N</IsFieldOnly>
           <IsEncrypted>N</IsEncrypted>
           <IsCentrallyMaintained>Y</IsCentrallyMaintained>
-          <DisplayLogic/>
+          <DisplayLogic />
           <AD_Tab_ID reference="uuid" reference-key="AD_Tab">e43ec7f4-682f-47ae-bcfe-a176c205e05b</AD_Tab_ID>
           <AD_Column_ID reference="uuid" reference-key="AD_Column">bc051c08-7cfd-4597-a15d-787abd8d1e07</AD_Column_ID>
           <AD_Field_UU>a5d00328-595a-45ed-b09b-438a21876a5a</AD_Field_UU>
@@ -3655,7 +3641,7 @@
           <Description>Taxable ratio for mixed business</Description>
           <EntityType>TW</EntityType>
           <SeqNo>110</SeqNo>
-          <IsActive>Y</IsActive>
+          <SeqNoGrid>110</SeqNoGrid><IsDisplayedGrid>Y</IsDisplayedGrid><IsActive>Y</IsActive>
           <IsDisplayed>Y</IsDisplayed>
           <IsReadOnly>N</IsReadOnly>
           <IsMandatory>N</IsMandatory>
@@ -3664,7 +3650,7 @@
           <IsFieldOnly>N</IsFieldOnly>
           <IsEncrypted>N</IsEncrypted>
           <IsCentrallyMaintained>Y</IsCentrallyMaintained>
-          <DisplayLogic/>
+          <DisplayLogic />
           <AD_Tab_ID reference="uuid" reference-key="AD_Tab">e43ec7f4-682f-47ae-bcfe-a176c205e05b</AD_Tab_ID>
           <AD_Column_ID reference="uuid" reference-key="AD_Column">b328efb7-e3bd-4eb2-8aed-fa4cccbb5c4a</AD_Column_ID>
           <AD_Field_UU>96c03434-3fe0-44f0-96ec-d8f5e43bffd0</AD_Field_UU>
@@ -3676,7 +3662,7 @@
           <Description>Adjusted input tax after ratio</Description>
           <EntityType>TW</EntityType>
           <SeqNo>120</SeqNo>
-          <IsActive>Y</IsActive>
+          <SeqNoGrid>120</SeqNoGrid><IsDisplayedGrid>Y</IsDisplayedGrid><IsActive>Y</IsActive>
           <IsDisplayed>Y</IsDisplayed>
           <IsReadOnly>N</IsReadOnly>
           <IsMandatory>N</IsMandatory>
@@ -3685,7 +3671,7 @@
           <IsFieldOnly>N</IsFieldOnly>
           <IsEncrypted>N</IsEncrypted>
           <IsCentrallyMaintained>Y</IsCentrallyMaintained>
-          <DisplayLogic/>
+          <DisplayLogic />
           <AD_Tab_ID reference="uuid" reference-key="AD_Tab">e43ec7f4-682f-47ae-bcfe-a176c205e05b</AD_Tab_ID>
           <AD_Column_ID reference="uuid" reference-key="AD_Column">e7d1fa1f-0932-4fc5-85c2-9d6ab71c8674</AD_Column_ID>
           <AD_Field_UU>42707558-a7a4-4bec-9ecb-31a2c6d7db21</AD_Field_UU>
@@ -3697,7 +3683,7 @@
           <Description>Net tax payable</Description>
           <EntityType>TW</EntityType>
           <SeqNo>130</SeqNo>
-          <IsActive>Y</IsActive>
+          <SeqNoGrid>130</SeqNoGrid><IsDisplayedGrid>Y</IsDisplayedGrid><IsActive>Y</IsActive>
           <IsDisplayed>Y</IsDisplayed>
           <IsReadOnly>N</IsReadOnly>
           <IsMandatory>Y</IsMandatory>
@@ -3706,7 +3692,7 @@
           <IsFieldOnly>N</IsFieldOnly>
           <IsEncrypted>N</IsEncrypted>
           <IsCentrallyMaintained>Y</IsCentrallyMaintained>
-          <DisplayLogic/>
+          <DisplayLogic />
           <AD_Tab_ID reference="uuid" reference-key="AD_Tab">e43ec7f4-682f-47ae-bcfe-a176c205e05b</AD_Tab_ID>
           <AD_Column_ID reference="uuid" reference-key="AD_Column">51d15428-2b57-4981-82cb-b8de4a23549a</AD_Column_ID>
           <AD_Field_UU>8f721278-c02c-44e7-8aa4-831dd0020b94</AD_Field_UU>
@@ -3718,7 +3704,7 @@
           <Description>Filing due date</Description>
           <EntityType>TW</EntityType>
           <SeqNo>140</SeqNo>
-          <IsActive>Y</IsActive>
+          <SeqNoGrid>140</SeqNoGrid><IsDisplayedGrid>Y</IsDisplayedGrid><IsActive>Y</IsActive>
           <IsDisplayed>Y</IsDisplayed>
           <IsReadOnly>N</IsReadOnly>
           <IsMandatory>N</IsMandatory>
@@ -3727,7 +3713,7 @@
           <IsFieldOnly>N</IsFieldOnly>
           <IsEncrypted>N</IsEncrypted>
           <IsCentrallyMaintained>Y</IsCentrallyMaintained>
-          <DisplayLogic/>
+          <DisplayLogic />
           <AD_Tab_ID reference="uuid" reference-key="AD_Tab">e43ec7f4-682f-47ae-bcfe-a176c205e05b</AD_Tab_ID>
           <AD_Column_ID reference="uuid" reference-key="AD_Column">e95fce28-839c-4bd0-b48f-3f484f91fddb</AD_Column_ID>
           <AD_Field_UU>e2642033-463a-4025-830a-982df4e1dff9</AD_Field_UU>
