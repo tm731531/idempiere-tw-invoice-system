@@ -2,7 +2,7 @@
 
 iDempiere 12.0 OSGi Plugin，實現符合台灣法規的統一發票（統一發票）與營業稅（401申報）管理。
 
-**狀態**: 實作完成 ✅ | 84 tests 通過 ✅ | 部署驗證通過 ✅ | 2Pack 1.0.9
+**狀態**: 實作完成 ✅ | 87 tests 通過 ✅ | 部署驗證通過 ✅ | 2Pack 1.0.10
 
 ---
 
@@ -10,7 +10,7 @@ iDempiere 12.0 OSGi Plugin，實現符合台灣法規的統一發票（統一發
 
 ```bash
 mvn compile      # 編譯
-mvn test         # 執行測試（84 tests）
+mvn test         # 執行測試（87 tests）
 mvn package      # 打包 → target/tw.idempiere.invoice.tax-1.0.0.jar
 ```
 
@@ -45,7 +45,7 @@ mvn package      # 打包 → target/tw.idempiere.invoice.tax-1.0.0.jar
 ```
 Bundle 啟動
   └─ TaiwanInvoiceTaxActivator (Incremental2PackActivator)
-      └─ PackIn: 安裝 2Pack_1.0.9.zip
+      └─ PackIn: 安裝 2Pack_1.0.10.zip
           └─ 安裝 AD_Table / AD_Window / AD_Field / AD_Menu 定義
       └─ afterPackIn(): 授予所有 active role 的 TW 視窗存取權限
 
@@ -68,8 +68,10 @@ Bundle 啟動
   TaxStatementEventHandler       ← 申報年度、期別範圍驗證
 
 驗證輔助（純靜態方法，非 OSGi 服務）
-  InvoicePrefixValidator    ← 字軌驗證靜態方法
-  InvoicePrefixMapValidator ← 發票對應驗證靜態方法
+  InvoicePrefixValidator        ← 字軌驗證靜態方法
+  InvoicePrefixMapValidator     ← 發票對應驗證靜態方法
+  InvoiceAdjustmentValidator    ← 折讓驗證靜態方法
+  TaxStatementValidator         ← 申報表驗證靜態方法
 
 流程（SvrProcess）
   GenerateTaxStatementProcess ← 產生 401 申報表（計劃中功能，尚未實作）
@@ -117,6 +119,16 @@ Bundle 啟動
 
 ## 變更記錄
 
+### 2026-03-27 — v1.0.10：Grid View 修復
+
+**關鍵修復：**
+- **Index:2 Grid View 崩潰修復（v1.0.10）**：PackOut.xml 中所有 73 個 AD_Field 元素均缺少 `SeqNoGrid`。iDempiere 12 Grid renderer 需要 `SeqNoGrid > 0` 才能正確初始化行編輯器；缺少時，在任何 TW 視窗按「新增」就會拋出 `IndexOutOfBoundsException: Index: 2`。修復：顯示欄位設為 `SeqNoGrid = SeqNo`，隱藏欄位設為 `SeqNoGrid = 0`。2Pack 版本升至 1.0.10。
+
+**附帶修復：**
+- 雙 JVM 問題（兩個 iDempiere 實例互搶 port），透過 systemd restart 解決
+
+---
+
 ### 2026-03-27 — 重大 Bug 修復與架構調整
 
 **關鍵修復：**
@@ -137,4 +149,4 @@ Bundle 啟動
 - 4 個 Model 類別均新增 `COLUMNNAME_*_UU` 常數
 - 新增 `AdjustmentDirection` 常數測試
 
-**測試數量**：65 → 84 tests（全部通過）
+**測試數量**：65 → 87 tests（全部通過）
