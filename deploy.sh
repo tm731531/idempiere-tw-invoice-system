@@ -1,12 +1,16 @@
 #!/usr/bin/env bash
 # deploy.sh — Build and hot-deploy tw.idempiere.invoice.tax into running iDempiere
 # Usage: ./deploy.sh
+# Override defaults via environment variables:
+#   IDEMPIERE_PLUGINS=/path/to/idempiere/plugins
+#   OSGI_HOST=127.0.0.1
+#   OSGI_PORT=12612
 
 set -e
 
-PLUGIN_DIR="/opt/idempiere-server/x86_64/plugins"
-OSGI_HOST="127.0.0.1"
-OSGI_PORT="12612"
+PLUGIN_DIR="${IDEMPIERE_PLUGINS:-/path/to/idempiere/plugins}"
+OSGI_HOST="${OSGI_HOST:-127.0.0.1}"
+OSGI_PORT="${OSGI_PORT:-12612}"
 PROJECT_DIR="$(cd "$(dirname "$0")" && pwd)"
 
 # ── 1. Build ──────────────────────────────────────────────────────────────────
