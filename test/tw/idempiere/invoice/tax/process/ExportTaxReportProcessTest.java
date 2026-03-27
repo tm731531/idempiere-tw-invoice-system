@@ -3,6 +3,7 @@ package tw.idempiere.invoice.tax.process;
 import org.junit.Test;
 import java.math.BigDecimal;
 import static org.junit.Assert.*;
+import static org.junit.Assert.assertThrows;
 
 public class ExportTaxReportProcessTest {
 
@@ -67,5 +68,11 @@ public class ExportTaxReportProcessTest {
         assertTrue("Exempt amount should appear in CSV", line.contains("50000"));
         assertTrue("NonDeductible should appear in CSV", line.contains("1000"));
         assertTrue("CarryOver should appear in CSV", line.contains("2000"));
+    }
+
+    @Test
+    public void testDoIt_throwsUnsupportedOperationException() {
+        ExportTaxReportProcess process = new ExportTaxReportProcess();
+        assertThrows(UnsupportedOperationException.class, () -> process.doIt());
     }
 }

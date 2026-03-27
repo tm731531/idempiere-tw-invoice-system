@@ -13,6 +13,16 @@ public class TaxCalculationService {
         return saleAmount.multiply(VAT_RATE).setScale(0, RoundingMode.FLOOR);
     }
 
+    /**
+     * Calculates gross amount for B2B (三聯式) invoices only.
+     * Input is saleAmount (稅前金額); returns saleAmount + floor(saleAmount × 0.05).
+     *
+     * Do NOT pass a gross amount as input — this method treats its argument as
+     * the pre-tax sale amount. For B2C reverse calculation, use calcSaleAmount().
+     *
+     * @param saleAmount pre-tax sale amount (稅前金額), must be non-negative
+     * @return gross amount including 5% VAT
+     */
     public static BigDecimal calcGrossAmount(BigDecimal saleAmount) {
         return saleAmount.add(calcOutputTax(saleAmount));
     }

@@ -24,6 +24,7 @@ public class MInvoicePrefixMap extends PO {
 
     // Column name constants
     public static final String COLUMNNAME_TW_Invoice_Prefix_Map_ID = "TW_Invoice_Prefix_Map_ID";
+    public static final String COLUMNNAME_TW_Invoice_Prefix_Map_UU = "TW_Invoice_Prefix_Map_UU";
     public static final String COLUMNNAME_TW_InvoicePrefix_ID      = "TW_InvoicePrefix_ID";
     public static final String COLUMNNAME_C_Invoice_ID             = "C_Invoice_ID";
     public static final String COLUMNNAME_InvoiceDate              = "InvoiceDate";

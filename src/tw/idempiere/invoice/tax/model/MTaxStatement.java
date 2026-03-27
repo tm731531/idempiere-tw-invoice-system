@@ -26,6 +26,7 @@ public class MTaxStatement extends PO {
 
     // Column name constants
     public static final String COLUMNNAME_TW_TaxStatement_ID    = "TW_TaxStatement_ID";
+    public static final String COLUMNNAME_TW_TaxStatement_UU    = "TW_TaxStatement_UU";
     public static final String COLUMNNAME_StatementYear         = "StatementYear";
     public static final String COLUMNNAME_StatementPeriod       = "StatementPeriod";
     public static final String COLUMNNAME_TaxableRevenue        = "TaxableRevenue";

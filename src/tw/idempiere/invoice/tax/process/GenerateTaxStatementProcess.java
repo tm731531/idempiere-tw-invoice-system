@@ -64,6 +64,8 @@ public class GenerateTaxStatementProcess extends SvrProcess {
         // BigDecimal output = ...; // from MTaxStatement.getOutputTaxAmount()
         // BigDecimal net = calcNetTaxPayable(output, adjustedInputTax, nonDeductible, carryOver);
 
-        return "@StatementYear@=" + p_StatementYear + " @StatementPeriod@=" + p_StatementPeriod;
+        throw new UnsupportedOperationException(
+            "GenerateTaxStatementProcess is not yet implemented. " +
+            "Please use the TW_TaxStatement window to create statements manually.");
     }
 }

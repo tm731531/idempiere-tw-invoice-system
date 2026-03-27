@@ -47,7 +47,7 @@ public class InvoicePrefixEventHandler extends AbstractEventHandler {
 
         // Validate status transition (only on change, not new)
         String topic = event.getTopic();
-        if (topic != null && topic.endsWith("po_before_change")) {
+        if (IEventTopics.PO_BEFORE_CHANGE.equals(topic)) {
             String oldStatus = (String) prefix.get_ValueOld(MInvoicePrefix.COLUMNNAME_Status);
             String newStatus = prefix.getStatus();
             if (InvoicePrefixValidator.isInvalidStatusTransition(oldStatus, newStatus)) {

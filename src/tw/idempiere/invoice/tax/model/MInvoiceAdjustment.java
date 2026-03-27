@@ -26,6 +26,7 @@ public class MInvoiceAdjustment extends PO {
 
     // Column name constants
     public static final String COLUMNNAME_TW_InvoiceAdjustment_ID = "TW_InvoiceAdjustment_ID";
+    public static final String COLUMNNAME_TW_InvoiceAdjustment_UU = "TW_InvoiceAdjustment_UU";
     public static final String COLUMNNAME_C_Invoice_ID            = "C_Invoice_ID";
     public static final String COLUMNNAME_AdjustmentType          = "AdjustmentType";
     public static final String COLUMNNAME_AdjustmentDirection     = "AdjustmentDirection";

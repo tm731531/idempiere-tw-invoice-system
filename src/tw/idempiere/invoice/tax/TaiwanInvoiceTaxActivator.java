@@ -43,9 +43,9 @@ public class TaiwanInvoiceTaxActivator extends Incremental2PackActivator {
             + "    WHERE x.AD_Window_ID = w.AD_Window_ID "
             + "      AND x.AD_Role_ID   = r.AD_Role_ID "
             + "  )";
-        System.err.println("[TW] afterPackIn() firing — inserting AD_Window_Access");
+        logger.info("[TW] afterPackIn() firing — inserting AD_Window_Access");
         int inserted = DB.executeUpdate(sql, (String) null);
-        System.err.println("[TW] afterPackIn() inserted=" + inserted);
+        logger.info("[TW] afterPackIn() inserted=" + inserted);
         if (inserted >= 0)
             logger.info("TW Window Access: granted " + inserted
                     + " role-window combinations (EntityType=TW)"

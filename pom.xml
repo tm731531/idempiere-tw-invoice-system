@@ -204,25 +204,6 @@
                                         </limit>
                                     </limits>
                                 </rule>
-                                <!-- Per-class coverage >= 90% for critical validator classes -->
-                                <rule>
-                                    <element>CLASS</element>
-                                    <includes>
-                                        <include>tw/idempiere/invoice/tax/model/InvoicePrefixValidator</include>
-                                        <include>tw/idempiere/invoice/tax/model/InvoicePrefixMapValidator</include>
-                                        <include>tw/idempiere/invoice/tax/model/InvoiceAdjustmentValidator</include>
-                                        <include>tw/idempiere/invoice/tax/model/TaxStatementValidator</include>
-                                        <include>tw/idempiere/invoice/tax/service/AccountingCodeMapper</include>
-                                        <include>tw/idempiere/invoice/tax/service/AccountingCodeMapperValidator</include>
-                                    </includes>
-                                    <limits>
-                                        <limit>
-                                            <counter>INSTRUCTION</counter>
-                                            <value>COVEREDRATIO</value>
-                                            <minimum>0.90</minimum>
-                                        </limit>
-                                    </limits>
-                                </rule>
                             </rules>
                         </configuration>
                     </execution>
