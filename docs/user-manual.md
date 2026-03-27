@@ -288,7 +288,7 @@ C（已用完/Complete）── 不可逆，不可改回 A
 ## 7. 常見問題
 
 **Q: 欄位都是灰色無法編輯？**
-A: 請重新登入 iDempiere。權限在 bundle 安裝後才生效，需重登才能取得新權限。
+A: 請重新登入 iDempiere。Bundle 安裝後新權限需重登才生效。若重登後仍全灰，確認 bundle 版本 ≥ 1.0.7（OSGi console: `ss tw.idempiere`），舊版缺少必要欄位定義會導致此問題。
 
 **Q: 找不到 TW 相關選單？**
 A: 確認 bundle 狀態為 ACTIVE（OSGi console: `ss tw.idempiere`）。若狀態異常，執行 `start <bundle_id>`。
