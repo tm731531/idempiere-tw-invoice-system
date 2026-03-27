@@ -167,6 +167,26 @@ Without this, OSGi refuses to resolve `PackIn` and the bundle fails to start.
 - Order: AD_EntityType → AD_Reference → AD_Table → AD_Column → AD_Window → AD_Tab → AD_Field → AD_Menu
 - `ColumnName` in XML **must exactly match** `COLUMNNAME_*` constants in Java model
 
+### 8. Standard AD_Field set per tab (verified from live DB)
+
+Every tab must include this full set of standard fields — verified against Pack Out and Tax Rate windows:
+
+| Column | SeqNo | IsDisplayed | IsReadOnly | Note |
+|--------|-------|-------------|------------|------|
+| PK_ID (e.g. TW_InvoicePrefix_ID) | 0 | N | — | Hidden |
+| _UU (e.g. TW_InvoicePrefix_UU) | 0 | N | — | Hidden |
+| Created | 0 | N | — | Hidden |
+| CreatedBy | 0 | N | — | Hidden |
+| Updated | 0 | N | — | Hidden |
+| UpdatedBy | 0 | N | — | Hidden |
+| AD_Client_ID (廠商) | 1 | Y | Y | **Required**: `dataNew()` uses this to init env context |
+| AD_Org_ID (組織) | 2 | Y | N | **Required**: without it `MRole.canUpdate()` returns false → all fields gray |
+| IsActive (啟用) | 3 | Y | N | Displayed |
+
+**`_UU` column must have `IsUpdateable=Y`** — the PO framework writes the UUID on save. `IsUpdateable=N` causes `_UU` to stay NULL for all records (verified: standard tables C_Tax, C_BPartner both use `Y`).
+
+**AD_Field UUID strategy for upgrades:** `AD_Field` has a `UNIQUE(ad_tab_id, ad_column_id)` constraint. When bumping 2Pack version, **keep existing field UUIDs** — changing them causes INSERT failure on upgrade. Only new fields (not previously in PackOut.xml) should get fresh uuid4 values.
+
 ### 7. `Table_ID` in Model classes
 
 `Table_ID` starts at `0`. It is populated dynamically by `MTable.getTable(ctx, Table_Name)` after 2Pack installs the dictionary. Never hardcode a real integer — the value changes per iDempiere installation.

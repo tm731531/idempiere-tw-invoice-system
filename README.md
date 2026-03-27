@@ -2,7 +2,7 @@
 
 iDempiere 12.0 OSGi Plugin，實現符合台灣法規的統一發票（統一發票）與營業稅（401申報）管理。
 
-**狀態**: 實作完成 ✅ | 65 tests 通過 ✅ | 部署驗證通過 ✅
+**狀態**: 實作完成 ✅ | 65 tests 通過 ✅ | 部署驗證通過 ✅ | 2Pack 1.0.9
 
 ---
 
@@ -45,7 +45,7 @@ mvn package      # 打包 → target/tw.idempiere.invoice.tax-1.0.0.jar
 ```
 Bundle 啟動
   └─ TaiwanInvoiceTaxActivator (Incremental2PackActivator)
-      └─ PackIn: 安裝 2Pack_1.0.7.zip
+      └─ PackIn: 安裝 2Pack_1.0.9.zip
           └─ 安裝 AD_Table / AD_Window / AD_Field / AD_Menu 定義
       └─ afterPackIn(): 授予所有 active role 的 TW 視窗存取權限
 
