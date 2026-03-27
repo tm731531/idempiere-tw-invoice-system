@@ -95,6 +95,7 @@ Bundle 啟動
 |------|------|
 | `CLAUDE.md` | **必讀** — iDempiere 規則、domain 規則、禁止事項 |
 | `docs/user-manual.md` | **使用手冊** — 4 個視窗操作說明、欄位意義、操作流程 |
+| `docs/idempiere-plugin-dev-guide.md` | **開發指南** — 2Pack 規範、AD_Field 標準集合、除錯方法、升版策略 |
 | `docs/schema/table-definitions.md` | 4 張 TW_* 資料表欄位、型別、業務規則 |
 | `docs/schema/packout-column-reference.md` | PackOut.xml 欄位參照（AD_Reference_ID 對照） |
 
