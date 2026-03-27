@@ -26,7 +26,8 @@ public class TaiwanInvoiceTaxActivator extends Incremental2PackActivator {
      */
     @Override
     protected void afterPackIn() {
-        String sql =
+        // Grant window access to all active roles
+        String windowSql =
             "INSERT INTO AD_Window_Access "
             + "  (AD_Window_ID, AD_Role_ID, AD_Client_ID, AD_Org_ID, "
             + "   IsActive, Created, CreatedBy, Updated, UpdatedBy, "
@@ -44,14 +45,37 @@ public class TaiwanInvoiceTaxActivator extends Incremental2PackActivator {
             + "      AND x.AD_Role_ID   = r.AD_Role_ID "
             + "  )";
         logger.info("[TW] afterPackIn() firing — inserting AD_Window_Access");
-        int inserted = DB.executeUpdate(sql, (String) null);
-        logger.info("[TW] afterPackIn() inserted=" + inserted);
-        if (inserted >= 0)
-            logger.info("TW Window Access: granted " + inserted
-                    + " role-window combinations (EntityType=TW)"
+        int windowsInserted = DB.executeUpdate(windowSql, (String) null);
+        logger.info("[TW] afterPackIn() window access inserted=" + windowsInserted);
+
+        // Grant process access to all active roles
+        String processSql =
+            "INSERT INTO AD_Process_Access "
+            + "  (AD_Process_ID, AD_Role_ID, AD_Client_ID, AD_Org_ID, "
+            + "   IsActive, Created, CreatedBy, Updated, UpdatedBy, "
+            + "   IsReadWrite) "
+            + "SELECT p.AD_Process_ID, r.AD_Role_ID, r.AD_Client_ID, 0, "
+            + "       'Y', NOW(), 100, NOW(), 100, 'Y' "
+            + "FROM AD_Process p "
+            + "CROSS JOIN AD_Role r "
+            + "WHERE p.EntityType = 'TW' "
+            + "  AND r.IsActive   = 'Y' "
+            + "  AND NOT EXISTS ( "
+            + "    SELECT 1 FROM AD_Process_Access x "
+            + "    WHERE x.AD_Process_ID = p.AD_Process_ID "
+            + "      AND x.AD_Role_ID    = r.AD_Role_ID "
+            + "  )";
+        logger.info("[TW] afterPackIn() firing — inserting AD_Process_Access");
+        int processesInserted = DB.executeUpdate(processSql, (String) null);
+        logger.info("[TW] afterPackIn() process access inserted=" + processesInserted);
+
+        if (windowsInserted >= 0 && processesInserted >= 0)
+            logger.info("TW Access granted: " + windowsInserted + " window + "
+                    + processesInserted + " process role combinations"
                     + " — users must re-login to see new permissions");
         else
-            logger.warning("TW Window Access: DB.executeUpdate returned " + inserted
-                    + " — check DB logs for constraint violation or connection error");
+            logger.warning("TW Access: some grants may have failed — "
+                    + "window=" + windowsInserted + " process=" + processesInserted
+                    + " — check DB logs");
     }
 }

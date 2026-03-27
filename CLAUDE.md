@@ -313,6 +313,42 @@ Validator classes that implement `ModelValidator` but are never registered as OS
 
 ---
 
+### 10. AD_Process_Para in PackOut.xml — required fields
+
+`ProcessParaElementHandler` does NOT inherit `AD_Process_ID` from the parent `<AD_Process>` context.
+Both of the following fields are required or the save will fail silently with no SQL error until you check the PostgreSQL log:
+
+```xml
+<AD_Process_Para type="table">
+  <AD_Process_ID reference="uuid" reference-key="AD_Process">{process-uuid}</AD_Process_ID>
+  <FieldLength>10</FieldLength>   <!-- NOT NULL in DB — use 10 for Integer, 1 for List/YesNo -->
+  ...
+</AD_Process_Para>
+```
+
+**Reference → FieldLength defaults:**
+- Integer (11): 10
+- List (17): 1 (unless stored value can be longer)
+- String (10): actual max length
+
+### 11. iDempiere physical tables live in `adempiere` schema, not `public`
+
+When checking physical table existence from psql or shell scripts:
+```sql
+-- WRONG: returns 0 rows
+SELECT count(*) FROM information_schema.tables WHERE table_schema='public' AND table_name ILIKE 'TW_%';
+
+-- CORRECT
+SELECT count(*) FROM pg_tables WHERE schemaname='adempiere' AND tablename ILIKE 'tw_%';
+```
+
+DROP commands in cleanup scripts must also use the schema prefix:
+```sql
+DROP TABLE IF EXISTS adempiere.TW_InvoicePrefix;
+```
+
+---
+
 ## What NOT to Do
 
 - **Never** use `POInfo.getPOInfo(ctx, String tableName)` — that overload does not exist; use `MTable.getTable_ID()` first

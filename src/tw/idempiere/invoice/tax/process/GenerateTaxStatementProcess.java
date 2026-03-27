@@ -1,10 +1,20 @@
 package tw.idempiere.invoice.tax.process;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.util.Calendar;
 import java.util.logging.Logger;
+
+import org.adempiere.exceptions.AdempiereException;
+import org.compiere.model.Query;
 import org.compiere.process.ProcessInfoParameter;
 import org.compiere.process.SvrProcess;
-import tw.idempiere.invoice.tax.service.MixedBusinessService;
+import org.compiere.util.DB;
+import org.compiere.util.Env;
+
+import tw.idempiere.invoice.tax.model.MTaxStatement;
 
 public class GenerateTaxStatementProcess extends SvrProcess {
 
@@ -33,6 +43,28 @@ public class GenerateTaxStatementProcess extends SvrProcess {
         return new int[]{startMonth, startMonth + 1};
     }
 
+    /**
+     * Filing due date = 15th of the month immediately after the period ends.
+     * e.g. Period 1 (Jan-Feb) → March 15; Period 6 (Nov-Dec) → next-year January 15.
+     */
+    public static java.sql.Timestamp calcFilingDueDate(int year, int period) {
+        int endMonth = period * 2;      // period 1 → 2 (Feb), period 6 → 12 (Dec)
+        int filingMonth = endMonth + 1;
+        int filingYear = year;
+        if (filingMonth > 12) {
+            filingMonth = 1;
+            filingYear++;
+        }
+        Calendar cal = Calendar.getInstance();
+        cal.set(filingYear, filingMonth - 1, 15, 0, 0, 0);
+        cal.set(Calendar.MILLISECOND, 0);
+        return new java.sql.Timestamp(cal.getTimeInMillis());
+    }
+
+    private static BigDecimal nullToZero(BigDecimal v) {
+        return v == null ? BigDecimal.ZERO : v;
+    }
+
     // --- SvrProcess implementation ---
 
     @Override
@@ -49,23 +81,128 @@ public class GenerateTaxStatementProcess extends SvrProcess {
 
     @Override
     protected String doIt() throws Exception {
-        log.info("GenerateTaxStatement: year=" + p_StatementYear + " period=" + p_StatementPeriod);
+        int[] months = getMonthsForPeriod(p_StatementPeriod);
+        int adClientId = Env.getAD_Client_ID(getCtx());
 
-        // TODO: Phase 4 full implementation — query TW_Invoice_Prefix_Map,
-        // aggregate OutputTaxAmount, InputTaxAmount from TW_Invoice_Prefix_Map records for the period,
-        // then create/update TW_TaxStatement record.
+        log.info("GenerateTaxStatement: year=" + p_StatementYear + " period=" + p_StatementPeriod
+            + " months=" + months[0] + "-" + months[1]);
 
-        // Calculation pipeline (values will be retrieved from MTaxStatement in Phase 4):
-        // BigDecimal inputTax = ...; // from MTaxStatement.getInputTaxAmount()
-        // BigDecimal ratio = ...; // from MTaxStatement.getTaxableRatio()
-        // BigDecimal adjustedInputTax = MixedBusinessService.adjustInputTax(inputTax, ratio);
-        // BigDecimal nonDeductible = ...; // from MTaxStatement.getNonDeductibleInputTax()
-        // BigDecimal carryOver = ...; // from MTaxStatement.getCarryOverTaxCredit()
-        // BigDecimal output = ...; // from MTaxStatement.getOutputTaxAmount()
-        // BigDecimal net = calcNetTaxPayable(output, adjustedInputTax, nonDeductible, carryOver);
+        // Prevent duplicate statements for the same year+period
+        MTaxStatement existing = new Query(getCtx(), MTaxStatement.Table_Name,
+                "StatementYear=? AND StatementPeriod=? AND AD_Client_ID=?", get_TrxName())
+            .setParameters(p_StatementYear, p_StatementPeriod, adClientId)
+            .first();
+        if (existing != null) {
+            throw new AdempiereException(
+                "Tax statement already exists for " + p_StatementYear + " period " + p_StatementPeriod
+                + " (ID=" + existing.get_ID() + "). Delete it first or edit it directly in the TW_TaxStatement window.");
+        }
 
-        throw new UnsupportedOperationException(
-            "GenerateTaxStatementProcess is not yet implemented. " +
-            "Please use the TW_TaxStatement window to create statements manually.");
+        // --- Aggregate sales invoices: TaxableRevenue + OutputTaxAmount ---
+        // TotalLines = sale amount before tax; GrandTotal - TotalLines = output tax
+        BigDecimal taxableRevenue = BigDecimal.ZERO;
+        BigDecimal outputTaxAmount = BigDecimal.ZERO;
+
+        String salesSQL =
+            "SELECT COALESCE(SUM(i.TotalLines), 0), COALESCE(SUM(i.GrandTotal - i.TotalLines), 0) " +
+            "FROM TW_Invoice_Prefix_Map pm " +
+            "JOIN C_Invoice i ON pm.C_Invoice_ID = i.C_Invoice_ID " +
+            "WHERE pm.AD_Client_ID=? AND pm.C_Invoice_ID > 0 " +
+            "AND pm.IsActive='Y' AND i.IsActive='Y' " +
+            "AND EXTRACT(YEAR FROM pm.InvoiceDate)=? " +
+            "AND EXTRACT(MONTH FROM pm.InvoiceDate) IN (?,?)";
+
+        PreparedStatement pstmt = DB.prepareStatement(salesSQL, get_TrxName());
+        ResultSet rs = null;
+        try {
+            pstmt.setInt(1, adClientId);
+            pstmt.setInt(2, p_StatementYear);
+            pstmt.setInt(3, months[0]);
+            pstmt.setInt(4, months[1]);
+            rs = pstmt.executeQuery();
+            if (rs.next()) {
+                taxableRevenue = nullToZero(rs.getBigDecimal(1));
+                outputTaxAmount = nullToZero(rs.getBigDecimal(2));
+            }
+        } finally {
+            DB.close(rs, pstmt);
+        }
+
+        // --- Sales adjustments (銷項折讓) reduce output tax ---
+        String salesAdjSQL =
+            "SELECT COALESCE(SUM(AdjustedTaxAmount), 0) FROM TW_InvoiceAdjustment " +
+            "WHERE AD_Client_ID=? AND IsActive='Y' " +
+            "AND AdjustmentDirection='SALES' AND TaxPeriod=? " +
+            "AND EXTRACT(YEAR FROM AdjustmentDate)=?";
+        BigDecimal salesAdjTax = BigDecimal.ZERO;
+        PreparedStatement pstmt2 = DB.prepareStatement(salesAdjSQL, get_TrxName());
+        ResultSet rs2 = null;
+        try {
+            pstmt2.setInt(1, adClientId);
+            pstmt2.setString(2, String.valueOf(p_StatementPeriod));
+            pstmt2.setInt(3, p_StatementYear);
+            rs2 = pstmt2.executeQuery();
+            if (rs2.next()) salesAdjTax = nullToZero(rs2.getBigDecimal(1));
+        } finally {
+            DB.close(rs2, pstmt2);
+        }
+        outputTaxAmount = outputTaxAmount.subtract(salesAdjTax);
+
+        // --- Purchase adjustments (進項折讓) = deductible input tax ---
+        String purchAdjSQL =
+            "SELECT COALESCE(SUM(AdjustedTaxAmount), 0) FROM TW_InvoiceAdjustment " +
+            "WHERE AD_Client_ID=? AND IsActive='Y' " +
+            "AND AdjustmentDirection='PURCHASE' AND TaxPeriod=? " +
+            "AND EXTRACT(YEAR FROM AdjustmentDate)=?";
+        BigDecimal inputTaxAmount = BigDecimal.ZERO;
+        PreparedStatement pstmt3 = DB.prepareStatement(purchAdjSQL, get_TrxName());
+        ResultSet rs3 = null;
+        try {
+            pstmt3.setInt(1, adClientId);
+            pstmt3.setString(2, String.valueOf(p_StatementPeriod));
+            pstmt3.setInt(3, p_StatementYear);
+            rs3 = pstmt3.executeQuery();
+            if (rs3.next()) inputTaxAmount = nullToZero(rs3.getBigDecimal(1));
+        } finally {
+            DB.close(rs3, pstmt3);
+        }
+
+        // Apply FLOOR rounding per Ministry of Finance rules
+        outputTaxAmount = outputTaxAmount.setScale(0, RoundingMode.FLOOR);
+        inputTaxAmount  = inputTaxAmount.setScale(0, RoundingMode.FLOOR);
+        taxableRevenue  = taxableRevenue.setScale(2, RoundingMode.FLOOR);
+
+        // Initial TaxPayable — user must review and fill in NonDeductibleInputTax,
+        // CarryOverTaxCredit, and IsMixedBusiness before finalizing.
+        BigDecimal taxPayable = calcNetTaxPayable(
+            outputTaxAmount, inputTaxAmount, BigDecimal.ZERO, BigDecimal.ZERO);
+
+        // --- Create TW_TaxStatement record ---
+        MTaxStatement stmt = new MTaxStatement(getCtx(), 0, get_TrxName());
+        stmt.setStatementYear(p_StatementYear);
+        stmt.setStatementPeriod(p_StatementPeriod);
+        stmt.setTaxableRevenue(taxableRevenue);
+        stmt.setZeroRateSalesAmount(BigDecimal.ZERO);   // user fills in zero-rate (export) sales
+        stmt.setExemptRevenue(BigDecimal.ZERO);          // user fills in exempt sales
+        stmt.setOutputTaxAmount(outputTaxAmount);
+        stmt.setInputTaxAmount(inputTaxAmount);
+        stmt.setNonDeductibleInputTax(BigDecimal.ZERO);  // user fills in
+        stmt.setCarryOverTaxCredit(BigDecimal.ZERO);     // user fills in from prior period
+        stmt.setIsMixedBusiness(false);
+        stmt.setTaxPayable(taxPayable);
+        stmt.setFilingDueDate(calcFilingDueDate(p_StatementYear, p_StatementPeriod));
+
+        if (!stmt.save())
+            throw new AdempiereException("Failed to save TW_TaxStatement");
+
+        log.info("TW_TaxStatement created: ID=" + stmt.get_ID());
+
+        return "Tax statement generated (ID=" + stmt.get_ID() + "): "
+            + "TaxableRevenue=" + taxableRevenue
+            + ", OutputTax=" + outputTaxAmount
+            + ", InputTax=" + inputTaxAmount
+            + ", TaxPayable=" + taxPayable
+            + ". Open TW_TaxStatement window to complete ZeroRateSalesAmount, "
+            + "ExemptRevenue, NonDeductibleInputTax, CarryOverTaxCredit, and IsMixedBusiness.";
     }
 }

@@ -7,7 +7,7 @@ public class ActivatorPackInTest {
     // NOTE: This version string must be updated whenever the 2Pack version is bumped
     // (e.g., 1.0.9 → 1.0.10). If this test fails with a null URL after a version bump,
     // update the filename below and in resources/META-INF/ to match.
-    private static final String PACK_VERSION = "1.0.10";
+    private static final String PACK_VERSION = "1.0.11";
 
     @Test
     public void testPackInResourceExists() {

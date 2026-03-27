@@ -2,8 +2,9 @@ package tw.idempiere.invoice.tax.process;
 
 import org.junit.Test;
 import java.math.BigDecimal;
+import java.sql.Timestamp;
+import java.util.Calendar;
 import static org.junit.Assert.*;
-import static org.junit.Assert.assertThrows;
 
 public class GenerateTaxStatementProcessTest {
 
@@ -41,7 +42,6 @@ public class GenerateTaxStatementProcessTest {
 
     @Test
     public void testPeriodYearFilter_correctRange() {
-        // Period 1 = Jan-Feb, period 2 = Mar-Apr
         int[] months = GenerateTaxStatementProcess.getMonthsForPeriod(1);
         assertEquals(2, months.length);
         assertEquals(1, months[0]);  // January
@@ -66,8 +66,43 @@ public class GenerateTaxStatementProcessTest {
     }
 
     @Test
-    public void testDoIt_throwsUnsupportedOperationException() {
-        GenerateTaxStatementProcess process = new GenerateTaxStatementProcess();
-        assertThrows(UnsupportedOperationException.class, () -> process.doIt());
+    public void testCalcFilingDueDate_period1_isMarche15() {
+        Timestamp due = GenerateTaxStatementProcess.calcFilingDueDate(2026, 1);
+        Calendar cal = Calendar.getInstance();
+        cal.setTimeInMillis(due.getTime());
+        assertEquals(2026, cal.get(Calendar.YEAR));
+        assertEquals(Calendar.MARCH, cal.get(Calendar.MONTH));
+        assertEquals(15, cal.get(Calendar.DAY_OF_MONTH));
+    }
+
+    @Test
+    public void testCalcFilingDueDate_period6_isNextYearJan15() {
+        // Period 6 = Nov-Dec; filing due = January 15 of the following year
+        Timestamp due = GenerateTaxStatementProcess.calcFilingDueDate(2026, 6);
+        Calendar cal = Calendar.getInstance();
+        cal.setTimeInMillis(due.getTime());
+        assertEquals(2027, cal.get(Calendar.YEAR));
+        assertEquals(Calendar.JANUARY, cal.get(Calendar.MONTH));
+        assertEquals(15, cal.get(Calendar.DAY_OF_MONTH));
+    }
+
+    @Test
+    public void testCalcFilingDueDate_allPeriods_correctMonth() {
+        // period N ends at month N*2, filing due = month N*2+1, day 15
+        int[][] expected = {
+            {1, 3},  // period 1 (Jan-Feb) → March
+            {2, 5},  // period 2 (Mar-Apr) → May
+            {3, 7},  // period 3 (May-Jun) → July
+            {4, 9},  // period 4 (Jul-Aug) → September
+            {5, 11}, // period 5 (Sep-Oct) → November
+        };
+        for (int[] pair : expected) {
+            Timestamp due = GenerateTaxStatementProcess.calcFilingDueDate(2026, pair[0]);
+            Calendar cal = Calendar.getInstance();
+            cal.setTimeInMillis(due.getTime());
+            assertEquals("Period " + pair[0] + " filing month",
+                pair[1], cal.get(Calendar.MONTH) + 1);
+            assertEquals(15, cal.get(Calendar.DAY_OF_MONTH));
+        }
     }
 }

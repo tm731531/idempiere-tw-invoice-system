@@ -1,4 +1,4 @@
-<idempiere Name="TW Invoice Tax System" Version="1.0.9" idempiereVersion="12.0.0" DataBaseVersion="12.0.0" Description="Taiwan Unified Invoice and Business Tax System" Author="TW iDempiere Community" AuthorEmail="dev@tw-idempiere.org" CreatedDate="2026-03-25 00:00:00" UpdatedDate="2026-03-26 00:00:00" PackOutVersion="100" UpdateDictionary="true" Client="0" AD_Client_UU="11111111-1111-1111-1111-111111111111">
+<idempiere Name="TW Invoice Tax System" Version="1.0.11" idempiereVersion="12.0.0" DataBaseVersion="12.0.0" Description="Taiwan Unified Invoice and Business Tax System" Author="TW iDempiere Community" AuthorEmail="dev@tw-idempiere.org" CreatedDate="2026-03-25 00:00:00" UpdatedDate="2026-03-28 00:00:00" PackOutVersion="100" UpdateDictionary="true" Client="0" AD_Client_UU="11111111-1111-1111-1111-111111111111">
 
   
   <AD_EntityType type="table">
@@ -671,7 +671,110 @@
     <AD_Sequence_UU>8be893ab-9491-4f1b-88bd-019b3fbf3f43</AD_Sequence_UU>
   </AD_Sequence>
 
-  
+
+  <AD_Process type="table">
+    <AD_Client_ID reference="id">0</AD_Client_ID>
+    <AD_Org_ID reference="id">0</AD_Org_ID>
+    <Value>TW_GenerateTaxStatement</Value>
+    <Name>Generate Tax Statement 產生401申報表</Name>
+    <Description>Aggregate invoice and adjustment data to generate a TW_TaxStatement for the selected bimonthly period</Description>
+    <Help>Queries TW_Invoice_Prefix_Map joined to C_Invoice for output tax, and TW_InvoiceAdjustment for input tax adjustments. Creates a new TW_TaxStatement record. Run once per period; open the statement window to complete ZeroRateSalesAmount, ExemptRevenue, NonDeductibleInputTax, CarryOverTaxCredit, and IsMixedBusiness before filing.</Help>
+    <IsActive>Y</IsActive>
+    <IsBetaFunctionality>N</IsBetaFunctionality>
+    <IsReport>N</IsReport>
+    <AccessLevel>3</AccessLevel>
+    <EntityType>TW</EntityType>
+    <ClassName>tw.idempiere.invoice.tax.process.GenerateTaxStatementProcess</ClassName>
+    <IsDirectPrint>N</IsDirectPrint>
+    <IsProcedure>N</IsProcedure>
+    <ShowHelp>Y</ShowHelp>
+    <AD_Process_UU>cc001001-0000-0000-0000-000000000001</AD_Process_UU>
+    <AD_Process_Para type="table">
+      <AD_Client_ID reference="id">0</AD_Client_ID>
+      <AD_Org_ID reference="id">0</AD_Org_ID>
+      <AD_Process_ID reference="uuid" reference-key="AD_Process">cc001001-0000-0000-0000-000000000001</AD_Process_ID>
+      <SeqNo>10</SeqNo>
+      <Name>Statement Year 申報年度</Name>
+      <ColumnName>StatementYear</ColumnName>
+      <FieldLength>10</FieldLength>
+      <IsMandatory>Y</IsMandatory>
+      <IsRange>N</IsRange>
+      <IsActive>Y</IsActive>
+      <AD_Reference_ID reference="id" reference-key="AD_Reference">11</AD_Reference_ID>
+      <EntityType>TW</EntityType>
+      <AD_Process_Para_UU>cc001001-0000-0000-0000-000000000011</AD_Process_Para_UU>
+    </AD_Process_Para>
+    <AD_Process_Para type="table">
+      <AD_Client_ID reference="id">0</AD_Client_ID>
+      <AD_Org_ID reference="id">0</AD_Org_ID>
+      <AD_Process_ID reference="uuid" reference-key="AD_Process">cc001001-0000-0000-0000-000000000001</AD_Process_ID>
+      <SeqNo>20</SeqNo>
+      <Name>Statement Period 申報期別</Name>
+      <ColumnName>StatementPeriod</ColumnName>
+      <IsMandatory>Y</IsMandatory>
+      <IsRange>N</IsRange>
+      <IsActive>Y</IsActive>
+      <AD_Reference_ID reference="id" reference-key="AD_Reference">17</AD_Reference_ID>
+      <FieldLength>1</FieldLength>
+      <AD_Reference_Value_ID reference="uuid" reference-key="AD_Reference">96216680-5925-4f68-9d71-75fb37656b84</AD_Reference_Value_ID>
+      <DefaultValue>1</DefaultValue>
+      <EntityType>TW</EntityType>
+      <AD_Process_Para_UU>cc001001-0000-0000-0000-000000000012</AD_Process_Para_UU>
+    </AD_Process_Para>
+  </AD_Process>
+
+  <AD_Process type="table">
+    <AD_Client_ID reference="id">0</AD_Client_ID>
+    <AD_Org_ID reference="id">0</AD_Org_ID>
+    <Value>TW_ExportTaxReport</Value>
+    <Name>Export Tax Report 匯出電子申報CSV</Name>
+    <Description>Export TW_TaxStatement data as CSV for Ministry of Finance electronic filing</Description>
+    <Help>Reads the TW_TaxStatement record for the selected year and period and writes a CSV file to the server temp directory. Run after generating and finalizing the tax statement. The output file path is shown in the process result.</Help>
+    <IsActive>Y</IsActive>
+    <IsBetaFunctionality>N</IsBetaFunctionality>
+    <IsReport>Y</IsReport>
+    <AccessLevel>3</AccessLevel>
+    <EntityType>TW</EntityType>
+    <ClassName>tw.idempiere.invoice.tax.process.ExportTaxReportProcess</ClassName>
+    <IsDirectPrint>N</IsDirectPrint>
+    <IsProcedure>N</IsProcedure>
+    <ShowHelp>Y</ShowHelp>
+    <AD_Process_UU>cc001002-0000-0000-0000-000000000002</AD_Process_UU>
+    <AD_Process_Para type="table">
+      <AD_Client_ID reference="id">0</AD_Client_ID>
+      <AD_Org_ID reference="id">0</AD_Org_ID>
+      <AD_Process_ID reference="uuid" reference-key="AD_Process">cc001002-0000-0000-0000-000000000002</AD_Process_ID>
+      <SeqNo>10</SeqNo>
+      <Name>Statement Year 申報年度</Name>
+      <ColumnName>StatementYear</ColumnName>
+      <FieldLength>10</FieldLength>
+      <IsMandatory>Y</IsMandatory>
+      <IsRange>N</IsRange>
+      <IsActive>Y</IsActive>
+      <AD_Reference_ID reference="id" reference-key="AD_Reference">11</AD_Reference_ID>
+      <EntityType>TW</EntityType>
+      <AD_Process_Para_UU>cc001002-0000-0000-0000-000000000021</AD_Process_Para_UU>
+    </AD_Process_Para>
+    <AD_Process_Para type="table">
+      <AD_Client_ID reference="id">0</AD_Client_ID>
+      <AD_Org_ID reference="id">0</AD_Org_ID>
+      <AD_Process_ID reference="uuid" reference-key="AD_Process">cc001002-0000-0000-0000-000000000002</AD_Process_ID>
+      <SeqNo>20</SeqNo>
+      <Name>Statement Period 申報期別</Name>
+      <ColumnName>StatementPeriod</ColumnName>
+      <IsMandatory>Y</IsMandatory>
+      <IsRange>N</IsRange>
+      <IsActive>Y</IsActive>
+      <AD_Reference_ID reference="id" reference-key="AD_Reference">17</AD_Reference_ID>
+      <FieldLength>1</FieldLength>
+      <AD_Reference_Value_ID reference="uuid" reference-key="AD_Reference">96216680-5925-4f68-9d71-75fb37656b84</AD_Reference_Value_ID>
+      <DefaultValue>1</DefaultValue>
+      <EntityType>TW</EntityType>
+      <AD_Process_Para_UU>cc001002-0000-0000-0000-000000000022</AD_Process_Para_UU>
+    </AD_Process_Para>
+  </AD_Process>
+
+
   <AD_Menu type="table">
     <AD_Client_ID reference="id">0</AD_Client_ID>
     <AD_Org_ID reference="id">0</AD_Org_ID>
@@ -3720,6 +3823,34 @@
       </AD_Field>
     </AD_Tab>
     </AD_Window>
+  </AD_Menu>
+
+  <AD_Menu type="table">
+      <AD_Client_ID reference="id">0</AD_Client_ID>
+      <AD_Org_ID reference="id">0</AD_Org_ID>
+      <Parent_ID reference="uuid" reference-key="AD_Menu">a1b2c3d4-e5f6-7890-abcd-ef1234567890</Parent_ID>
+      <Name>Generate Tax Statement 產生401申報表</Name>
+      <Description>Aggregate invoice data to generate bimonthly 401 tax statement</Description>
+      <EntityType>TW</EntityType>
+      <IsSummary>N</IsSummary>
+      <IsActive>Y</IsActive>
+      <Action>P</Action>
+      <AD_Process_ID reference="uuid" reference-key="AD_Process">cc001001-0000-0000-0000-000000000001</AD_Process_ID>
+      <AD_Menu_UU>cc002001-0000-0000-0000-000000000001</AD_Menu_UU>
+  </AD_Menu>
+
+  <AD_Menu type="table">
+      <AD_Client_ID reference="id">0</AD_Client_ID>
+      <AD_Org_ID reference="id">0</AD_Org_ID>
+      <Parent_ID reference="uuid" reference-key="AD_Menu">a1b2c3d4-e5f6-7890-abcd-ef1234567890</Parent_ID>
+      <Name>Export Tax Report 匯出電子申報CSV</Name>
+      <Description>Export tax statement as CSV for Ministry of Finance electronic filing</Description>
+      <EntityType>TW</EntityType>
+      <IsSummary>N</IsSummary>
+      <IsActive>Y</IsActive>
+      <Action>P</Action>
+      <AD_Process_ID reference="uuid" reference-key="AD_Process">cc001002-0000-0000-0000-000000000002</AD_Process_ID>
+      <AD_Menu_UU>cc002002-0000-0000-0000-000000000002</AD_Menu_UU>
   </AD_Menu>
 
   </AD_Menu>

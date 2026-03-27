@@ -2,7 +2,7 @@
 
 iDempiere 12.0 OSGi Plugin，實現符合台灣法規的統一發票（統一發票）與營業稅（401申報）管理。
 
-**狀態**: 實作完成 ✅ | 87 tests 通過 ✅ | 部署驗證通過 ✅ | 2Pack 1.0.10
+**狀態**: 實作完成 ✅ | 89 tests 通過 ✅ | 部署驗證通過 ✅ | 2Pack 1.0.11
 
 ---
 
@@ -10,7 +10,7 @@ iDempiere 12.0 OSGi Plugin，實現符合台灣法規的統一發票（統一發
 
 ```bash
 mvn compile      # 編譯
-mvn test         # 執行測試（87 tests）
+mvn test         # 執行測試（89 tests）
 mvn package      # 打包 → target/tw.idempiere.invoice.tax-1.0.0.jar
 ```
 
@@ -45,7 +45,7 @@ mvn package      # 打包 → target/tw.idempiere.invoice.tax-1.0.0.jar
 ```
 Bundle 啟動
   └─ TaiwanInvoiceTaxActivator (Incremental2PackActivator)
-      └─ PackIn: 安裝 2Pack_1.0.10.zip
+      └─ PackIn: 安裝 2Pack_1.0.11.zip
           └─ 安裝 AD_Table / AD_Window / AD_Field / AD_Menu 定義
       └─ afterPackIn(): 授予所有 active role 的 TW 視窗存取權限
 
@@ -74,8 +74,8 @@ Bundle 啟動
   TaxStatementValidator         ← 申報表驗證靜態方法
 
 流程（SvrProcess）
-  GenerateTaxStatementProcess ← 產生 401 申報表（計劃中功能，尚未實作）
-  ExportTaxReportProcess      ← 匯出財政部電子申報 CSV（計劃中功能，尚未實作）
+  GenerateTaxStatementProcess ← 產生 401 申報表（查詢 TW_Invoice_Prefix_Map + TW_InvoiceAdjustment，建立 TW_TaxStatement）
+  ExportTaxReportProcess      ← 匯出 TW_TaxStatement 為財政部電子申報 CSV
 ```
 
 ---
@@ -119,10 +119,10 @@ Bundle 啟動
 
 ## 變更記錄
 
-### 2026-03-27 — v1.0.10：Grid View 修復
+### 2026-03-27 — v1.0.11：Grid View 修復
 
 **關鍵修復：**
-- **Index:2 Grid View 崩潰修復（v1.0.10）**：PackOut.xml 中所有 73 個 AD_Field 元素均缺少 `SeqNoGrid`。iDempiere 12 Grid renderer 需要 `SeqNoGrid > 0` 才能正確初始化行編輯器；缺少時，在任何 TW 視窗按「新增」就會拋出 `IndexOutOfBoundsException: Index: 2`。修復：顯示欄位設為 `SeqNoGrid = SeqNo`，隱藏欄位設為 `SeqNoGrid = 0`。2Pack 版本升至 1.0.10。
+- **Index:2 Grid View 崩潰修復（v1.0.11）**：PackOut.xml 中所有 73 個 AD_Field 元素均缺少 `SeqNoGrid`。iDempiere 12 Grid renderer 需要 `SeqNoGrid > 0` 才能正確初始化行編輯器；缺少時，在任何 TW 視窗按「新增」就會拋出 `IndexOutOfBoundsException: Index: 2`。修復：顯示欄位設為 `SeqNoGrid = SeqNo`，隱藏欄位設為 `SeqNoGrid = 0`。2Pack 版本升至 1.0.11。
 
 **附帶修復：**
 - 雙 JVM 問題（兩個 iDempiere 實例互搶 port），透過 systemd restart 解決
@@ -149,4 +149,4 @@ Bundle 啟動
 - 4 個 Model 類別均新增 `COLUMNNAME_*_UU` 常數
 - 新增 `AdjustmentDirection` 常數測試
 
-**測試數量**：65 → 87 tests（全部通過）
+**測試數量**：65 → 89 tests（全部通過）
