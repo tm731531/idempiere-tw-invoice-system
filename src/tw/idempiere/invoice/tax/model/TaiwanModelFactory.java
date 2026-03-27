@@ -11,6 +11,10 @@ import org.osgi.service.component.annotations.Component;
  * iDempiere's AnnotationBasedModelFactory can discover them.
  * Without this, TW_* tables fall back to GenericPO and beforeSave()/afterSave() never run.
  */
+// NOTE: @Component annotation is present for documentation only.
+// The build does not include bnd/felix-scr annotation processing, so
+// DS registration is controlled exclusively by OSGI-INF/TaiwanModelFactory.xml.
+// Do not remove the XML file assuming the annotation handles registration.
 @Component(
     immediate = true,
     service = IModelFactory.class,

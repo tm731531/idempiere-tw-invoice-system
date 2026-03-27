@@ -56,15 +56,15 @@ tw.idempiere.invoice.tax/
 │   │   ├── TaxCalculationService.java
 │   │   ├── MixedBusinessService.java
 │   │   └── InvoiceValidationService.java
-│   ├── event/                           ← OSGi DS event handlers (registered services)
-│   │   ├── InvoicePrefixEventHandler.java
-│   │   ├── InvoicePrefixMapEventHandler.java
-│   │   ├── InvoiceAdjustmentEventHandler.java
-│   │   └── TaxStatementEventHandler.java
-│   ├── validator/                       ← Pure static helpers (NOT OSGi services)
-│   │   ├── InvoicePrefixValidator.java
-│   │   └── InvoicePrefixMapValidator.java
-│   ├── callout/
+│   ├── callout/                         ← Event handlers (OSGi DS) + pure-static validators
+│   │   ├── InvoicePrefixEventHandler.java    ← OSGi DS, registered in OSGI-INF/
+│   │   ├── InvoicePrefixMapEventHandler.java ← OSGi DS, registered in OSGI-INF/
+│   │   ├── InvoiceAdjustmentEventHandler.java← OSGi DS, registered in OSGI-INF/
+│   │   ├── TaxStatementEventHandler.java     ← OSGi DS, registered in OSGI-INF/
+│   │   ├── InvoicePrefixValidator.java       ← Static helpers only, NOT an OSGi service
+│   │   ├── InvoicePrefixMapValidator.java    ← Static helpers only, NOT an OSGi service
+│   │   ├── InvoiceAdjustmentValidator.java   ← Static helpers only, NOT an OSGi service
+│   │   ├── TaxStatementValidator.java        ← Static helpers only, NOT an OSGi service
 │   │   ├── InvoicePrefixCallout.java
 │   │   └── TaxStatementCallout.java
 │   ├── process/

@@ -1,7 +1,5 @@
 package tw.idempiere.invoice.tax.callout;
 
-import tw.idempiere.invoice.tax.model.MInvoicePrefix;
-
 public class InvoicePrefixValidator {
 
     // --- Static helper methods (unit-testable without iDempiere runtime) ---

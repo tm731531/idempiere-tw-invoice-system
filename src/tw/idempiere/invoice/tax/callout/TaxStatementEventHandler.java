@@ -41,5 +41,11 @@ public class TaxStatementEventHandler extends AbstractEventHandler {
             addErrorMessage(event, yearError);
             return;
         }
+
+        // TODO: Implement MixedBusiness < 9 months adjustment exemption
+        // Per domain rule: if the company has been operating for < 9 months, the mixed-business
+        // ratio adjustment is not required. MixedBusinessService.isEligibleForAdjustment()
+        // exists but no event handler calls it to enforce or warn. Add a check here when
+        // isMixedBusiness() is true.
     }
 }

@@ -27,6 +27,8 @@ public class InvoiceAdjustmentValidator {
     public static String validateAdjustmentDirection(String adjustmentDirection) {
         if (adjustmentDirection == null || adjustmentDirection.trim().isEmpty())
             return "折讓方向為必填（SALES=銷項折讓 / PURCHASE=進項折讓）";
+        if (!"SALES".equals(adjustmentDirection) && !"PURCHASE".equals(adjustmentDirection))
+            return "折讓方向值無效，僅接受 SALES（銷項折讓）或 PURCHASE（進項折讓）";
         return null;
     }
 }

@@ -46,4 +46,9 @@ public class InvoiceAdjustmentValidatorTest {
     public void testValidateAdjustmentDirection_PURCHASE_isValid() {
         assertNull(InvoiceAdjustmentValidator.validateAdjustmentDirection("PURCHASE"));
     }
+
+    @Test
+    public void testValidateAdjustmentDirection_invalidValue_returnsError() {
+        assertNotNull(InvoiceAdjustmentValidator.validateAdjustmentDirection("INVALID"));
+    }
 }

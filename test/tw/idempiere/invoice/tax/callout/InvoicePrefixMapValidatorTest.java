@@ -60,4 +60,12 @@ public class InvoicePrefixMapValidatorTest {
         String result = InvoicePrefixMapValidator.validateBuyerTaxIDStatic("SALES_TRIPART", "12345678");
         assertNull("Valid 8-digit TaxID should pass", result);
     }
+
+    @Test
+    public void testNullInvoiceType_buyerTaxIDOptional() {
+        // When parent prefix cannot be loaded (ID=0), invoiceType is null
+        // validateBuyerTaxIDStatic(null, anything) should not require a tax ID
+        assertNull(InvoicePrefixMapValidator.validateBuyerTaxIDStatic(null, null));
+        assertNull(InvoicePrefixMapValidator.validateBuyerTaxIDStatic(null, ""));
+    }
 }

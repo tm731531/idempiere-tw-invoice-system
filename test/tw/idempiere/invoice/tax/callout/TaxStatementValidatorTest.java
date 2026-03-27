@@ -14,8 +14,14 @@ public class TaxStatementValidatorTest {
     }
 
     @Test
-    public void testValidateStatementPeriod_zero_returnsError() {
-        assertNotNull(TaxStatementValidator.validateStatementPeriod(0));
+    public void testValidateStatementPeriod_zero_skipsValidation() {
+        // 0 means "not yet entered" on a new record — must not produce an error
+        assertNull(TaxStatementValidator.validateStatementPeriod(0));
+    }
+
+    @Test
+    public void testValidateStatementYear_zero_skipsValidation() {
+        assertNull(TaxStatementValidator.validateStatementYear(0));
     }
 
     @Test

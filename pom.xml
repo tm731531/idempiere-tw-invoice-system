@@ -183,6 +183,8 @@
                                 <!-- Event handlers (require iDempiere runtime + IEventManager) -->
                                 <exclude>tw/idempiere/invoice/tax/callout/InvoicePrefixEventHandler.class</exclude>
                                 <exclude>tw/idempiere/invoice/tax/callout/InvoicePrefixMapEventHandler.class</exclude>
+                                <exclude>tw/idempiere/invoice/tax/callout/InvoiceAdjustmentEventHandler.class</exclude>
+                                <exclude>tw/idempiere/invoice/tax/callout/TaxStatementEventHandler.class</exclude>
                             </excludes>
                             <rules>
                                 <!--
