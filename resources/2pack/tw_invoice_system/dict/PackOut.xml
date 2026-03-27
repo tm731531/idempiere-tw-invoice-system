@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <idempiere
     Name="TW Invoice Tax System"
-    Version="1.0.7"
+    Version="1.0.8"
     idempiereVersion="12.0.0"
     DataBaseVersion="12.0.0"
     Description="Taiwan Unified Invoice and Business Tax System"
@@ -1154,6 +1154,126 @@
       <AD_Field type="table">
           <AD_Client_ID reference="id">0</AD_Client_ID>
           <AD_Org_ID reference="id">0</AD_Org_ID>
+          <Name>ID</Name>
+          <EntityType>TW</EntityType>
+          <SeqNo>0</SeqNo>
+          <IsActive>Y</IsActive>
+          <IsDisplayed>N</IsDisplayed>
+          <IsReadOnly>N</IsReadOnly>
+          <IsMandatory>N</IsMandatory>
+          <IsSameLine>N</IsSameLine>
+          <IsHeading>N</IsHeading>
+          <IsFieldOnly>N</IsFieldOnly>
+          <IsEncrypted>N</IsEncrypted>
+          <IsCentrallyMaintained>Y</IsCentrallyMaintained>
+          <DisplayLogic/>
+          <AD_Tab_ID reference="uuid" reference-key="AD_Tab">d53983bc-2ec4-420e-8539-ae71376aae19</AD_Tab_ID>
+          <AD_Column_ID reference="uuid" reference-key="AD_Column">809fa0d8-9ef6-451c-9c1f-30cf85097eed</AD_Column_ID>
+          <AD_Field_UU>0ac6c2fc-38ea-4be9-abe8-2d7918dd3dd4</AD_Field_UU>
+      </AD_Field>
+      <AD_Field type="table">
+          <AD_Client_ID reference="id">0</AD_Client_ID>
+          <AD_Org_ID reference="id">0</AD_Org_ID>
+          <Name>UUID</Name>
+          <EntityType>TW</EntityType>
+          <SeqNo>0</SeqNo>
+          <IsActive>Y</IsActive>
+          <IsDisplayed>N</IsDisplayed>
+          <IsReadOnly>N</IsReadOnly>
+          <IsMandatory>N</IsMandatory>
+          <IsSameLine>N</IsSameLine>
+          <IsHeading>N</IsHeading>
+          <IsFieldOnly>N</IsFieldOnly>
+          <IsEncrypted>N</IsEncrypted>
+          <IsCentrallyMaintained>Y</IsCentrallyMaintained>
+          <DisplayLogic/>
+          <AD_Tab_ID reference="uuid" reference-key="AD_Tab">d53983bc-2ec4-420e-8539-ae71376aae19</AD_Tab_ID>
+          <AD_Column_ID reference="uuid" reference-key="AD_Column">4973a358-13c7-4adf-8bcb-8d522a0e1bdd</AD_Column_ID>
+          <AD_Field_UU>c9e06eeb-1168-49b2-8f10-1d752684169a</AD_Field_UU>
+      </AD_Field>
+      <AD_Field type="table">
+          <AD_Client_ID reference="id">0</AD_Client_ID>
+          <AD_Org_ID reference="id">0</AD_Org_ID>
+          <Name>Created</Name>
+          <EntityType>TW</EntityType>
+          <SeqNo>0</SeqNo>
+          <IsActive>Y</IsActive>
+          <IsDisplayed>N</IsDisplayed>
+          <IsReadOnly>N</IsReadOnly>
+          <IsMandatory>N</IsMandatory>
+          <IsSameLine>N</IsSameLine>
+          <IsHeading>N</IsHeading>
+          <IsFieldOnly>N</IsFieldOnly>
+          <IsEncrypted>N</IsEncrypted>
+          <IsCentrallyMaintained>Y</IsCentrallyMaintained>
+          <DisplayLogic/>
+          <AD_Tab_ID reference="uuid" reference-key="AD_Tab">d53983bc-2ec4-420e-8539-ae71376aae19</AD_Tab_ID>
+          <AD_Column_ID reference="uuid" reference-key="AD_Column">7dfe5f7a-cdae-49d4-899a-16db78d8bc96</AD_Column_ID>
+          <AD_Field_UU>071c6f76-8cb4-4f1c-8cea-d34344513b87</AD_Field_UU>
+      </AD_Field>
+      <AD_Field type="table">
+          <AD_Client_ID reference="id">0</AD_Client_ID>
+          <AD_Org_ID reference="id">0</AD_Org_ID>
+          <Name>CreatedBy</Name>
+          <EntityType>TW</EntityType>
+          <SeqNo>0</SeqNo>
+          <IsActive>Y</IsActive>
+          <IsDisplayed>N</IsDisplayed>
+          <IsReadOnly>N</IsReadOnly>
+          <IsMandatory>N</IsMandatory>
+          <IsSameLine>N</IsSameLine>
+          <IsHeading>N</IsHeading>
+          <IsFieldOnly>N</IsFieldOnly>
+          <IsEncrypted>N</IsEncrypted>
+          <IsCentrallyMaintained>Y</IsCentrallyMaintained>
+          <DisplayLogic/>
+          <AD_Tab_ID reference="uuid" reference-key="AD_Tab">d53983bc-2ec4-420e-8539-ae71376aae19</AD_Tab_ID>
+          <AD_Column_ID reference="uuid" reference-key="AD_Column">a58f3146-fea2-4284-b1fd-1719a4c80ea1</AD_Column_ID>
+          <AD_Field_UU>49a67024-19b4-49f4-a53f-7fa02422aaaa</AD_Field_UU>
+      </AD_Field>
+      <AD_Field type="table">
+          <AD_Client_ID reference="id">0</AD_Client_ID>
+          <AD_Org_ID reference="id">0</AD_Org_ID>
+          <Name>Updated</Name>
+          <EntityType>TW</EntityType>
+          <SeqNo>0</SeqNo>
+          <IsActive>Y</IsActive>
+          <IsDisplayed>N</IsDisplayed>
+          <IsReadOnly>N</IsReadOnly>
+          <IsMandatory>N</IsMandatory>
+          <IsSameLine>N</IsSameLine>
+          <IsHeading>N</IsHeading>
+          <IsFieldOnly>N</IsFieldOnly>
+          <IsEncrypted>N</IsEncrypted>
+          <IsCentrallyMaintained>Y</IsCentrallyMaintained>
+          <DisplayLogic/>
+          <AD_Tab_ID reference="uuid" reference-key="AD_Tab">d53983bc-2ec4-420e-8539-ae71376aae19</AD_Tab_ID>
+          <AD_Column_ID reference="uuid" reference-key="AD_Column">144d9964-04d2-4500-8cf7-d89f9e417761</AD_Column_ID>
+          <AD_Field_UU>a33bea83-289f-4aae-86d0-33a7b7d84a57</AD_Field_UU>
+      </AD_Field>
+      <AD_Field type="table">
+          <AD_Client_ID reference="id">0</AD_Client_ID>
+          <AD_Org_ID reference="id">0</AD_Org_ID>
+          <Name>UpdatedBy</Name>
+          <EntityType>TW</EntityType>
+          <SeqNo>0</SeqNo>
+          <IsActive>Y</IsActive>
+          <IsDisplayed>N</IsDisplayed>
+          <IsReadOnly>N</IsReadOnly>
+          <IsMandatory>N</IsMandatory>
+          <IsSameLine>N</IsSameLine>
+          <IsHeading>N</IsHeading>
+          <IsFieldOnly>N</IsFieldOnly>
+          <IsEncrypted>N</IsEncrypted>
+          <IsCentrallyMaintained>Y</IsCentrallyMaintained>
+          <DisplayLogic/>
+          <AD_Tab_ID reference="uuid" reference-key="AD_Tab">d53983bc-2ec4-420e-8539-ae71376aae19</AD_Tab_ID>
+          <AD_Column_ID reference="uuid" reference-key="AD_Column">4013cf9c-e7f6-4c17-8216-a9d3feaa91ef</AD_Column_ID>
+          <AD_Field_UU>b32661e9-d902-46c6-b3a2-a04040b41479</AD_Field_UU>
+      </AD_Field>
+      <AD_Field type="table">
+          <AD_Client_ID reference="id">0</AD_Client_ID>
+          <AD_Org_ID reference="id">0</AD_Org_ID>
           <Name>字軌代號</Name>
           <Description>Invoice prefix code</Description>
           <EntityType>TW</EntityType>
@@ -1753,6 +1873,126 @@
       <AD_Field type="table">
           <AD_Client_ID reference="id">0</AD_Client_ID>
           <AD_Org_ID reference="id">0</AD_Org_ID>
+          <Name>ID</Name>
+          <EntityType>TW</EntityType>
+          <SeqNo>0</SeqNo>
+          <IsActive>Y</IsActive>
+          <IsDisplayed>N</IsDisplayed>
+          <IsReadOnly>N</IsReadOnly>
+          <IsMandatory>N</IsMandatory>
+          <IsSameLine>N</IsSameLine>
+          <IsHeading>N</IsHeading>
+          <IsFieldOnly>N</IsFieldOnly>
+          <IsEncrypted>N</IsEncrypted>
+          <IsCentrallyMaintained>Y</IsCentrallyMaintained>
+          <DisplayLogic/>
+          <AD_Tab_ID reference="uuid" reference-key="AD_Tab">ea25fd07-0aee-4889-8db2-da7d0ffd79cf</AD_Tab_ID>
+          <AD_Column_ID reference="uuid" reference-key="AD_Column">72b7fd05-31d9-4f29-a372-56eb4453fa38</AD_Column_ID>
+          <AD_Field_UU>15f7be11-a8c2-45f7-8ceb-0132a52031d3</AD_Field_UU>
+      </AD_Field>
+      <AD_Field type="table">
+          <AD_Client_ID reference="id">0</AD_Client_ID>
+          <AD_Org_ID reference="id">0</AD_Org_ID>
+          <Name>UUID</Name>
+          <EntityType>TW</EntityType>
+          <SeqNo>0</SeqNo>
+          <IsActive>Y</IsActive>
+          <IsDisplayed>N</IsDisplayed>
+          <IsReadOnly>N</IsReadOnly>
+          <IsMandatory>N</IsMandatory>
+          <IsSameLine>N</IsSameLine>
+          <IsHeading>N</IsHeading>
+          <IsFieldOnly>N</IsFieldOnly>
+          <IsEncrypted>N</IsEncrypted>
+          <IsCentrallyMaintained>Y</IsCentrallyMaintained>
+          <DisplayLogic/>
+          <AD_Tab_ID reference="uuid" reference-key="AD_Tab">ea25fd07-0aee-4889-8db2-da7d0ffd79cf</AD_Tab_ID>
+          <AD_Column_ID reference="uuid" reference-key="AD_Column">9c0510b1-8dc1-4ee8-8fab-d3cf2a6d5535</AD_Column_ID>
+          <AD_Field_UU>f91ac4c9-d95f-4c1a-9653-5c454f714d93</AD_Field_UU>
+      </AD_Field>
+      <AD_Field type="table">
+          <AD_Client_ID reference="id">0</AD_Client_ID>
+          <AD_Org_ID reference="id">0</AD_Org_ID>
+          <Name>Created</Name>
+          <EntityType>TW</EntityType>
+          <SeqNo>0</SeqNo>
+          <IsActive>Y</IsActive>
+          <IsDisplayed>N</IsDisplayed>
+          <IsReadOnly>N</IsReadOnly>
+          <IsMandatory>N</IsMandatory>
+          <IsSameLine>N</IsSameLine>
+          <IsHeading>N</IsHeading>
+          <IsFieldOnly>N</IsFieldOnly>
+          <IsEncrypted>N</IsEncrypted>
+          <IsCentrallyMaintained>Y</IsCentrallyMaintained>
+          <DisplayLogic/>
+          <AD_Tab_ID reference="uuid" reference-key="AD_Tab">ea25fd07-0aee-4889-8db2-da7d0ffd79cf</AD_Tab_ID>
+          <AD_Column_ID reference="uuid" reference-key="AD_Column">1eee2999-c520-43f0-a797-ab549642f928</AD_Column_ID>
+          <AD_Field_UU>7a006f11-99b1-4052-a684-fc4189837f5c</AD_Field_UU>
+      </AD_Field>
+      <AD_Field type="table">
+          <AD_Client_ID reference="id">0</AD_Client_ID>
+          <AD_Org_ID reference="id">0</AD_Org_ID>
+          <Name>CreatedBy</Name>
+          <EntityType>TW</EntityType>
+          <SeqNo>0</SeqNo>
+          <IsActive>Y</IsActive>
+          <IsDisplayed>N</IsDisplayed>
+          <IsReadOnly>N</IsReadOnly>
+          <IsMandatory>N</IsMandatory>
+          <IsSameLine>N</IsSameLine>
+          <IsHeading>N</IsHeading>
+          <IsFieldOnly>N</IsFieldOnly>
+          <IsEncrypted>N</IsEncrypted>
+          <IsCentrallyMaintained>Y</IsCentrallyMaintained>
+          <DisplayLogic/>
+          <AD_Tab_ID reference="uuid" reference-key="AD_Tab">ea25fd07-0aee-4889-8db2-da7d0ffd79cf</AD_Tab_ID>
+          <AD_Column_ID reference="uuid" reference-key="AD_Column">e30eed21-1f79-4376-813f-848a0f0fdf6e</AD_Column_ID>
+          <AD_Field_UU>d1330dc8-6a5a-4a78-8a46-6e504ebfbb8f</AD_Field_UU>
+      </AD_Field>
+      <AD_Field type="table">
+          <AD_Client_ID reference="id">0</AD_Client_ID>
+          <AD_Org_ID reference="id">0</AD_Org_ID>
+          <Name>Updated</Name>
+          <EntityType>TW</EntityType>
+          <SeqNo>0</SeqNo>
+          <IsActive>Y</IsActive>
+          <IsDisplayed>N</IsDisplayed>
+          <IsReadOnly>N</IsReadOnly>
+          <IsMandatory>N</IsMandatory>
+          <IsSameLine>N</IsSameLine>
+          <IsHeading>N</IsHeading>
+          <IsFieldOnly>N</IsFieldOnly>
+          <IsEncrypted>N</IsEncrypted>
+          <IsCentrallyMaintained>Y</IsCentrallyMaintained>
+          <DisplayLogic/>
+          <AD_Tab_ID reference="uuid" reference-key="AD_Tab">ea25fd07-0aee-4889-8db2-da7d0ffd79cf</AD_Tab_ID>
+          <AD_Column_ID reference="uuid" reference-key="AD_Column">2e0d1374-612d-4195-b52a-53bbbfd40f82</AD_Column_ID>
+          <AD_Field_UU>70344942-25c3-4fbd-b418-2f52025616d1</AD_Field_UU>
+      </AD_Field>
+      <AD_Field type="table">
+          <AD_Client_ID reference="id">0</AD_Client_ID>
+          <AD_Org_ID reference="id">0</AD_Org_ID>
+          <Name>UpdatedBy</Name>
+          <EntityType>TW</EntityType>
+          <SeqNo>0</SeqNo>
+          <IsActive>Y</IsActive>
+          <IsDisplayed>N</IsDisplayed>
+          <IsReadOnly>N</IsReadOnly>
+          <IsMandatory>N</IsMandatory>
+          <IsSameLine>N</IsSameLine>
+          <IsHeading>N</IsHeading>
+          <IsFieldOnly>N</IsFieldOnly>
+          <IsEncrypted>N</IsEncrypted>
+          <IsCentrallyMaintained>Y</IsCentrallyMaintained>
+          <DisplayLogic/>
+          <AD_Tab_ID reference="uuid" reference-key="AD_Tab">ea25fd07-0aee-4889-8db2-da7d0ffd79cf</AD_Tab_ID>
+          <AD_Column_ID reference="uuid" reference-key="AD_Column">d7d053db-3940-4168-b4a8-df1f624430c0</AD_Column_ID>
+          <AD_Field_UU>5e3862c6-f358-423d-be8b-aaa3009eb0f8</AD_Field_UU>
+      </AD_Field>
+      <AD_Field type="table">
+          <AD_Client_ID reference="id">0</AD_Client_ID>
+          <AD_Org_ID reference="id">0</AD_Org_ID>
           <Name>發票字軌</Name>
           <Description>Invoice prefix</Description>
           <EntityType>TW</EntityType>
@@ -2283,6 +2523,126 @@
           <AD_Tab_ID reference="uuid" reference-key="AD_Tab">30928dd8-6524-4d45-8fef-1ff140038d48</AD_Tab_ID>
           <AD_Column_ID reference="uuid" reference-key="AD_Column">90de368e-7ac2-494d-a20a-56c4ead8aec0</AD_Column_ID>
           <AD_Field_UU>aa000003-0001-0001-0001-000000000003</AD_Field_UU>
+      </AD_Field>
+      <AD_Field type="table">
+          <AD_Client_ID reference="id">0</AD_Client_ID>
+          <AD_Org_ID reference="id">0</AD_Org_ID>
+          <Name>ID</Name>
+          <EntityType>TW</EntityType>
+          <SeqNo>0</SeqNo>
+          <IsActive>Y</IsActive>
+          <IsDisplayed>N</IsDisplayed>
+          <IsReadOnly>N</IsReadOnly>
+          <IsMandatory>N</IsMandatory>
+          <IsSameLine>N</IsSameLine>
+          <IsHeading>N</IsHeading>
+          <IsFieldOnly>N</IsFieldOnly>
+          <IsEncrypted>N</IsEncrypted>
+          <IsCentrallyMaintained>Y</IsCentrallyMaintained>
+          <DisplayLogic/>
+          <AD_Tab_ID reference="uuid" reference-key="AD_Tab">30928dd8-6524-4d45-8fef-1ff140038d48</AD_Tab_ID>
+          <AD_Column_ID reference="uuid" reference-key="AD_Column">5b68e04f-ac5d-4fef-b757-c402a6090a1a</AD_Column_ID>
+          <AD_Field_UU>bb9c4690-5a9f-42e6-9916-4a48f16d3ff8</AD_Field_UU>
+      </AD_Field>
+      <AD_Field type="table">
+          <AD_Client_ID reference="id">0</AD_Client_ID>
+          <AD_Org_ID reference="id">0</AD_Org_ID>
+          <Name>UUID</Name>
+          <EntityType>TW</EntityType>
+          <SeqNo>0</SeqNo>
+          <IsActive>Y</IsActive>
+          <IsDisplayed>N</IsDisplayed>
+          <IsReadOnly>N</IsReadOnly>
+          <IsMandatory>N</IsMandatory>
+          <IsSameLine>N</IsSameLine>
+          <IsHeading>N</IsHeading>
+          <IsFieldOnly>N</IsFieldOnly>
+          <IsEncrypted>N</IsEncrypted>
+          <IsCentrallyMaintained>Y</IsCentrallyMaintained>
+          <DisplayLogic/>
+          <AD_Tab_ID reference="uuid" reference-key="AD_Tab">30928dd8-6524-4d45-8fef-1ff140038d48</AD_Tab_ID>
+          <AD_Column_ID reference="uuid" reference-key="AD_Column">a2fd3820-44fd-482d-9855-db4aad8c43b7</AD_Column_ID>
+          <AD_Field_UU>562e4be3-55a6-4764-9076-68fd1376997a</AD_Field_UU>
+      </AD_Field>
+      <AD_Field type="table">
+          <AD_Client_ID reference="id">0</AD_Client_ID>
+          <AD_Org_ID reference="id">0</AD_Org_ID>
+          <Name>Created</Name>
+          <EntityType>TW</EntityType>
+          <SeqNo>0</SeqNo>
+          <IsActive>Y</IsActive>
+          <IsDisplayed>N</IsDisplayed>
+          <IsReadOnly>N</IsReadOnly>
+          <IsMandatory>N</IsMandatory>
+          <IsSameLine>N</IsSameLine>
+          <IsHeading>N</IsHeading>
+          <IsFieldOnly>N</IsFieldOnly>
+          <IsEncrypted>N</IsEncrypted>
+          <IsCentrallyMaintained>Y</IsCentrallyMaintained>
+          <DisplayLogic/>
+          <AD_Tab_ID reference="uuid" reference-key="AD_Tab">30928dd8-6524-4d45-8fef-1ff140038d48</AD_Tab_ID>
+          <AD_Column_ID reference="uuid" reference-key="AD_Column">4b5137e3-8601-4d36-9570-f52dfc6f2044</AD_Column_ID>
+          <AD_Field_UU>a6d42d68-09df-4d4a-9abd-a1d3df3b8eef</AD_Field_UU>
+      </AD_Field>
+      <AD_Field type="table">
+          <AD_Client_ID reference="id">0</AD_Client_ID>
+          <AD_Org_ID reference="id">0</AD_Org_ID>
+          <Name>CreatedBy</Name>
+          <EntityType>TW</EntityType>
+          <SeqNo>0</SeqNo>
+          <IsActive>Y</IsActive>
+          <IsDisplayed>N</IsDisplayed>
+          <IsReadOnly>N</IsReadOnly>
+          <IsMandatory>N</IsMandatory>
+          <IsSameLine>N</IsSameLine>
+          <IsHeading>N</IsHeading>
+          <IsFieldOnly>N</IsFieldOnly>
+          <IsEncrypted>N</IsEncrypted>
+          <IsCentrallyMaintained>Y</IsCentrallyMaintained>
+          <DisplayLogic/>
+          <AD_Tab_ID reference="uuid" reference-key="AD_Tab">30928dd8-6524-4d45-8fef-1ff140038d48</AD_Tab_ID>
+          <AD_Column_ID reference="uuid" reference-key="AD_Column">132777c0-bbad-412b-a661-20f8e81e17c9</AD_Column_ID>
+          <AD_Field_UU>aa87285c-76b6-46c0-9e30-2068417ccaa6</AD_Field_UU>
+      </AD_Field>
+      <AD_Field type="table">
+          <AD_Client_ID reference="id">0</AD_Client_ID>
+          <AD_Org_ID reference="id">0</AD_Org_ID>
+          <Name>Updated</Name>
+          <EntityType>TW</EntityType>
+          <SeqNo>0</SeqNo>
+          <IsActive>Y</IsActive>
+          <IsDisplayed>N</IsDisplayed>
+          <IsReadOnly>N</IsReadOnly>
+          <IsMandatory>N</IsMandatory>
+          <IsSameLine>N</IsSameLine>
+          <IsHeading>N</IsHeading>
+          <IsFieldOnly>N</IsFieldOnly>
+          <IsEncrypted>N</IsEncrypted>
+          <IsCentrallyMaintained>Y</IsCentrallyMaintained>
+          <DisplayLogic/>
+          <AD_Tab_ID reference="uuid" reference-key="AD_Tab">30928dd8-6524-4d45-8fef-1ff140038d48</AD_Tab_ID>
+          <AD_Column_ID reference="uuid" reference-key="AD_Column">66a8c288-60f4-4d74-b3d1-6c045abf4d56</AD_Column_ID>
+          <AD_Field_UU>755f68d0-c39f-4be8-981e-d61ad4dfab4a</AD_Field_UU>
+      </AD_Field>
+      <AD_Field type="table">
+          <AD_Client_ID reference="id">0</AD_Client_ID>
+          <AD_Org_ID reference="id">0</AD_Org_ID>
+          <Name>UpdatedBy</Name>
+          <EntityType>TW</EntityType>
+          <SeqNo>0</SeqNo>
+          <IsActive>Y</IsActive>
+          <IsDisplayed>N</IsDisplayed>
+          <IsReadOnly>N</IsReadOnly>
+          <IsMandatory>N</IsMandatory>
+          <IsSameLine>N</IsSameLine>
+          <IsHeading>N</IsHeading>
+          <IsFieldOnly>N</IsFieldOnly>
+          <IsEncrypted>N</IsEncrypted>
+          <IsCentrallyMaintained>Y</IsCentrallyMaintained>
+          <DisplayLogic/>
+          <AD_Tab_ID reference="uuid" reference-key="AD_Tab">30928dd8-6524-4d45-8fef-1ff140038d48</AD_Tab_ID>
+          <AD_Column_ID reference="uuid" reference-key="AD_Column">b4f7ed43-11ce-4847-a073-0b724b924089</AD_Column_ID>
+          <AD_Field_UU>f4a0430c-620d-43c3-9c4b-7eae10b324cd</AD_Field_UU>
       </AD_Field>
       <AD_Field type="table">
           <AD_Client_ID reference="id">0</AD_Client_ID>
@@ -2957,6 +3317,126 @@
           <AD_Tab_ID reference="uuid" reference-key="AD_Tab">e43ec7f4-682f-47ae-bcfe-a176c205e05b</AD_Tab_ID>
           <AD_Column_ID reference="uuid" reference-key="AD_Column">c7396842-9bf7-419d-a42d-c078965b0c2a</AD_Column_ID>
           <AD_Field_UU>aa000004-0001-0001-0001-000000000003</AD_Field_UU>
+      </AD_Field>
+      <AD_Field type="table">
+          <AD_Client_ID reference="id">0</AD_Client_ID>
+          <AD_Org_ID reference="id">0</AD_Org_ID>
+          <Name>ID</Name>
+          <EntityType>TW</EntityType>
+          <SeqNo>0</SeqNo>
+          <IsActive>Y</IsActive>
+          <IsDisplayed>N</IsDisplayed>
+          <IsReadOnly>N</IsReadOnly>
+          <IsMandatory>N</IsMandatory>
+          <IsSameLine>N</IsSameLine>
+          <IsHeading>N</IsHeading>
+          <IsFieldOnly>N</IsFieldOnly>
+          <IsEncrypted>N</IsEncrypted>
+          <IsCentrallyMaintained>Y</IsCentrallyMaintained>
+          <DisplayLogic/>
+          <AD_Tab_ID reference="uuid" reference-key="AD_Tab">e43ec7f4-682f-47ae-bcfe-a176c205e05b</AD_Tab_ID>
+          <AD_Column_ID reference="uuid" reference-key="AD_Column">712ed415-1161-41e7-a3c0-a709d605c891</AD_Column_ID>
+          <AD_Field_UU>6478991a-1082-421d-82ab-d73df1ffc078</AD_Field_UU>
+      </AD_Field>
+      <AD_Field type="table">
+          <AD_Client_ID reference="id">0</AD_Client_ID>
+          <AD_Org_ID reference="id">0</AD_Org_ID>
+          <Name>UUID</Name>
+          <EntityType>TW</EntityType>
+          <SeqNo>0</SeqNo>
+          <IsActive>Y</IsActive>
+          <IsDisplayed>N</IsDisplayed>
+          <IsReadOnly>N</IsReadOnly>
+          <IsMandatory>N</IsMandatory>
+          <IsSameLine>N</IsSameLine>
+          <IsHeading>N</IsHeading>
+          <IsFieldOnly>N</IsFieldOnly>
+          <IsEncrypted>N</IsEncrypted>
+          <IsCentrallyMaintained>Y</IsCentrallyMaintained>
+          <DisplayLogic/>
+          <AD_Tab_ID reference="uuid" reference-key="AD_Tab">e43ec7f4-682f-47ae-bcfe-a176c205e05b</AD_Tab_ID>
+          <AD_Column_ID reference="uuid" reference-key="AD_Column">b29dad19-d8ed-4d67-a4b7-1f123be22a72</AD_Column_ID>
+          <AD_Field_UU>df57134f-d0ee-4b30-acfe-f47b51ebc4aa</AD_Field_UU>
+      </AD_Field>
+      <AD_Field type="table">
+          <AD_Client_ID reference="id">0</AD_Client_ID>
+          <AD_Org_ID reference="id">0</AD_Org_ID>
+          <Name>Created</Name>
+          <EntityType>TW</EntityType>
+          <SeqNo>0</SeqNo>
+          <IsActive>Y</IsActive>
+          <IsDisplayed>N</IsDisplayed>
+          <IsReadOnly>N</IsReadOnly>
+          <IsMandatory>N</IsMandatory>
+          <IsSameLine>N</IsSameLine>
+          <IsHeading>N</IsHeading>
+          <IsFieldOnly>N</IsFieldOnly>
+          <IsEncrypted>N</IsEncrypted>
+          <IsCentrallyMaintained>Y</IsCentrallyMaintained>
+          <DisplayLogic/>
+          <AD_Tab_ID reference="uuid" reference-key="AD_Tab">e43ec7f4-682f-47ae-bcfe-a176c205e05b</AD_Tab_ID>
+          <AD_Column_ID reference="uuid" reference-key="AD_Column">9984d119-1b59-45bd-af36-1b0a992e6956</AD_Column_ID>
+          <AD_Field_UU>011158b0-20f8-4d02-b6c4-68287dc67706</AD_Field_UU>
+      </AD_Field>
+      <AD_Field type="table">
+          <AD_Client_ID reference="id">0</AD_Client_ID>
+          <AD_Org_ID reference="id">0</AD_Org_ID>
+          <Name>CreatedBy</Name>
+          <EntityType>TW</EntityType>
+          <SeqNo>0</SeqNo>
+          <IsActive>Y</IsActive>
+          <IsDisplayed>N</IsDisplayed>
+          <IsReadOnly>N</IsReadOnly>
+          <IsMandatory>N</IsMandatory>
+          <IsSameLine>N</IsSameLine>
+          <IsHeading>N</IsHeading>
+          <IsFieldOnly>N</IsFieldOnly>
+          <IsEncrypted>N</IsEncrypted>
+          <IsCentrallyMaintained>Y</IsCentrallyMaintained>
+          <DisplayLogic/>
+          <AD_Tab_ID reference="uuid" reference-key="AD_Tab">e43ec7f4-682f-47ae-bcfe-a176c205e05b</AD_Tab_ID>
+          <AD_Column_ID reference="uuid" reference-key="AD_Column">9bda1398-47d3-4b0f-a171-793b4ac2cb48</AD_Column_ID>
+          <AD_Field_UU>b8643e5d-4dfe-4c5f-b16c-acda9ec8d4ae</AD_Field_UU>
+      </AD_Field>
+      <AD_Field type="table">
+          <AD_Client_ID reference="id">0</AD_Client_ID>
+          <AD_Org_ID reference="id">0</AD_Org_ID>
+          <Name>Updated</Name>
+          <EntityType>TW</EntityType>
+          <SeqNo>0</SeqNo>
+          <IsActive>Y</IsActive>
+          <IsDisplayed>N</IsDisplayed>
+          <IsReadOnly>N</IsReadOnly>
+          <IsMandatory>N</IsMandatory>
+          <IsSameLine>N</IsSameLine>
+          <IsHeading>N</IsHeading>
+          <IsFieldOnly>N</IsFieldOnly>
+          <IsEncrypted>N</IsEncrypted>
+          <IsCentrallyMaintained>Y</IsCentrallyMaintained>
+          <DisplayLogic/>
+          <AD_Tab_ID reference="uuid" reference-key="AD_Tab">e43ec7f4-682f-47ae-bcfe-a176c205e05b</AD_Tab_ID>
+          <AD_Column_ID reference="uuid" reference-key="AD_Column">e4a70319-1dbd-4b78-8572-22529e84bc18</AD_Column_ID>
+          <AD_Field_UU>fbbdf5f4-7d93-4233-bafe-a85494a05f2c</AD_Field_UU>
+      </AD_Field>
+      <AD_Field type="table">
+          <AD_Client_ID reference="id">0</AD_Client_ID>
+          <AD_Org_ID reference="id">0</AD_Org_ID>
+          <Name>UpdatedBy</Name>
+          <EntityType>TW</EntityType>
+          <SeqNo>0</SeqNo>
+          <IsActive>Y</IsActive>
+          <IsDisplayed>N</IsDisplayed>
+          <IsReadOnly>N</IsReadOnly>
+          <IsMandatory>N</IsMandatory>
+          <IsSameLine>N</IsSameLine>
+          <IsHeading>N</IsHeading>
+          <IsFieldOnly>N</IsFieldOnly>
+          <IsEncrypted>N</IsEncrypted>
+          <IsCentrallyMaintained>Y</IsCentrallyMaintained>
+          <DisplayLogic/>
+          <AD_Tab_ID reference="uuid" reference-key="AD_Tab">e43ec7f4-682f-47ae-bcfe-a176c205e05b</AD_Tab_ID>
+          <AD_Column_ID reference="uuid" reference-key="AD_Column">48692fc6-f562-4a07-8b3d-d3fa0cf3dc1b</AD_Column_ID>
+          <AD_Field_UU>7eb6cd1b-03f1-409f-8da5-08cd40a8dee7</AD_Field_UU>
       </AD_Field>
       <AD_Field type="table">
           <AD_Client_ID reference="id">0</AD_Client_ID>
