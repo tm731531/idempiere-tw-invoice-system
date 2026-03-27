@@ -306,20 +306,25 @@ DB.executeUpdate(sql, (String) null);
 # 1. build
 mvn package
 
-# 2. 複製到 plugins 目錄
-cp target/my.plugin-*.jar /opt/idempiere-server/x86_64/plugins/
+# 2. 複製到 plugins 目錄（路徑依安裝環境而定）
+cp target/my.plugin-*.jar /path/to/idempiere/plugins/
 
-# 3. OSGi console 熱更新（telnet 12612）
+# 3. OSGi console 熱更新（預設 port 12612，可透過環境變數覆蓋）
 ss my.plugin                    # 查詢 bundle ID
-update <id> file:///opt/.../my.plugin_1.0.0.jar
+update <id> file:///path/to/idempiere/plugins/my.plugin_1.0.0.jar
 start <id>
 ```
+
+> 使用 `deploy.sh` 時可透過環境變數指定路徑：
+> ```bash
+> IDEMPIERE_PLUGINS=/path/to/idempiere/plugins ./deploy.sh
+> ```
 
 ### 7.2 確認 2Pack 安裝
 
 ```bash
-# log 中搜尋
-grep "Pack\|1\.0\." /opt/idempiere-server/x86_64/log/idempiere.*.log
+# log 中搜尋（路徑依安裝環境而定）
+grep "Pack\|1\.0\." /path/to/idempiere/log/idempiere.*.log
 ```
 
 ### 7.3 安裝後使用者須重新登入
