@@ -64,10 +64,12 @@ public class ExportTaxReportProcessTest {
             new BigDecimal("1000"),
             new BigDecimal("2000"),
             new BigDecimal("7000"));
-        assertTrue("Zero-rate amount should appear in CSV", line.contains("100000"));
-        assertTrue("Exempt amount should appear in CSV", line.contains("50000"));
-        assertTrue("NonDeductible should appear in CSV", line.contains("1000"));
-        assertTrue("CarryOver should appear in CSV", line.contains("2000"));
+        // CSV column order: year,period,taxableRevenue,zeroRate,exempt,outputTax,inputTax,nonDeductible,carryOver,taxPayable
+        String[] fields = line.split(",");
+        assertEquals("ZeroRateSalesAmount at field index 3", "100000", fields[3]);
+        assertEquals("ExemptRevenue at field index 4", "50000", fields[4]);
+        assertEquals("NonDeductibleInputTax at field index 7", "1000", fields[7]);
+        assertEquals("CarryOverTaxCredit at field index 8", "2000", fields[8]);
     }
 
     @Test
