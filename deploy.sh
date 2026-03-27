@@ -8,7 +8,7 @@
 
 set -e
 
-PLUGIN_DIR="${IDEMPIERE_PLUGINS:-/path/to/idempiere/plugins}"
+PLUGIN_DIR="${IDEMPIERE_PLUGINS:-/opt/idempiere-server/x86_64/plugins}"
 OSGI_HOST="${OSGI_HOST:-127.0.0.1}"
 OSGI_PORT="${OSGI_PORT:-12612}"
 PROJECT_DIR="$(cd "$(dirname "$0")" && pwd)"
