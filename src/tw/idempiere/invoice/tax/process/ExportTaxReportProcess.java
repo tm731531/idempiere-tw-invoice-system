@@ -52,7 +52,8 @@ public class ExportTaxReportProcess extends SvrProcess {
         log.info("ExportTaxReport: year=" + p_StatementYear + " period=" + p_StatementPeriod);
         // TODO: Phase 4 full implementation — query TW_TaxStatement records for the period,
         // write CSV rows using formatCSVLine(), save to file or attachment, return record count.
-        int exportedCount = 0;
-        return "Exported " + exportedCount + " records successfully";
+        throw new UnsupportedOperationException(
+            "ExportTaxReportProcess is not yet implemented. " +
+            "Tax report export functionality is planned for a future release.");
     }
 }

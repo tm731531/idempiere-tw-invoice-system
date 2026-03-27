@@ -24,6 +24,7 @@ public class MInvoicePrefix extends PO {
 
     // Column name constants
     public static final String COLUMNNAME_TW_InvoicePrefix_ID    = "TW_InvoicePrefix_ID";
+    public static final String COLUMNNAME_TW_InvoicePrefix_UU    = "TW_InvoicePrefix_UU";
     public static final String COLUMNNAME_PrefixCode             = "PrefixCode";
     public static final String COLUMNNAME_InvoiceType            = "InvoiceType";
     public static final String COLUMNNAME_Status                 = "Status";

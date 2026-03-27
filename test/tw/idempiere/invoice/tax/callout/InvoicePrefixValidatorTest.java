@@ -65,4 +65,9 @@ public class InvoicePrefixValidatorTest {
     public void testStatusTransition_inactiveToComplete_blocked() {
         assertTrue(InvoicePrefixValidator.isInvalidStatusTransition("I", "C"));
     }
+
+    @Test
+    public void testStatusTransition_A_to_I_isInvalid() {
+        assertTrue("A→I must be blocked", InvoicePrefixValidator.isInvalidStatusTransition("A", "I"));
+    }
 }

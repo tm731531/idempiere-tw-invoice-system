@@ -36,7 +36,12 @@ Table schemas and PackOut.xml writing guides are in `docs/schema/`:
 ```
 tw.idempiere.invoice.tax/
 ├── META-INF/MANIFEST.MF          ← OSGi bundle manifest
-├── OSGI-INF/component.xml        ← DS service registrations
+├── OSGI-INF/                     ← One XML file per DS component (wildcard: OSGI-INF/*.xml)
+│   ├── TaiwanModelFactory.xml
+│   ├── InvoicePrefixEventHandler.xml
+│   ├── InvoicePrefixMapEventHandler.xml
+│   ├── InvoiceAdjustmentEventHandler.xml
+│   └── TaxStatementEventHandler.xml
 ├── pom.xml                       ← Maven build
 ├── src/tw/idempiere/invoice/tax/
 │   ├── TaiwanInvoiceTaxActivator.java   ← Bundle lifecycle + PackIn
@@ -51,17 +56,25 @@ tw.idempiere.invoice.tax/
 │   │   ├── TaxCalculationService.java
 │   │   ├── MixedBusinessService.java
 │   │   └── InvoiceValidationService.java
+│   ├── event/                           ← OSGi DS event handlers (registered services)
+│   │   ├── InvoicePrefixEventHandler.java
+│   │   ├── InvoicePrefixMapEventHandler.java
+│   │   ├── InvoiceAdjustmentEventHandler.java
+│   │   └── TaxStatementEventHandler.java
+│   ├── validator/                       ← Pure static helpers (NOT OSGi services)
+│   │   ├── InvoicePrefixValidator.java
+│   │   └── InvoicePrefixMapValidator.java
 │   ├── callout/
 │   │   ├── InvoicePrefixCallout.java
 │   │   └── TaxStatementCallout.java
 │   ├── process/
-│   │   ├── GenerateTaxStatementProcess.java
-│   │   └── ExportTaxReportProcess.java
+│   │   ├── GenerateTaxStatementProcess.java  ← planned, not yet implemented
+│   │   └── ExportTaxReportProcess.java       ← planned, not yet implemented
 │   └── util/
 │       └── AccountingCodes.java
 ├── resources/
 │   ├── 2pack/
-│   │   └── tw_invoice_system.zip        ← PackOut.xml packed as ZIP
+│   │   └── (ZIP generated at build time — do not commit stale ZIPs)
 │   └── (no sql/ — 2Pack handles DDL)
 └── test/tw/idempiere/invoice/tax/
     ├── model/*Test.java
@@ -262,6 +275,44 @@ public class ValidationResult {
 
 ---
 
+## Known Validator Pattern
+
+### 9. ModelValidator vs EventHandler — use EventHandler only
+
+Do NOT implement `ModelValidator` interface in validator helper classes.
+The correct pattern for this plugin is:
+
+- `*Validator.java` — pure Java class with ONLY static helper methods, no interface
+- `*EventHandler.java` — extends `AbstractEventHandler`, registered as OSGi DS component, calls static helpers
+- `OSGI-INF/*.xml` — one XML file per EventHandler
+
+**Example structure:**
+
+```java
+// CORRECT — static helpers only, no implements
+public class InvoicePrefixValidator {
+    public static String validatePrefixCode(String code) { ... }
+    public static String validateStatusTransition(String from, String to) { ... }
+}
+
+// CORRECT — EventHandler wires OSGi event to static validator
+@Component(immediate = true, service = IEventHandler.class, ...)
+public class InvoicePrefixEventHandler extends AbstractEventHandler {
+    @Override
+    protected void doHandleEvent(Event event) {
+        String topic = (String) event.getProperty(IEventTopics.EVENT_TOPIC);
+        if (IEventTopics.PO_BEFORE_CHANGE.equals(topic)) {
+            String err = InvoicePrefixValidator.validateStatusTransition(...);
+            if (err != null) throw new AdempiereException(err);
+        }
+    }
+}
+```
+
+Validator classes that implement `ModelValidator` but are never registered as OSGi services are dead code — the interface methods (`initialize`, `modelChange`, `docValidate`, `getAD_Client_ID`, `login`) will never be called.
+
+---
+
 ## What NOT to Do
 
 - **Never** use `POInfo.getPOInfo(ctx, String tableName)` — that overload does not exist; use `MTable.getTable_ID()` first
@@ -277,3 +328,6 @@ public class ValidationResult {
 - **Never** pass `null` as trxName to `PackIn.importXML()` — throws `No Transaction Name` at runtime. Always create a named transaction: `String trxName = Trx.createTrxName("name"); Trx trx = Trx.get(trxName, true);`
 - **Never** declare `Import-Package: org.adempiere.pipo2;version="[12.0.0,13.0.0)"` — pipo2 is exported without version (0.0.0), the version range causes bundle resolve failure. Use `org.adempiere.pipo2` with no version constraint
 - **Never** override `PO.isActive()` — it is `final` in iDempiere 12.0 and will cause a compile error
+- **Never** use `topic.endsWith("string")` to match event topics — use `IEventTopics.CONSTANT.equals(topic)`. String suffix matching silently fails at runtime when topic format changes
+- **Never** allow status transition A→I for TW_InvoicePrefix — active prefixes cannot be deactivated (台灣稅法). Only forward transitions: I→A→C
+- **Never** implement `ModelValidator` in `*Validator` classes — these are not registered as OSGi services; only static helper methods are needed

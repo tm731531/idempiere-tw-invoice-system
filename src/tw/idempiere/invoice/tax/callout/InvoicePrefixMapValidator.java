@@ -1,17 +1,8 @@
 package tw.idempiere.invoice.tax.callout;
 
-import java.sql.Timestamp;
 import java.time.LocalDate;
-import java.util.logging.Logger;
-import org.compiere.model.MClient;
-import org.compiere.model.ModelValidationEngine;
-import org.compiere.model.ModelValidator;
-import org.compiere.model.PO;
-import tw.idempiere.invoice.tax.model.MInvoicePrefixMap;
 
-public class InvoicePrefixMapValidator implements ModelValidator {
-
-    private static final Logger log = Logger.getLogger(InvoicePrefixMapValidator.class.getName());
+public class InvoicePrefixMapValidator {
 
     public static String validateInvoiceDateStatic(LocalDate invoiceDate) {
         if (invoiceDate != null && invoiceDate.isAfter(LocalDate.now()))
@@ -28,44 +19,4 @@ public class InvoicePrefixMapValidator implements ModelValidator {
         }
         return null;
     }
-
-    @Override
-    public void initialize(ModelValidationEngine engine, MClient client) {
-        engine.addModelChange(MInvoicePrefixMap.Table_Name, this);
-        log.info("InvoicePrefixMapValidator registered for " + MInvoicePrefixMap.Table_Name);
-    }
-
-    @Override
-    public String modelChange(PO po, int type) throws Exception {
-        if (!(po instanceof MInvoicePrefixMap)) return null;
-        MInvoicePrefixMap map = (MInvoicePrefixMap) po;
-
-        if (type == ModelValidator.TYPE_BEFORE_NEW || type == ModelValidator.TYPE_BEFORE_CHANGE) {
-            Timestamp ts = map.getInvoiceDate();
-            if (ts != null) {
-                String dateError = validateInvoiceDateStatic(ts.toLocalDateTime().toLocalDate());
-                if (dateError != null) return dateError;
-            }
-            // InvoiceType is on the parent TW_InvoicePrefix — load it for validation
-            String invoiceType = null;
-            int prefixId = map.getTW_InvoicePrefix_ID();
-            if (prefixId > 0) {
-                tw.idempiere.invoice.tax.model.MInvoicePrefix prefix =
-                    new tw.idempiere.invoice.tax.model.MInvoicePrefix(map.getCtx(), prefixId, map.get_TrxName());
-                invoiceType = prefix.getInvoiceType();
-            }
-            String taxIdError = validateBuyerTaxIDStatic(invoiceType, map.getBuyerTaxID());
-            if (taxIdError != null) return taxIdError;
-        }
-        return null;
-    }
-
-    @Override
-    public String docValidate(PO po, int timing) { return null; }
-
-    @Override
-    public int getAD_Client_ID() { return 0; }
-
-    @Override
-    public String login(int AD_Org_ID, int AD_Role_ID, int AD_User_ID) { return null; }
 }

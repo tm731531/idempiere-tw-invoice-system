@@ -2,7 +2,7 @@
 
 iDempiere 12.0 OSGi Plugin，實現符合台灣法規的統一發票（統一發票）與營業稅（401申報）管理。
 
-**狀態**: 實作完成 ✅ | 65 tests 通過 ✅ | 部署驗證通過 ✅ | 2Pack 1.0.9
+**狀態**: 實作完成 ✅ | 84 tests 通過 ✅ | 部署驗證通過 ✅ | 2Pack 1.0.9
 
 ---
 
@@ -10,7 +10,7 @@ iDempiere 12.0 OSGi Plugin，實現符合台灣法規的統一發票（統一發
 
 ```bash
 mvn compile      # 編譯
-mvn test         # 執行測試（65 tests）
+mvn test         # 執行測試（84 tests）
 mvn package      # 打包 → target/tw.idempiere.invoice.tax-1.0.0.jar
 ```
 
@@ -61,13 +61,19 @@ Bundle 啟動
   MixedBusinessService     ← 兼營比例調整
   InvoiceValidationService ← 驗證規則（警告不阻擋）
 
-驗證器（ModelValidator，OSGi DS 服務）
-  InvoicePrefixValidator    ← 字軌格式、號碼範圍、狀態轉換
-  InvoicePrefixMapValidator ← 發票日期、買方統一編號格式
+事件處理器（AbstractEventHandler，OSGi DS 服務）
+  InvoicePrefixEventHandler      ← 字軌格式、號碼範圍、狀態轉換驗證
+  InvoicePrefixMapEventHandler   ← 發票日期、買方統一編號格式驗證
+  InvoiceAdjustmentEventHandler  ← 折讓方向、期別驗證
+  TaxStatementEventHandler       ← 申報年度、期別範圍驗證
+
+驗證輔助（純靜態方法，非 OSGi 服務）
+  InvoicePrefixValidator    ← 字軌驗證靜態方法
+  InvoicePrefixMapValidator ← 發票對應驗證靜態方法
 
 流程（SvrProcess）
-  GenerateTaxStatementProcess ← 產生 401 申報表
-  ExportTaxReportProcess      ← 匯出財政部電子申報 CSV
+  GenerateTaxStatementProcess ← 產生 401 申報表（計劃中功能，尚未實作）
+  ExportTaxReportProcess      ← 匯出財政部電子申報 CSV（計劃中功能，尚未實作）
 ```
 
 ---
@@ -106,3 +112,29 @@ Bundle 啟動
 - [財政部電子申報繳稅服務網](https://www.etax.nat.gov.tw/)
 - [全國法規資料庫 — 加值型及非加值型營業稅法](https://law.moj.gov.tw/)
 - [統一發票使用辦法](https://law.moj.gov.tw/)
+
+---
+
+## 變更記錄
+
+### 2026-03-27 — 重大 Bug 修復與架構調整
+
+**關鍵修復：**
+- **事件主題比較方式修正**：`InvoicePrefixEventHandler` 將 `topic.endsWith("po_before_change")` 改為 `IEventTopics.PO_BEFORE_CHANGE.equals(topic)`，修復狀態轉換守衛在執行期靜默失效的問題
+- **禁止 A→I 狀態降級**：`InvoicePrefixValidator` 新增攔截邏輯，禁止將使用中（A）字軌降回未啟用（I），符合台灣稅法規範
+- **移除死程式碼**：`InvoicePrefixValidator` 與 `InvoicePrefixMapValidator` 移除 `implements ModelValidator` 及所有介面方法，改為純靜態輔助類（這些類從未被註冊為 OSGi 服務）
+
+**重要修復：**
+- **刪除過時 ZIP**：移除 `resources/2pack/tw_invoice_system.zip`（內容已過時）
+- **刪除孤立 plugin.xml**：移除專案根目錄的 pipo 殘留檔案
+- **修正 JaCoCo 規則**：移除參照錯誤套件和不存在類別的 per-class 覆蓋率規則
+- **Stub 流程改拋例外**：`GenerateTaxStatementProcess.doIt()` 與 `ExportTaxReportProcess.doIt()` 改為拋出 `UnsupportedOperationException`，不再回傳假成功訊息
+- **新增事件處理器**：加入 `InvoiceAdjustmentEventHandler` 與 `TaxStatementEventHandler`，各含驗證器與 OSGi component XML
+
+**次要修復：**
+- `calcGrossAmount()` Javadoc 更新（僅適用 B2B）
+- `Activator` 中 `System.err.println` 改為 `logger.info`
+- 4 個 Model 類別均新增 `COLUMNNAME_*_UU` 常數
+- 新增 `AdjustmentDirection` 常數測試
+
+**測試數量**：65 → 84 tests（全部通過）

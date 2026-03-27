@@ -3,6 +3,7 @@ package tw.idempiere.invoice.tax.process;
 import org.junit.Test;
 import java.math.BigDecimal;
 import static org.junit.Assert.*;
+import static org.junit.Assert.assertThrows;
 
 public class GenerateTaxStatementProcessTest {
 
@@ -62,5 +63,11 @@ public class GenerateTaxStatementProcessTest {
     @Test(expected = IllegalArgumentException.class)
     public void testGetMonthsForPeriod_periodTooHigh_throws() {
         GenerateTaxStatementProcess.getMonthsForPeriod(7);
+    }
+
+    @Test
+    public void testDoIt_throwsUnsupportedOperationException() {
+        GenerateTaxStatementProcess process = new GenerateTaxStatementProcess();
+        assertThrows(UnsupportedOperationException.class, () -> process.doIt());
     }
 }
