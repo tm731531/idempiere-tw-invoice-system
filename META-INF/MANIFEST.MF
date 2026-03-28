@@ -10,7 +10,7 @@ Bundle-ClassPath: .
 Bundle-RequiredExecutionEnvironment: JavaSE-17
 Service-Component: OSGI-INF/*.xml
 Import-Package: org.adempiere.base,org.adempiere.base.event,org.adempier
- e.plugin.utils,org.compiere.model,org.compiere.util,org.compiere.proces
- s,org.osgi.framework;version="1.10.0",org.osgi.service.event,org.adempi
- ere.pipo2
+ e.exceptions,org.adempiere.plugin.utils,org.compiere.model,org.compiere.
+ util,org.compiere.process,org.osgi.framework;version="1.10.0",org.osgi.s
+ ervice.component.annotations,org.osgi.service.event,org.adempiere.pipo2
 

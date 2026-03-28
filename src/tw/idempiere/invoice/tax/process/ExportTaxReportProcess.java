@@ -51,10 +51,17 @@ public class ExportTaxReportProcess extends SvrProcess {
     @Override
     protected void prepare() {
         for (ProcessInfoParameter para : getParameter()) {
-            if ("StatementYear".equals(para.getParameterName()))
+            if ("StatementYear".equals(para.getParameterName())) {
                 p_StatementYear = para.getParameterAsInt();
-            else if ("StatementPeriod".equals(para.getParameterName()))
-                p_StatementPeriod = para.getParameterAsInt();
+            } else if ("StatementPeriod".equals(para.getParameterName())) {
+                Object val = para.getParameter();
+                if (val instanceof String)
+                    p_StatementPeriod = Integer.parseInt(((String) val).trim());
+                else if (val instanceof Number)
+                    p_StatementPeriod = ((Number) val).intValue();
+                else
+                    p_StatementPeriod = para.getParameterAsInt();
+            }
         }
     }
 
@@ -64,9 +71,10 @@ public class ExportTaxReportProcess extends SvrProcess {
 
         log.info("ExportTaxReport: year=" + p_StatementYear + " period=" + p_StatementPeriod);
 
+        // StatementPeriod is CHAR(1) in the physical table, must pass as String
         List<MTaxStatement> statements = new Query(getCtx(), MTaxStatement.Table_Name,
                 "StatementYear=? AND StatementPeriod=? AND AD_Client_ID=?", get_TrxName())
-            .setParameters(p_StatementYear, p_StatementPeriod, adClientId)
+            .setParameters(p_StatementYear, String.valueOf(p_StatementPeriod), adClientId)
             .list();
 
         if (statements.isEmpty()) {

@@ -86,12 +86,19 @@ public class MTaxStatement extends PO {
     }
 
     public int getStatementPeriod() {
-        Integer ii = (Integer) get_Value(COLUMNNAME_StatementPeriod);
-        return ii == null ? 0 : ii;
+        // StatementPeriod is AD_Reference_ID=17 (List), stored as CHAR(1) in the physical
+        // table. get_Value() returns String, not Integer — handle both for safety.
+        Object val = get_Value(COLUMNNAME_StatementPeriod);
+        if (val instanceof Integer)   return (Integer) val;
+        if (val instanceof Number)    return ((Number) val).intValue();
+        if (val instanceof String && !((String) val).trim().isEmpty())
+            return Integer.parseInt(((String) val).trim());
+        return 0;
     }
 
     public void setStatementPeriod(int StatementPeriod) {
-        set_Value(COLUMNNAME_StatementPeriod, StatementPeriod);
+        // Store as String to match the CHAR(1) column type created by the List reference.
+        set_Value(COLUMNNAME_StatementPeriod, String.valueOf(StatementPeriod));
     }
 
     public BigDecimal getTaxableRevenue() {

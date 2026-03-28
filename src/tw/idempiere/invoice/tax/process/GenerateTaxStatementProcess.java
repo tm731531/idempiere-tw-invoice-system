@@ -70,10 +70,20 @@ public class GenerateTaxStatementProcess extends SvrProcess {
     @Override
     protected void prepare() {
         for (ProcessInfoParameter para : getParameter()) {
-            if ("StatementYear".equals(para.getParameterName()))
+            if ("StatementYear".equals(para.getParameterName())) {
                 p_StatementYear = para.getParameterAsInt();
-            else if ("StatementPeriod".equals(para.getParameterName()))
-                p_StatementPeriod = para.getParameterAsInt();
+            } else if ("StatementPeriod".equals(para.getParameterName())) {
+                // StatementPeriod uses AD_Reference_ID=17 (List). The REST API may deliver
+                // the value as String ("2"), BigDecimal, or Integer depending on how the
+                // parameter was serialized. Handle all three cases explicitly.
+                Object val = para.getParameter();
+                if (val instanceof String)
+                    p_StatementPeriod = Integer.parseInt(((String) val).trim());
+                else if (val instanceof Number)
+                    p_StatementPeriod = ((Number) val).intValue();
+                else
+                    p_StatementPeriod = para.getParameterAsInt();
+            }
         }
         if (p_StatementPeriod < 1 || p_StatementPeriod > 6)
             throw new IllegalArgumentException("StatementPeriod must be between 1 and 6");
@@ -87,10 +97,12 @@ public class GenerateTaxStatementProcess extends SvrProcess {
         log.info("GenerateTaxStatement: year=" + p_StatementYear + " period=" + p_StatementPeriod
             + " months=" + months[0] + "-" + months[1]);
 
-        // Prevent duplicate statements for the same year+period
+        // Prevent duplicate statements for the same year+period.
+        // StatementPeriod is CHAR(1) in the physical table (List reference type),
+        // so pass as String to avoid "character = integer" type mismatch.
         MTaxStatement existing = new Query(getCtx(), MTaxStatement.Table_Name,
                 "StatementYear=? AND StatementPeriod=? AND AD_Client_ID=?", get_TrxName())
-            .setParameters(p_StatementYear, p_StatementPeriod, adClientId)
+            .setParameters(p_StatementYear, String.valueOf(p_StatementPeriod), adClientId)
             .first();
         if (existing != null) {
             throw new AdempiereException(
