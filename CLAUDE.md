@@ -367,3 +367,8 @@ DROP TABLE IF EXISTS adempiere.TW_InvoicePrefix;
 - **Never** use `topic.endsWith("string")` to match event topics — use `IEventTopics.CONSTANT.equals(topic)`. String suffix matching silently fails at runtime when topic format changes
 - **Never** allow status transition A→I for TW_InvoicePrefix — active prefixes cannot be deactivated (台灣稅法). Only forward transitions: I→A→C
 - **Never** implement `ModelValidator` in `*Validator` classes — these are not registered as OSGi services; only static helper methods are needed
+- **Never** skip `IProcessFactory` registration for `SvrProcess` subclasses — iDempiere's `DefaultProcessFactory` (in `org.adempiere.base`) cannot load classes from plugin bundles via `Class.forName()`. Every plugin that provides processes must implement `IProcessFactory` as an OSGi DS component (`OSGI-INF/*.xml`).
+- **Never** use `(Integer) get_Value(col)` for List-reference columns — they are stored as CHAR/VARCHAR in the physical table, so `get_Value()` returns `String`. Use `instanceof` guard: `if (val instanceof String) return Integer.parseInt(...)`.
+- **Never** pass int to `Query.setParameters()` for a List-reference column — the physical column is CHAR, so PostgreSQL rejects `character = integer`. Use `String.valueOf(intVal)`.
+- **REST API process parameters format**: iDempiere REST API reads process params from **flat top-level JSON keys** (matching `columnName` or `propertyName`), NOT from a `parameters` array. Correct: `{"StatementYear": 2026, "StatementPeriod": "2"}`. Wrong: `{"parameters": [{"parameterName": "...", "value": ...}]}`.
+- **List-type process parameters via REST API**: pass values as String (e.g. `"2"`), not integer, to ensure they reach `P_String` in `AD_PInstance_Para` correctly.
