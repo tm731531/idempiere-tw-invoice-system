@@ -42,6 +42,9 @@ run_sql "AD_Menu (summary)"   "DELETE FROM AD_Menu WHERE EntityType='TW' AND IsS
 run_sql "AD_Window (Trl)"     "DELETE FROM AD_Window_Trl WHERE AD_Window_ID IN (SELECT AD_Window_ID FROM AD_Window WHERE EntityType='TW'); SELECT 0"
 run_sql "AD_Window"           "DELETE FROM AD_Window WHERE EntityType='TW'; SELECT 0"
 run_sql "AD_Process_Para"     "DELETE FROM AD_Process_Para WHERE AD_Process_ID IN (SELECT AD_Process_ID FROM AD_Process WHERE EntityType='TW'); SELECT 0"
+run_sql "AD_PInstance_Para"   "DELETE FROM AD_PInstance_Para WHERE AD_PInstance_ID IN (SELECT AD_PInstance_ID FROM AD_PInstance WHERE AD_Process_ID IN (SELECT AD_Process_ID FROM AD_Process WHERE EntityType='TW')); SELECT 0"
+run_sql "AD_PInstance_Log"    "DELETE FROM AD_PInstance_Log WHERE AD_PInstance_ID IN (SELECT AD_PInstance_ID FROM AD_PInstance WHERE AD_Process_ID IN (SELECT AD_Process_ID FROM AD_Process WHERE EntityType='TW')); SELECT 0"
+run_sql "AD_PInstance"        "DELETE FROM AD_PInstance WHERE AD_Process_ID IN (SELECT AD_Process_ID FROM AD_Process WHERE EntityType='TW'); SELECT 0"
 run_sql "AD_Process"          "DELETE FROM AD_Process WHERE EntityType='TW'; SELECT 0"
 
 echo ""
