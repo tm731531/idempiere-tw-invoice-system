@@ -18,6 +18,10 @@
 9. [除錯：Bundle 啟動失敗](#9-除錯bundle-啟動失敗)
 10. [升版策略（2Pack Version Bump）](#10-升版策略2pack-version-bump)
 11. [常用 DB 查詢速查](#11-常用-db-查詢速查)
+12. [AD_Process 與 AD_Process_Para 註冊](#12-ad_process-與-ad_process_para-註冊)
+13. [SvrProcess 實作模式](#13-svrprocess-實作模式)
+14. [iDempiere 物理表在 adempiere schema](#14-idempiere-物理表在-adempiere-schema)
+15. [完整重裝 SOP（clean_reinstall.sh）](#15-完整重裝-sopclean_reinstallsh)
 
 ---
 
@@ -494,4 +498,236 @@ JOIN AD_Tab t ON f.AD_Tab_ID = t.AD_Tab_ID
 JOIN AD_Window w ON t.AD_Window_ID = w.AD_Window_ID
 WHERE w.Name = 'Tax Rate' AND t.SeqNo = 10
 ORDER BY f.SeqNo;
+
+-- 確認 Process Access 已授予
+SELECT p.Value, r.Name as RoleName, pa.IsReadWrite
+FROM AD_Process_Access pa
+JOIN AD_Process p ON pa.AD_Process_ID = p.AD_Process_ID
+JOIN AD_Role r ON pa.AD_Role_ID = r.AD_Role_ID
+WHERE p.EntityType = 'MY_ET' AND pa.IsActive = 'Y';
 ```
+
+---
+
+## 12. AD_Process 與 AD_Process_Para 註冊
+
+### 12.1 PackOut.xml 中 AD_Process 的位置
+
+`AD_Process` 放在 `<AD_Menu>` 區段之前，`<AD_Window>` 區段之後：
+
+```xml
+<!-- AD_Window 區段 ... -->
+
+<AD_Process type="table">
+  <AD_Process_UU>cc001001-0000-0000-0000-000000000001</AD_Process_UU>
+  <Value>TW_GenerateTaxStatement</Value>
+  <Name>Generate Tax Statement</Name>
+  <ClassName>tw.idempiere.invoice.tax.process.GenerateTaxStatementProcess</ClassName>
+  <EntityType>TW</EntityType>
+  <IsActive>true</IsActive>
+  <IsReport>false</IsReport>
+  <IsDirectPrint>false</IsDirectPrint>
+  <ShowHelp>N</ShowHelp>
+  <AD_Process_Para type="table">
+    <AD_Process_ID reference="uuid" reference-key="AD_Process">cc001001-0000-0000-0000-000000000001</AD_Process_ID>
+    <AD_Process_Para_UU>cc001011-0000-0000-0000-000000000011</AD_Process_Para_UU>
+    <Name>Statement Year</Name>
+    <ColumnName>StatementYear</ColumnName>
+    <SeqNo>10</SeqNo>
+    <AD_Reference_ID reference="id" reference-key="AD_Reference">11</AD_Reference_ID>
+    <FieldLength>10</FieldLength>
+    <IsMandatory>true</IsMandatory>
+    <IsRange>false</IsRange>
+    <EntityType>TW</EntityType>
+    <IsActive>true</IsActive>
+  </AD_Process_Para>
+</AD_Process>
+```
+
+### 12.2 兩個必填欄位（踩坑記錄）
+
+**陷阱 1：`AD_Process_ID` 必須明確寫入每個 `AD_Process_Para`**
+
+`ProcessParaElementHandler` **不會**從父元素 `<AD_Process>` 繼承 `AD_Process_ID`，
+不像 `AD_Tab` 可以從 `AD_Window` 繼承 `AD_Window_ID`。
+
+```xml
+<!-- 錯誤：缺少 AD_Process_ID → 存入時 NOT NULL 違規 -->
+<AD_Process_Para type="table">
+  <Name>Year</Name>
+  ...
+</AD_Process_Para>
+
+<!-- 正確：每個 para 都要顯式宣告 -->
+<AD_Process_Para type="table">
+  <AD_Process_ID reference="uuid" reference-key="AD_Process">{process-uuid}</AD_Process_ID>
+  <Name>Year</Name>
+  ...
+</AD_Process_Para>
+```
+
+**陷阱 2：`FieldLength` NOT NULL**
+
+```xml
+<!-- 依 AD_Reference_ID 選填 -->
+<!-- Integer (11)  → FieldLength = 10  -->
+<!-- List    (17)  → FieldLength = 1   -->
+<!-- String  (10)  → FieldLength = 實際最大長度 -->
+<FieldLength>10</FieldLength>
+```
+
+**除錯方式：** iDempiere log 只會說 `Failed to save ProcessPara`，真正的 SQL 錯誤需查 PostgreSQL log：
+```bash
+tail -f /var/log/postgresql/postgresql-16-main.log
+```
+
+### 12.3 AD_Menu 中的 Process 連結
+
+```xml
+<AD_Menu type="table">
+  <AD_Menu_UU>cc009001-0000-0000-0000-000000000009</AD_Menu_UU>
+  <Name>Generate Tax Statement</Name>
+  <Action>P</Action>      <!-- P = Process，W = Window -->
+  <AD_Process_ID reference="uuid" reference-key="AD_Process">cc001001-0000-0000-0000-000000000001</AD_Process_ID>
+  <EntityType>TW</EntityType>
+  <IsActive>true</IsActive>
+  <IsSummary>false</IsSummary>
+</AD_Menu>
+```
+
+---
+
+## 13. SvrProcess 實作模式
+
+### 13.1 基本結構
+
+```java
+public class MyProcess extends SvrProcess {
+
+    // Parameters declared as instance fields
+    private int myYear;
+    private int myPeriod;
+
+    @Override
+    protected void prepare() {
+        ProcessInfoParameter[] para = getParameter();
+        for (ProcessInfoParameter p : para) {
+            String name = p.getParameterName();
+            if ("MyYear".equals(name))
+                myYear = p.getParameterAsInt();
+            else if ("MyPeriod".equals(name))
+                myPeriod = p.getParameterAsInt();
+        }
+    }
+
+    @Override
+    protected String doIt() throws Exception {
+        // ... 實作業務邏輯 ...
+        return "@Process@ @OK@";   // 回傳訊息（ad_message 鍵或純文字）
+    }
+}
+```
+
+### 13.2 用 DB.prepareStatement 做 SQL 聚合
+
+```java
+String sql = "SELECT SUM(c.GrandTotal) FROM TW_Invoice_Prefix_Map m "
+           + "JOIN C_Invoice c ON m.C_Invoice_ID = c.C_Invoice_ID "
+           + "WHERE m.AD_Client_ID = ? AND m.StatementYear = ? "
+           + "  AND m.StatementPeriod = ? AND c.IsSOTrx = 'Y'";
+
+PreparedStatement ps = null;
+ResultSet rs = null;
+try {
+    ps = DB.prepareStatement(sql, get_TrxName());
+    ps.setInt(1, getAD_Client_ID());
+    ps.setInt(2, year);
+    ps.setInt(3, period);
+    rs = ps.executeQuery();
+    if (rs.next()) {
+        BigDecimal total = rs.getBigDecimal(1);
+        // ...
+    }
+} finally {
+    DB.close(rs, ps);
+}
+```
+
+注意：**不要**呼叫 `ps.setAD_Client_ID()` — 那是 PO 類別的 protected 方法，不是 PreparedStatement 的方法。PO 建構子會自動從 context 設定 AD_Client_ID。
+
+### 13.3 取得目前 Client/Org 的方式
+
+在 `SvrProcess` 內：
+```java
+int clientId = getAD_Client_ID();   // 來自 ProcessInfo
+int orgId    = getAD_Org_ID();      // 來自 ProcessInfo
+```
+
+---
+
+## 14. iDempiere 物理表在 adempiere schema
+
+iDempiere 12.0 的物理表建立在 PostgreSQL 的 **`adempiere`** schema，不是 `public`。
+
+這影響：
+
+**1. SQL 查詢表是否存在**
+```sql
+-- 錯誤：public schema 找不到 TW_* 表
+SELECT count(*) FROM information_schema.tables
+WHERE table_schema = 'public' AND table_name ILIKE 'TW_%';
+
+-- 正確：用 pg_tables 查 adempiere schema
+SELECT tablename FROM pg_tables
+WHERE schemaname = 'adempiere' AND tablename ILIKE 'tw_%';
+```
+
+**2. DROP TABLE 語法**
+```sql
+-- 錯誤：找不到表
+DROP TABLE IF EXISTS TW_InvoicePrefix;
+
+-- 正確：加 schema prefix
+DROP TABLE IF EXISTS adempiere.TW_InvoicePrefix;
+```
+
+**3. psql 直連確認**
+```bash
+psql -U adempiere -d idempiere -c "\dt adempiere.TW_*"
+```
+
+---
+
+## 15. 完整重裝 SOP（clean_reinstall.sh）
+
+開發期間若需要從頭清除並重新部署，用專案根目錄的 `clean_reinstall.sh`：
+
+```bash
+./clean_reinstall.sh
+```
+
+腳本執行流程：
+
+1. **移除 TW 字典（FK 順序）**
+   Window_Access → Process_Access → Field_Trl → Field → Tab_Trl → Tab → Menu → Window_Trl → Window → Process_Para → Process
+
+2. **Drop 物理表**（使用 `adempiere.TW_*` prefix）
+
+3. **移除後設資料**
+   Column → Table_Trl → Table → Sequence → Element_Trl → Element → Ref_List → Reference → EntityType
+
+4. **清除安裝記錄**
+   Package_Imp_Detail 先刪（有 FK），再刪 Package_Imp
+
+5. **呼叫 deploy.sh** 重新編譯並部署
+
+### 重裝後必做
+
+- 所有使用者需**重新登入** iDempiere 才能取得新權限
+- `afterPackIn()` 會自動授予 Window Access 和 Process Access
+
+### 注意
+
+- `AD_Ref_List` 刪除條件是 `WHERE AD_Reference_ID IN (SELECT ... WHERE Name LIKE 'TW_%')`
+  不是 `WHERE EntityType = 'TW'`（2Pack 安裝後 Ref_List 的 EntityType 可能是 `U`）
+- `AD_Package_Imp_Detail` 必須在 `AD_Package_Imp` 之前刪除（FK 約束）
