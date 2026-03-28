@@ -119,6 +119,27 @@ Bundle 啟動
 
 ## 變更記錄
 
+### 2026-03-28 — v1.0.11：流程實作與完整端對端驗證
+
+**流程實作：**
+- **`GenerateTaxStatementProcess`**：查詢 `TW_Invoice_Prefix_Map`（銷售）+ `TW_InvoiceAdjustment`（折讓），彙總產生 `TW_TaxStatement`；防重複（同年期不重建）；FilingDueDate 自動計算
+- **`ExportTaxReportProcess`**：查詢 `TW_TaxStatement` 並匯出 CSV（10 欄位）至 `/tmp/TW_TaxReport_YYYY_PN.csv`
+- **`TaiwanProcessFactory`**：新增 `IProcessFactory` OSGi DS 元件，解決 `DefaultProcessFactory.newProcessInstance()` 跨 bundle `ClassNotFoundException`
+- **`MTaxStatement`**：`getStatementPeriod()` / `setStatementPeriod()` 修正 `CHAR(1)` 型別轉換
+
+**修復：**
+- `clean_reinstall.sh`：加入 `AD_PInstance_Para` → `AD_PInstance_Log` → `AD_PInstance` 清除步驟
+- `MANIFEST.MF`：加入 `org.adempiere.exceptions`、`org.osgi.service.component.annotations`
+
+**端對端驗證（從零安裝全流程通過）：**
+```
+clean_reinstall.sh → 2Pack 1.0.11 安裝 → 建立字軌/發票/折讓 →
+GenerateTaxStatementProcess → TW_TaxStatement 建立 →
+ExportTaxReportProcess → CSV 匯出正確
+```
+
+---
+
 ### 2026-03-27 — v1.0.11：Grid View 修復
 
 **關鍵修復：**
@@ -140,7 +161,6 @@ Bundle 啟動
 - **刪除過時 ZIP**：移除 `resources/2pack/tw_invoice_system.zip`（內容已過時）
 - **刪除孤立 plugin.xml**：移除專案根目錄的 pipo 殘留檔案
 - **修正 JaCoCo 規則**：移除參照錯誤套件和不存在類別的 per-class 覆蓋率規則
-- **Stub 流程改拋例外**：`GenerateTaxStatementProcess.doIt()` 與 `ExportTaxReportProcess.doIt()` 改為拋出 `UnsupportedOperationException`，不再回傳假成功訊息
 - **新增事件處理器**：加入 `InvoiceAdjustmentEventHandler` 與 `TaxStatementEventHandler`，各含驗證器與 OSGi component XML
 
 **次要修復：**
