@@ -9,6 +9,7 @@ import org.compiere.model.MInvoiceLine;
 import org.compiere.model.MOrg;
 import org.compiere.model.MOrgInfo;
 import org.compiere.model.MSysConfig;
+import org.compiere.process.ProcessInfoParameter;
 import org.compiere.process.SvrProcess;
 import org.compiere.util.Env;
 import tw.idempiere.invoice.tax.einvoice.AmountInfo;
@@ -39,7 +40,21 @@ public class GenerateEInvoiceProcess extends SvrProcess {
 
     private int p_MapId;
 
-    @Override protected void prepare() { p_MapId = getRecord_ID(); }
+    @Override protected void prepare() {
+        for (ProcessInfoParameter para : getParameter()) {
+            if ("TW_Invoice_Prefix_Map_ID".equals(para.getParameterName())) {
+                Object val = para.getParameter();
+                if (val instanceof String)
+                    p_MapId = ((String) val).trim().isEmpty() ? 0 : Integer.parseInt(((String) val).trim());
+                else if (val instanceof Number)
+                    p_MapId = ((Number) val).intValue();
+                else
+                    p_MapId = para.getParameterAsInt();
+            }
+        }
+        if (p_MapId <= 0)
+            p_MapId = getRecord_ID();
+    }
 
     @Override protected String doIt() throws Exception {
         MInvoicePrefixMap map = new MInvoicePrefixMap(getCtx(), p_MapId, get_TrxName());
