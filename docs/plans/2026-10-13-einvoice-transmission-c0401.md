@@ -680,7 +680,7 @@ Remove the stale `META-INF/2Pack_1.0.11.zip`. Expected: zip lists `tw_invoice_sy
 
 - [ ] **Step 7: Deploy and verify the table is created**
 
-Run `./clean_reinstall.sh` (or `./deploy.sh`), then:
+Run `./deploy.sh` (hot deploy; Incremental2PackActivator installs the new version delta — do NOT run clean_reinstall, live DB has real data). Then:
 ```bash
 psql -c "SELECT count(*) FROM pg_tables WHERE schemaname='adempiere' AND tablename='tw_einvoicemessage';"
 ```
@@ -846,7 +846,7 @@ Add an `<AD_Process>` for `GenerateEInvoiceProcess` (Classname = fully-qualified
 
 - [ ] **Step 6: Deploy + end-to-end verification**
 
-Run `./clean_reinstall.sh`. In the UI: create an active `TW_InvoicePrefix`, issue a `TW_Invoice_Prefix_Map` row linked to a real `C_Invoice`, run **Generate E-Invoice**. Verify:
+Run `./deploy.sh` (NOT clean_reinstall — live data must be preserved). In the UI: create an active `TW_InvoicePrefix`, issue a `TW_Invoice_Prefix_Map` row linked to a real `C_Invoice`, run **Generate E-Invoice**. Verify:
 ```bash
 ls -l /opt/turnkey/B2C/   # the <InvoiceNumber>.xml file exists
 psql -c "SELECT status, xmlfilename, randomnumber FROM adempiere.tw_einvoicemessage ORDER BY created DESC LIMIT 1;"
