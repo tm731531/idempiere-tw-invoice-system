@@ -52,4 +52,6 @@ public class MEInvoiceMessage extends PO {
     public void setXmlFileName(String v) { set_Value(COLUMNNAME_XmlFileName, v); }
     public String getErrorMessage() { return (String) get_Value(COLUMNNAME_ErrorMessage); }
     public void setErrorMessage(String v) { set_Value(COLUMNNAME_ErrorMessage, v); }
+    public java.sql.Timestamp getGeneratedOn() { return (java.sql.Timestamp) get_Value(COLUMNNAME_GeneratedOn); }
+    public void setGeneratedOn(java.sql.Timestamp v) { set_Value(COLUMNNAME_GeneratedOn, v); }
 }

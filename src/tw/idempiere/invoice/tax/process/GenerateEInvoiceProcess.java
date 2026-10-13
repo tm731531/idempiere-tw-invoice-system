@@ -45,41 +45,48 @@ public class GenerateEInvoiceProcess extends SvrProcess {
         MInvoicePrefixMap map = new MInvoicePrefixMap(getCtx(), p_MapId, get_TrxName());
         if (map.get_ID() <= 0) throw new AdempiereException("Invoice map record not found");
 
-        MInvoice inv = new MInvoice(getCtx(), map.getC_Invoice_ID(), get_TrxName());
-        MOrgInfo orgInfo = MOrgInfo.get(getCtx(), inv.getAD_Org_ID(), get_TrxName());
-        MOrg org = MOrg.get(getCtx(), inv.getAD_Org_ID());
-        String sellerTaxId = orgInfo.getTaxID();
-        if (sellerTaxId == null || sellerTaxId.trim().isEmpty())
-            throw new AdempiereException("Seller tax id (賣方統編) not set on Org Info");
-
-        // Skeleton: populate identifier + name; address/contacts optional (builder omits nulls).
-        SellerInfo seller = new SellerInfo(sellerTaxId, org.getName(),
-                null, null, null, null, null, null, null);
-        String buyerId = (map.getBuyerTaxID() == null || map.getBuyerTaxID().trim().isEmpty())
-                ? "0000000000" : map.getBuyerTaxID().trim();
-        BuyerInfo buyer = new BuyerInfo(buyerId, null, null);
-
-        List<EInvoiceItem> items = new ArrayList<>();
-        int seq = 1;
-        for (MInvoiceLine ln : inv.getLines()) {
-            String desc = ln.getName() != null ? ln.getName() : ln.getDescription();
-            items.add(new EInvoiceItem(desc, ln.getQtyInvoiced(), ln.getPriceActual(),
-                    "1", ln.getLineNetAmt(), String.format("%03d", seq++), null, null));
-        }
-
-        AmountInfo amount = b2cAmount(inv.getGrandTotal());
-        String random = RandomNumberGenerator.generate();
-        EInvoiceDoc doc = EInvoiceDoc.forB2CPrint(map.getInvoiceNumber(),
-                map.getInvoiceDate().toLocalDateTime(), seller, buyer, "07", items, amount, random);
-        String xml = MigF0401Builder.build(doc);
-
         MEInvoiceMessage msg = new MEInvoiceMessage(getCtx(), 0, get_TrxName());
         msg.setTW_Invoice_Prefix_Map_ID(map.get_ID());
         msg.setMessageType("F0401");
-        msg.setRandomNumber(random);
         msg.setMigVersion("4.1");
+        msg.setGeneratedOn(new java.sql.Timestamp(System.currentTimeMillis()));
         msg.setStatus("DRAFT");
+
         try {
+            MInvoice inv = new MInvoice(getCtx(), map.getC_Invoice_ID(), get_TrxName());
+            MOrgInfo orgInfo = MOrgInfo.get(getCtx(), inv.getAD_Org_ID(), get_TrxName());
+            MOrg org = MOrg.get(getCtx(), inv.getAD_Org_ID());
+            String sellerTaxId = orgInfo.getTaxID();
+            if (sellerTaxId == null || sellerTaxId.trim().isEmpty())
+                throw new AdempiereException("Seller tax id (賣方統編) not set on Org Info");
+
+            // Skeleton: populate identifier + name. Seller Name/Address are always
+            // emitted by the builder via `el` (may render as empty elements when
+            // null); only the optional contact fields use `elOpt` and are omitted.
+            // Populating Seller address from the Org location is a deferred
+            // deploy-time item.
+            SellerInfo seller = new SellerInfo(sellerTaxId, org.getName(),
+                    null, null, null, null, null, null, null);
+            String buyerId = (map.getBuyerTaxID() == null || map.getBuyerTaxID().trim().isEmpty())
+                    ? "0000000000" : map.getBuyerTaxID().trim();
+            BuyerInfo buyer = new BuyerInfo(buyerId, null, null);
+
+            List<EInvoiceItem> items = new ArrayList<>();
+            int seq = 1;
+            for (MInvoiceLine ln : inv.getLines()) {
+                String desc = ln.getName() != null ? ln.getName() : ln.getDescription();
+                items.add(new EInvoiceItem(desc, ln.getQtyInvoiced(), ln.getPriceActual(),
+                        "1", ln.getLineNetAmt(), String.format("%03d", seq++), null, null));
+            }
+
+            AmountInfo amount = b2cAmount(inv.getGrandTotal());
+            String random = RandomNumberGenerator.generate();
+            EInvoiceDoc doc = EInvoiceDoc.forB2CPrint(map.getInvoiceNumber(),
+                    map.getInvoiceDate().toLocalDateTime(), seller, buyer, "07", items, amount, random);
+            String xml = MigF0401Builder.build(doc);
+
+            msg.setRandomNumber(random);
+
             String dir = MSysConfig.getValue("TW_TURNKEY_INTAKE_DIR", "/opt/turnkey/B2C",
                     Env.getAD_Client_ID(getCtx()));
             String file = new TurnkeyFileAdapter(dir).submit(doc.getInvoiceNumber(), xml);
