@@ -18,6 +18,8 @@ public class TaiwanProcessFactory implements IProcessFactory {
             return new GenerateTaxStatementProcess();
         if (ExportTaxReportProcess.class.getName().equals(className))
             return new ExportTaxReportProcess();
+        if (GenerateEInvoiceProcess.class.getName().equals(className))
+            return new GenerateEInvoiceProcess();
         return null;
     }
 }
