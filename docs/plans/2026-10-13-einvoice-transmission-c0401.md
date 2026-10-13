@@ -698,6 +698,8 @@ git commit -m "feat: add TW_EInvoiceMessage table + model (2Pack 1.0.12)"
 
 ### Task 7: GenerateEInvoiceProcess (end-to-end)
 
+> **AMOUNT CORRECTION (authoritative, from MIG 4.1 B2C samples):** do NOT floor-split tax. B2C F0401 puts `SalesAmount = TotalAmount = GrandTotal (含稅)`, `TaxAmount = 0`, each line `Amount = UnitPrice*Qty` (gross), `taxType="1"`. The `splitB2C` helper below is superseded — build `AmountInfo` directly with gross = C_Invoice GrandTotal. (The 401 tax breakdown stays in `TaxCalculationService`, not in the e-invoice message.)
+
 **Files:**
 - Create: `src/tw/idempiere/invoice/tax/process/GenerateEInvoiceProcess.java`
 - Modify: `src/tw/idempiere/invoice/tax/process/TaiwanProcessFactory.java` (register the new process)
