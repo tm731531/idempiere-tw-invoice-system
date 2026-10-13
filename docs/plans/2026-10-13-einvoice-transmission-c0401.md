@@ -698,19 +698,19 @@ git commit -m "feat: add TW_EInvoiceMessage table + model (2Pack 1.0.12)"
 
 ### Task 7: GenerateEInvoiceProcess (end-to-end)
 
-> **AMOUNT CORRECTION (authoritative, from MIG 4.1 B2C samples):** do NOT floor-split tax. B2C F0401 puts `SalesAmount = TotalAmount = GrandTotal (含稅)`, `TaxAmount = 0`, each line `Amount = UnitPrice*Qty` (gross), `taxType="1"`. The `splitB2C` helper below is superseded — build `AmountInfo` directly with gross = C_Invoice GrandTotal. (The 401 tax breakdown stays in `TaxCalculationService`, not in the e-invoice message.)
+> **AMOUNT (authoritative, from MIG 4.1 B2C samples):** no tax split. `SalesAmount = TotalAmount = GrandTotal (含稅)`, `TaxAmount = 0`, `taxType="1"`. (401 tax breakdown stays in `TaxCalculationService`, not the e-invoice message.)
 
 **Files:**
 - Create: `src/tw/idempiere/invoice/tax/process/GenerateEInvoiceProcess.java`
 - Modify: `src/tw/idempiere/invoice/tax/process/TaiwanProcessFactory.java` (register the new process)
-- Modify: `resources/2pack/tw_invoice_system/dict/PackOut.xml` (add `AD_Process` + button/menu to run it on a `TW_Invoice_Prefix_Map` record)
 - Test: `test/tw/idempiere/invoice/tax/process/GenerateEInvoiceAmountsTest.java` (pure helper)
+- (The `AD_Process` + menu button are added in the combined PackOut.xml step by the controller, not here.)
 
 **Interfaces:**
-- Consumes: `EInvoiceDoc`, `MigF0401Builder`, `TurnkeyFileAdapter`, `RandomNumberGenerator`, `MEInvoiceMessage`, existing `TaxCalculationService`, `MInvoicePrefixMap`.
-- Produces: a runnable `SvrProcess` that, given a `TW_Invoice_Prefix_Map_ID`, sources data, builds F0401, drops the file, and writes a `TW_EInvoiceMessage` row.
+- Consumes: `EInvoiceDoc.forB2CPrint`, `SellerInfo`, `BuyerInfo`, `AmountInfo`, `EInvoiceItem`, `MigF0401Builder`, `TurnkeyFileAdapter`, `RandomNumberGenerator`, `MEInvoiceMessage`, `MInvoicePrefixMap`, iDempiere `MInvoice`/`MInvoiceLine`/`MOrg`/`MOrgInfo`/`MSysConfig`.
+- Produces: a runnable `SvrProcess` that, given a `TW_Invoice_Prefix_Map_ID`, sources data, builds F0401, drops the file, writes a `TW_EInvoiceMessage` row.
 
-- [ ] **Step 1: Write a failing unit test for the pure sourcing helper**
+- [ ] **Step 1: Write a failing unit test for the pure amount helper**
 
 ```java
 package tw.idempiere.invoice.tax.process;
@@ -718,21 +718,19 @@ package tw.idempiere.invoice.tax.process;
 import static org.junit.Assert.*;
 import java.math.BigDecimal;
 import org.junit.Test;
+import tw.idempiere.invoice.tax.einvoice.AmountInfo;
 
 public class GenerateEInvoiceAmountsTest {
-    // 二聯式 B2C: total(gross) known → sales=floor(total/1.05), tax=floor(sales*0.05)
-    @Test public void splitsGrossWithFloor() {
-        BigDecimal[] r = GenerateEInvoiceProcess.splitB2C(new BigDecimal("105"));
-        assertEquals(new BigDecimal("100"), r[0]); // sales
-        assertEquals(new BigDecimal("5"),   r[1]); // tax
-    }
-    @Test public void floorsOddAmount() {
-        BigDecimal[] r = GenerateEInvoiceProcess.splitB2C(new BigDecimal("100"));
-        assertEquals(new BigDecimal("95"), r[0]); // floor(100/1.05)=95
-        assertEquals(new BigDecimal("4"),  r[1]); // floor(95*0.05)=4
+    @Test public void b2cDoesNotSplitTax() {
+        AmountInfo a = GenerateEInvoiceProcess.b2cAmount(new BigDecimal("325"));
+        assertEquals(new BigDecimal("325"), a.salesAmount);
+        assertEquals(new BigDecimal("325"), a.totalAmount);
+        assertEquals(BigDecimal.ZERO, a.taxAmount);
+        assertEquals("1", a.taxType);
     }
 }
 ```
+(Assumes `AmountInfo` fields are public-final: `salesAmount`, `totalAmount`, `taxAmount`, `taxType` — per Task 4. Adjust field access if Task 4 used getters.)
 
 - [ ] **Step 2: Run test to verify it fails**
 
@@ -741,65 +739,75 @@ Expected: FAIL — method not defined.
 
 - [ ] **Step 3: Implement the process + register it**
 
-`GenerateEInvoiceProcess.java`:
 ```java
 package tw.idempiere.invoice.tax.process;
 
 import java.math.BigDecimal;
-import java.math.RoundingMode;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import org.adempiere.exceptions.AdempiereException;
 import org.compiere.model.MInvoice;
 import org.compiere.model.MInvoiceLine;
+import org.compiere.model.MOrg;
 import org.compiere.model.MOrgInfo;
+import org.compiere.model.MSysConfig;
 import org.compiere.process.SvrProcess;
 import org.compiere.util.Env;
-import tw.idempiere.invoice.tax.einvoice.*;
+import tw.idempiere.invoice.tax.einvoice.AmountInfo;
+import tw.idempiere.invoice.tax.einvoice.BuyerInfo;
+import tw.idempiere.invoice.tax.einvoice.EInvoiceDoc;
+import tw.idempiere.invoice.tax.einvoice.EInvoiceItem;
+import tw.idempiere.invoice.tax.einvoice.MigF0401Builder;
+import tw.idempiere.invoice.tax.einvoice.RandomNumberGenerator;
+import tw.idempiere.invoice.tax.einvoice.SellerInfo;
+import tw.idempiere.invoice.tax.einvoice.TurnkeyFileAdapter;
 import tw.idempiere.invoice.tax.model.MEInvoiceMessage;
 import tw.idempiere.invoice.tax.model.MInvoicePrefixMap;
 
 public class GenerateEInvoiceProcess extends SvrProcess {
 
-    private static final BigDecimal RATE = new BigDecimal("1.05");
-    private static final BigDecimal TAX  = new BigDecimal("0.05");
+    private static final BigDecimal TAX_RATE = new BigDecimal("0.05");
 
-    /** 二聯式: gross → [sales, tax] with FLOOR per Ministry of Finance rule. */
-    public static BigDecimal[] splitB2C(BigDecimal gross) {
-        BigDecimal sales = gross.divide(RATE, 0, RoundingMode.FLOOR);
-        BigDecimal tax = sales.multiply(TAX).setScale(0, RoundingMode.FLOOR);
-        return new BigDecimal[]{sales, tax};
+    /** B2C 二聯式 F0401: SalesAmount=TotalAmount=gross, TaxAmount=0 (no split). */
+    public static AmountInfo b2cAmount(BigDecimal grandTotal) {
+        return new AmountInfo(grandTotal, BigDecimal.ZERO, BigDecimal.ZERO,
+                "1", TAX_RATE, BigDecimal.ZERO, grandTotal);
     }
 
     private int p_MapId;
 
-    @Override protected void prepare() {
-        p_MapId = getRecord_ID();
-    }
+    @Override protected void prepare() { p_MapId = getRecord_ID(); }
 
     @Override protected String doIt() throws Exception {
         MInvoicePrefixMap map = new MInvoicePrefixMap(getCtx(), p_MapId, get_TrxName());
         if (map.get_ID() <= 0) throw new AdempiereException("Invoice map record not found");
 
         MInvoice inv = new MInvoice(getCtx(), map.getC_Invoice_ID(), get_TrxName());
-        MOrgInfo org = MOrgInfo.get(getCtx(), inv.getAD_Org_ID(), get_TrxName());
-        String sellerTaxId = org.getTaxID();
+        MOrgInfo orgInfo = MOrgInfo.get(getCtx(), inv.getAD_Org_ID(), get_TrxName());
+        MOrg org = MOrg.get(getCtx(), inv.getAD_Org_ID());
+        String sellerTaxId = orgInfo.getTaxID();
+        if (sellerTaxId == null || sellerTaxId.trim().isEmpty())
+            throw new AdempiereException("Seller tax id (賣方統編) not set on Org Info");
 
-        BigDecimal gross = inv.getGrandTotal();
-        BigDecimal[] st = splitB2C(gross);
+        // Skeleton: populate identifier + name; address/contacts optional (builder omits nulls).
+        SellerInfo seller = new SellerInfo(sellerTaxId, org.getName(),
+                null, null, null, null, null, null, null);
+        String buyerId = (map.getBuyerTaxID() == null || map.getBuyerTaxID().trim().isEmpty())
+                ? "0000000000" : map.getBuyerTaxID().trim();
+        BuyerInfo buyer = new BuyerInfo(buyerId, null, null);
 
         List<EInvoiceItem> items = new ArrayList<>();
+        int seq = 1;
         for (MInvoiceLine ln : inv.getLines()) {
-            items.add(new EInvoiceItem(ln.getName() != null ? ln.getName() : ln.getDescription(),
-                    ln.getQtyInvoiced(), ln.getPriceActual(), ln.getLineNetAmt()));
+            String desc = ln.getName() != null ? ln.getName() : ln.getDescription();
+            items.add(new EInvoiceItem(desc, ln.getQtyInvoiced(), ln.getPriceActual(),
+                    "1", ln.getLineNetAmt(), String.format("%03d", seq++), null, null));
         }
 
+        AmountInfo amount = b2cAmount(inv.getGrandTotal());
         String random = RandomNumberGenerator.generate();
-        EInvoiceInput in = new EInvoiceInput(sellerTaxId, org.getName_Trl(),
-                map.getBuyerTaxID(), map.getInvoiceNumber(),
-                map.getInvoiceDate().toLocalDateTime(), st[0], st[1], gross, items);
-        EInvoiceDoc doc = EInvoiceDoc.forB2CTaxable(in, random);
+        EInvoiceDoc doc = EInvoiceDoc.forB2CPrint(map.getInvoiceNumber(),
+                map.getInvoiceDate().toLocalDateTime(), seller, buyer, "07", items, amount, random);
         String xml = MigF0401Builder.build(doc);
 
         MEInvoiceMessage msg = new MEInvoiceMessage(getCtx(), 0, get_TrxName());
@@ -807,11 +815,10 @@ public class GenerateEInvoiceProcess extends SvrProcess {
         msg.setMessageType("F0401");
         msg.setRandomNumber(random);
         msg.setMigVersion("4.1");
-        msg.set_Value(MEInvoiceMessage.COLUMNNAME_GeneratedOn, new java.sql.Timestamp(System.currentTimeMillis()));
-
+        msg.setStatus("DRAFT");
         try {
-            String dir = org.compiere.model.MSysConfig.getValue(
-                    "TW_TURNKEY_INTAKE_DIR", "/opt/turnkey/B2C", Env.getAD_Client_ID(getCtx()));
+            String dir = MSysConfig.getValue("TW_TURNKEY_INTAKE_DIR", "/opt/turnkey/B2C",
+                    Env.getAD_Client_ID(getCtx()));
             String file = new TurnkeyFileAdapter(dir).submit(doc.getInvoiceNumber(), xml);
             msg.setXmlFileName(file);
             msg.setStatus("WRITTEN");
@@ -833,35 +840,20 @@ if (GenerateEInvoiceProcess.class.getName().equals(className))
     return new GenerateEInvoiceProcess();
 ```
 
-> Note: `org.compiere.model.MInvoice/MInvoiceLine/MOrgInfo/MSysConfig` require `org.compiere.model` in `MANIFEST.MF` `Import-Package` (already present). `org.name_trl`/line accessors are approximate — on first compile, resolve any missing accessor against the real iDempiere 12 API before relying on it.
+> **Verify at compile/deploy (iDempiere 12 API + mapping — do not assume):** accessor names `MInvoiceLine.getName()/getDescription()/getQtyInvoiced()/getPriceActual()/getLineNetAmt()`, `MInvoice.getGrandTotal()/getLines()`, `MOrgInfo.getTaxID()`, `MOrg.get(ctx,id).getName()`, `MSysConfig.getValue(name,default,clientId)`. If a name differs, fix against the real API so it compiles. Also open: whether line `Amount` should be gross (qty*price incl. tax) vs `getLineNetAmt()` — confirm against a real B2C invoice at the gated deploy; and whether the platform requires Seller Name/Address or Buyer Name — if rejected, populate from `MOrgInfo` location / invoice BPartner.
 
-- [ ] **Step 4: Run unit test to verify it passes**
+- [ ] **Step 4: Run unit test + full suite**
 
-Run: `mvn test -Dtest=GenerateEInvoiceAmountsTest`
-Expected: PASS (2 tests). Then `mvn test` — all tests (89 existing + new) green.
+Run: `mvn test -Dtest=GenerateEInvoiceAmountsTest` then `mvn test`.
+Expected: the new test passes; full suite green (compilation proves the iDempiere accessors resolve).
 
-- [ ] **Step 5: Add AD_Process to PackOut.xml + bump 2Pack**
-
-Add an `<AD_Process>` for `GenerateEInvoiceProcess` (Classname = fully-qualified name) and surface it as a toolbar button/menu on the `TW_Invoice_Prefix_Map` window. Bump 2Pack `1.0.12` → `1.0.13`, rename zip, update `Version=`. Follow the existing `GenerateTaxStatementProcess` AD_Process block as the template.
-
-- [ ] **Step 6: Deploy + end-to-end verification**
-
-Run `./deploy.sh` (NOT clean_reinstall — live data must be preserved). In the UI: create an active `TW_InvoicePrefix`, issue a `TW_Invoice_Prefix_Map` row linked to a real `C_Invoice`, run **Generate E-Invoice**. Verify:
-```bash
-ls -l /opt/turnkey/B2C/   # the <InvoiceNumber>.xml file exists
-psql -c "SELECT status, xmlfilename, randomnumber FROM adempiere.tw_einvoicemessage ORDER BY created DESC LIMIT 1;"
-xmllint --noout /opt/turnkey/B2C/<InvoiceNumber>.xml && grep -q "eInvoiceMessage:F0401:4.1" /opt/turnkey/B2C/<InvoiceNumber>.xml && echo "LIVE XML OK"
-```
-Expected: `Status=WRITTEN`, file present, `LIVE XML VALID`.
-
-- [ ] **Step 7: Commit**
+- [ ] **Step 5: Commit (code only; AD_Process + deploy handled in the combined PackOut step)**
 
 ```bash
-git add -A
-git commit -m "feat: add GenerateEInvoiceProcess end-to-end F0401 generation (2Pack 1.0.13)"
+git add src/tw/idempiere/invoice/tax/process/GenerateEInvoiceProcess.java src/tw/idempiere/invoice/tax/process/TaiwanProcessFactory.java test/tw/idempiere/invoice/tax/process/GenerateEInvoiceAmountsTest.java
+git commit -m "feat: add GenerateEInvoiceProcess (F0401, no-split B2C amounts)"
 ```
 
----
 
 ## Self-Review notes
 
