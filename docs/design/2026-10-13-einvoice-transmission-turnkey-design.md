@@ -18,7 +18,7 @@ This design adds the missing piece: turn an issued invoice into a **MIG XML mess
 
 - **Placement = A**: this work lives **inside** `idempiere-tw-invoice-system`, not a separate plugin. (Decision 5347-01.)
 - **Route = Turnkey-first, pluggable**: a `TransmissionAdapter` interface with a `TurnkeyFileAdapter` as the flagship; a VAN/ECPay adapter is a *later, optional* entry path, not in this design's scope.
-- **First cut = C0401 (B2C 開立存證) only.** Void (C0501) and allowance messages are a second cut.
+- **First cut = F0401 (B2C 存證開立, 列印紙本) only.** Void (C0501) and allowance messages are a second cut.
 
 ---
 
@@ -32,7 +32,7 @@ Turnkey is a **Ministry-of-Finance-provided program the merchant installs**. The
 
 **Our plugin never touches SFTP, the certificate, or the government platform directly.** This makes the valuable core — MIG XML correctness — **unit-testable offline against the official C0401 sample/XSD**, with no cert and no government test environment required.
 
-Current mandatory message spec: **MIG 4.x** (not 3.2.1 — that is obsolete). Exact minor version and XSD are pinned from the official MIG guide during implementation.
+Current mandatory message: **MIG 4.1 `F0401`** (B2C 存證開立). Earlier notes said `C0401`/3.2 — obsolete. Authoritative structure is the official MIG 4.1 sample `test/resources/mig/F0401-B2C-print-sample.xml`; an `F0401.xsd` can be added later for stricter validation.
 
 ---
 
@@ -49,7 +49,7 @@ TW_Invoice_Prefix_Map (invoice no., date, buyer tax id, prefix link)
 │                                                             │
 │  EInvoiceAssembler   pure Java: sources above → EInvoiceDoc │
 │  EInvoiceDoc         canonical in-memory model (pure DTO)   │
-│  MigC0401Builder     EInvoiceDoc → MIG 4.x C0401 XML        │
+│  MigF0401Builder     EInvoiceDoc → MIG 4.1 F0401 XML        │
 │  TransmissionAdapter interface { submit(xml, msg) }         │
 │    └─ TurnkeyFileAdapter   write XML to Turnkey B2C folder  │
 │  EInvoiceService     orchestrates assemble→build→submit     │
@@ -59,7 +59,7 @@ TW_Invoice_Prefix_Map (invoice no., date, buyer tax id, prefix link)
 TW_EInvoiceMessage (new table) — one row per transmission attempt
 ```
 
-- **EInvoiceAssembler / EInvoiceDoc / MigC0401Builder are pure Java** (no iDempiere runtime) → JUnit-testable, matching the existing `service/` layer convention.
+- **EInvoiceAssembler / EInvoiceDoc / MigF0401Builder are pure Java** (no iDempiere runtime) → JUnit-testable, matching the existing `service/` layer convention.
 - Trigger for the first cut is a **manual `SvrProcess`** ("Generate E-Invoice") run on a `TW_Invoice_Prefix_Map` record, registered through the existing `TaiwanProcessFactory` (`IProcessFactory`). An automatic event-driven trigger on invoice completion is deferred.
 
 ---
@@ -94,9 +94,9 @@ One row per transmission attempt (installed via a 2Pack version bump; follows al
 | TW_EInvoiceMessage_ID / _UU | PK / UUID | standard |
 | AD_Client_ID / AD_Org_ID / IsActive / audit | | standard set |
 | TW_Invoice_Prefix_Map_ID | TableDir FK | the invoice being transmitted |
-| MessageType | List | first cut: `C0401` only |
+| MessageType | List | first cut: `F0401` only |
 | RandomNumber | String(4) | the 4-digit 隨機碼, generated once, persisted |
-| MigVersion | String | e.g. `4.0` |
+| MigVersion | String | e.g. `4.1` |
 | Status | List | `DRAFT` → `WRITTEN` (file dropped) → `CONFIRMED` / `FAILED` |
 | XmlFileName | String | the file written to Turnkey intake |
 | ErrorMessage | String | on failure |
@@ -108,12 +108,12 @@ One row per transmission attempt (installed via a 2Pack version bump; follows al
 
 ## 6. First-cut scope (walking skeleton)
 
-**Goal:** prove one B2C taxable invoice becomes a valid C0401 XML dropped for Turnkey.
+**Goal:** prove one B2C taxable (列印紙本) invoice becomes a valid F0401 XML dropped for Turnkey.
 
 In scope:
 1. `TW_EInvoiceMessage` table + `MEInvoiceMessage` model (`@Model`, `TaiwanModelFactory` already scans the `model` package).
 2. `EInvoiceAssembler`: read one `TW_Invoice_Prefix_Map` + its `C_Invoice`/`C_InvoiceLine` + Org → `EInvoiceDoc`. B2C, 應稅, no carrier, no donation.
-3. `MigC0401Builder`: `EInvoiceDoc` → MIG 4.x C0401 XML.
+3. `MigF0401Builder`: `EInvoiceDoc` → MIG 4.1 F0401 XML (reproduces official sample).
 4. `TurnkeyFileAdapter`: write XML to a configurable intake directory (path from `AD_SysConfig`, default a local folder).
 5. `GenerateEInvoiceProcess` (`SvrProcess`) wired via existing `TaiwanProcessFactory`.
 6. `RandomNumber` generation (persisted, reused on retry).
@@ -133,7 +133,7 @@ Out of scope (later cuts): C0501 void, allowance messages, B2C carrier (手機�
 
 ## 8. Testing
 
-- **Pure-Java unit tests** (JUnit, no iDempiere runtime) for `EInvoiceAssembler` and `MigC0401Builder`.
+- **Pure-Java unit tests** (JUnit, no iDempiere runtime) for `EInvoiceAssembler` and `MigF0401Builder`.
 - **Golden-file test:** generated C0401 XML validated against the **official Ministry-of-Finance C0401 sample + XSD** (committed under `test/resources/mig/`). This is the acceptance gate — correctness is proven without any cert or government environment.
 - Random-number field asserted 4 digits and stable across retry.
 - Follows the existing 89-test suite's style; target: all existing tests stay green.

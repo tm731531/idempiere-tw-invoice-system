@@ -1,12 +1,14 @@
-# E-Invoice Transmission (C0401 first cut) Implementation Plan
+# E-Invoice Transmission (F0401 B2C 存證開立 first cut) Implementation Plan
+
+> **CORRECTION (2026-10-13, authoritative):** MIG 4.1 names the B2C 存證開立 message **`F0401`** (namespace `urn:GEINV:eInvoiceMessage:F0401:4.1`), NOT `C0401` (that was MIG 3.2). All `C0401` references below are superseded by `F0401`/4.1. Gate = reproduce the official sample `test/resources/mig/F0401-B2C-print-sample.xml` (no XSD in the sample package).
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 >
 > **Before writing code**, invoke the Domain Skills declared in this repo's `CLAUDE.md` (`idempiere-mapped-model-factory-service`, `idempiere-annotation-process`) and keep the iDempiere brain rules in mind.
 
-**Goal:** Turn one issued B2C taxable invoice into a valid MIG 4.x `C0401` XML file dropped into Turnkey's intake directory, recorded in a new `TW_EInvoiceMessage` table.
+**Goal:** Turn one issued B2C taxable (列印紙本) invoice into an F0401 (MIG 4.1) XML file matching the official sample, dropped into Turnkey's intake directory, recorded in a new `TW_EInvoiceMessage` table.
 
-**Architecture:** A new pure-Java `einvoice` sub-package assembles invoice data into a canonical `EInvoiceDoc`, builds C0401 XML (`MigC0401Builder`), and hands it to a pluggable `TransmissionAdapter` (`TurnkeyFileAdapter` = file drop). An iDempiere `SvrProcess` sources the data from existing models and persists a transmission record. Pure pieces are JUnit-tested offline; XML correctness is gated by validation against the official C0401 XSD.
+**Architecture:** A new pure-Java `einvoice` sub-package assembles invoice data into a canonical `EInvoiceDoc`, builds F0401 XML (`MigF0401Builder`), and hands it to a pluggable `TransmissionAdapter` (`TurnkeyFileAdapter` = file drop). An iDempiere `SvrProcess` sources the data from existing models and persists a transmission record. Pure pieces are JUnit-tested offline; XML correctness is gated by reproducing the official F0401 sample (byte-structure match after whitespace normalization).
 
 **Tech Stack:** iDempiere 12 OSGi plugin (`tw.idempiere.invoice.tax`), Java, JUnit 4, Maven, 2Pack (PackOut.xml), `javax.xml.validation` + `xmllint` for XSD validation.
 
@@ -18,7 +20,7 @@
 - `TaiwanModelFactory` already scans package `tw.idempiere.invoice.tax.model` — new models go there to be auto-discovered.
 - Every `SvrProcess` MUST be registered in `TaiwanProcessFactory.newProcessInstance(...)`.
 - 2Pack: bump version (`2Pack_1.0.11.zip` → `2Pack_1.0.12.zip` + `PackOut.xml Version=`); keep existing UUIDs; every grid field needs `SeqNoGrid`+`IsDisplayedGrid=Y`; standard AD_Field set per tab; `_UU` `IsUpdateable=Y`.
-- **The official MIG 4.x `C0401.xsd` (Task 1) is the authoritative source for element names, namespace, and ordering.** Any XML scaffold in this plan derived from the MIG 3.2 structure must be corrected to pass XSD validation.
+- **The official sample `test/resources/mig/F0401-B2C-print-sample.xml` is the authoritative source for element names, namespace (`urn:GEINV:eInvoiceMessage:F0401:4.1`), and ordering.** The builder must reproduce it. If an `F0401.xsd` is obtained later, add XSD validation as a second gate.
 - Language: all code, comments, commits in English. Git stays on `dev`. JUnit 4 (`import org.junit.Test; import static org.junit.Assert.*;`).
 
 ---
@@ -313,19 +315,82 @@ git commit -m "feat: add canonical EInvoiceDoc with B2C taxable defaults + valid
 
 ---
 
-### Task 4: MigC0401Builder (XSD-gated)
+### Task 4: MigF0401Builder (official-sample-gated) + model extension
 
 **Files:**
-- Create: `src/tw/idempiere/invoice/tax/einvoice/MigC0401Builder.java`
-- Test: `test/tw/idempiere/invoice/tax/einvoice/MigC0401BuilderTest.java`
+- Modify: `src/tw/idempiere/invoice/tax/einvoice/EInvoiceItem.java` (add `taxType`, `sequenceNumber`, nullable `remark`, `relateNumber`)
+- Create: `src/tw/idempiere/invoice/tax/einvoice/SellerInfo.java`
+- Create: `src/tw/idempiere/invoice/tax/einvoice/BuyerInfo.java`
+- Create: `src/tw/idempiere/invoice/tax/einvoice/AmountInfo.java`
+- Modify: `src/tw/idempiere/invoice/tax/einvoice/EInvoiceDoc.java` (replace the Task-3 `forB2CTaxable(EInvoiceInput,...)` API with `forB2CPrint(...)` taking the value objects below; keep validation)
+- Modify: `test/tw/idempiere/invoice/tax/einvoice/EInvoiceDocTest.java` (adapt to new API: keep "reject blank seller id" and "reject no line items"; drop the obsolete blank-buyer-default test — buyer is now explicit)
+- Delete: `src/tw/idempiere/invoice/tax/einvoice/EInvoiceInput.java` (superseded by the value objects; Task 7 sources straight into `forB2CPrint`)
+- Create: `src/tw/idempiere/invoice/tax/einvoice/MigF0401Builder.java`
+- Create: `test/tw/idempiere/invoice/tax/einvoice/MigF0401BuilderTest.java`
 
-**Interfaces:**
-- Consumes: `EInvoiceDoc` (Task 3), the XSD fixture (Task 1).
-- Produces: `String MigC0401Builder.build(EInvoiceDoc doc)` → C0401 XML string.
+**Authoritative target — the official sample this task MUST reproduce** (`test/resources/mig/F0401-B2C-print-sample.xml`):
 
-> **Authoritative-source note:** the element tree below follows the MIG 3.2 structure (root `Invoice`; `Main` with `InvoiceNumber`, `InvoiceDate` as `YYYYMMDD`, `InvoiceTime` as `HH:mm:ss`, `Seller/Identifier`+`Name`, `Buyer/Identifier`, `InvoiceType`, `DonateMark`, `RandomNumber`; `Details/ProductItem` with `Description`,`Quantity`,`UnitPrice`,`Amount`,`SequenceNumber`; `Amount` with `SalesAmount`,`TaxType`,`TaxRate`,`TaxAmount`,`TotalAmount`). **Before implementing, open `test/resources/mig/C0401.xsd` (Task 1) and correct tag names, element ORDER, namespace, and any 4.x-added mandatory element.** The XSD-validation test in Step 1 is the gate — make the builder produce XML that validates, not XML that matches this scaffold.
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<Invoice xsi:schemaLocation="urn:GEINV:eInvoiceMessage:F0401:4.1 F0401.xsd" xmlns="urn:GEINV:eInvoiceMessage:F0401:4.1" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <Main>
+        <InvoiceNumber>KZ10000012</InvoiceNumber>
+        <InvoiceDate>20241201</InvoiceDate>
+        <InvoiceTime>09:00:00</InvoiceTime>
+        <Seller>
+            <Identifier>90000011</Identifier>
+            <Name>測試公司</Name>
+            <Address>台北市中華路1段123號</Address>
+            <PersonInCharge>王小明</PersonInCharge>
+            <TelephoneNumber>0212345678</TelephoneNumber>
+            <FacsimileNumber>0212345678</FacsimileNumber>
+            <EmailAddress>test1@test.com.tw</EmailAddress>
+            <CustomerNumber>A123456789</CustomerNumber>
+            <RoleRemark>defaultUser</RoleRemark>
+        </Seller>
+        <Buyer>
+            <Identifier>0000000000</Identifier>
+            <Name>測試買家</Name>
+            <Address>台中市中正路888號</Address>
+        </Buyer>
+        <InvoiceType>07</InvoiceType>
+        <DonateMark>0</DonateMark>
+        <PrintMark>Y</PrintMark>
+        <RandomNumber>1234</RandomNumber>
+    </Main>
+    <Details>
+        <ProductItem>
+            <Description>純喫茶紅茶</Description>
+            <Quantity>1</Quantity>
+            <UnitPrice>20</UnitPrice>
+            <TaxType>1</TaxType>
+            <Amount>20</Amount>
+            <SequenceNumber>001</SequenceNumber>
+            <Remark>remark</Remark>
+            <RelateNumber>A123456789</RelateNumber>
+        </ProductItem>
+    </Details>
+    <Amount>
+        <SalesAmount>20</SalesAmount>
+        <FreeTaxSalesAmount>0</FreeTaxSalesAmount>
+        <ZeroTaxSalesAmount>0</ZeroTaxSalesAmount>
+        <TaxType>1</TaxType>
+        <TaxRate>0.05</TaxRate>
+        <TaxAmount>0</TaxAmount>
+        <TotalAmount>20</TotalAmount>
+    </Amount>
+</Invoice>
+```
 
-- [ ] **Step 1: Write the failing test (XSD validation is the gate)**
+**Interfaces (model API this task defines):**
+- `EInvoiceItem(String description, BigDecimal quantity, BigDecimal unitPrice, String taxType, BigDecimal amount, String sequenceNumber, String remark, String relateNumber)` — `remark`/`relateNumber` nullable (element omitted when null).
+- `SellerInfo(String identifier, String name, String address, String personInCharge, String telephoneNumber, String facsimileNumber, String emailAddress, String customerNumber, String roleRemark)` — everything after `address` nullable (element omitted when null/blank).
+- `BuyerInfo(String identifier, String name, String address)` — `name`/`address` nullable.
+- `AmountInfo(BigDecimal salesAmount, BigDecimal freeTaxSalesAmount, BigDecimal zeroTaxSalesAmount, String taxType, BigDecimal taxRate, BigDecimal taxAmount, BigDecimal totalAmount)`.
+- `EInvoiceDoc.forB2CPrint(String invoiceNumber, LocalDateTime invoiceDateTime, SellerInfo seller, BuyerInfo buyer, String invoiceType, java.util.List<EInvoiceItem> items, AmountInfo amount, String randomNumber)` -> sets `donateMark="0"`, `printMark="Y"`; validates `seller.identifier` non-blank, `items` non-empty, `invoiceNumber` matches `[A-Z]{2}` + 8 digits (throws `org.adempiere.exceptions.AdempiereException`). Exposes getters the builder needs.
+- `String MigF0401Builder.build(EInvoiceDoc doc)` -> F0401 XML string. Emits the exact element order shown in the sample; emits a nullable element only when its value is non-null/non-blank. `InvoiceDate` = `yyyyMMdd`, `InvoiceTime` = `HH:mm:ss`, `BigDecimal` via `toPlainString()`. Root attributes in the sample's exact order.
+
+- [ ] **Step 1: Write the failing gate test (reproduce the official sample)**
 
 ```java
 package tw.idempiere.invoice.tax.einvoice;
@@ -333,135 +398,61 @@ package tw.idempiere.invoice.tax.einvoice;
 import static org.junit.Assert.*;
 import java.io.File;
 import java.math.BigDecimal;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
 import java.time.LocalDateTime;
 import java.util.Collections;
-import javax.xml.XMLConstants;
-import javax.xml.transform.stream.StreamSource;
-import javax.xml.validation.Schema;
-import javax.xml.validation.SchemaFactory;
-import javax.xml.validation.Validator;
-import java.io.StringReader;
-import javax.xml.transform.stream.StreamSource;
 import org.junit.Test;
 
-public class MigC0401BuilderTest {
+public class MigF0401BuilderTest {
 
-    private EInvoiceDoc sampleDoc() {
-        EInvoiceInput in = new EInvoiceInput("12345678", "Test Seller Co", null,
-                "AA00000001", LocalDateTime.of(2026, 10, 13, 9, 30, 0),
-                new BigDecimal("100"), new BigDecimal("5"), new BigDecimal("105"),
-                Collections.singletonList(new EInvoiceItem(
-                        "Widget", new BigDecimal("1"), new BigDecimal("105"), new BigDecimal("105"))));
-        return EInvoiceDoc.forB2CTaxable(in, "0007");
+    private static String norm(String s) { return s.replaceAll(">\s+<", "><").trim(); }
+
+    private EInvoiceDoc officialPrintSampleDoc() {
+        SellerInfo seller = new SellerInfo("90000011", "測試公司", "台北市中華路1段123號",
+                "王小明", "0212345678", "0212345678", "test1@test.com.tw", "A123456789", "defaultUser");
+        BuyerInfo buyer = new BuyerInfo("0000000000", "測試買家", "台中市中正路888號");
+        EInvoiceItem item = new EInvoiceItem("純喫茶紅茶", new BigDecimal("1"), new BigDecimal("20"),
+                "1", new BigDecimal("20"), "001", "remark", "A123456789");
+        AmountInfo amount = new AmountInfo(new BigDecimal("20"), new BigDecimal("0"), new BigDecimal("0"),
+                "1", new BigDecimal("0.05"), new BigDecimal("0"), new BigDecimal("20"));
+        return EInvoiceDoc.forB2CPrint("KZ10000012", LocalDateTime.of(2024, 12, 1, 9, 0, 0),
+                seller, buyer, "07", Collections.singletonList(item), amount, "1234");
     }
 
     @Test
-    public void containsKeyFields() {
-        String xml = MigC0401Builder.build(sampleDoc());
-        assertTrue(xml.contains("<InvoiceNumber>AA00000001</InvoiceNumber>"));
-        assertTrue(xml.contains("<InvoiceDate>20261013</InvoiceDate>"));
-        assertTrue(xml.contains("<RandomNumber>0007</RandomNumber>"));
-        assertTrue(xml.contains("0000000000")); // B2C buyer
-    }
-
-    @Test
-    public void validatesAgainstOfficialXsd() throws Exception {
-        String xml = MigC0401Builder.build(sampleDoc());
-        SchemaFactory sf = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
-        Schema schema = sf.newSchema(new File("test/resources/mig/C0401.xsd"));
-        Validator v = schema.newValidator();
-        v.validate(new StreamSource(new StringReader(xml))); // throws if invalid
+    public void reproducesOfficialPrintSample() throws Exception {
+        String expected = new String(Files.readAllBytes(
+                new File("test/resources/mig/F0401-B2C-print-sample.xml").toPath()), StandardCharsets.UTF_8);
+        String actual = MigF0401Builder.build(officialPrintSampleDoc());
+        assertEquals(norm(expected), norm(actual));
     }
 }
 ```
 
 - [ ] **Step 2: Run test to verify it fails**
 
-Run: `mvn test -Dtest=MigC0401BuilderTest`
-Expected: FAIL — `MigC0401Builder` not defined.
+Run: `mvn test -Dtest=MigF0401BuilderTest`
+Expected: FAIL — classes/API not defined.
 
-- [ ] **Step 3: Write the builder (then adjust to pass XSD)**
+- [ ] **Step 3: Implement value objects, new `EInvoiceDoc.forB2CPrint`, and `MigF0401Builder`**
 
-```java
-package tw.idempiere.invoice.tax.einvoice;
+Value objects = immutable public-final-field holders (same style as existing `EInvoiceItem`). `MigF0401Builder.build` writes the sample's exact structure with an `el(tag,val)` helper and an `elOpt(tag,val)` that returns `""` when `val` is null/blank; XML-escape text. Root line verbatim:
+`<Invoice xsi:schemaLocation="urn:GEINV:eInvoiceMessage:F0401:4.1 F0401.xsd" xmlns="urn:GEINV:eInvoiceMessage:F0401:4.1" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">`
+Order per sample: Main(InvoiceNumber, InvoiceDate, InvoiceTime, Seller{Identifier,Name,Address,PersonInCharge,TelephoneNumber,FacsimileNumber,EmailAddress,CustomerNumber,RoleRemark}, Buyer{Identifier,Name,Address}, InvoiceType, DonateMark, PrintMark, RandomNumber) -> Details(ProductItem{Description,Quantity,UnitPrice,TaxType,Amount,SequenceNumber,Remark,RelateNumber}) -> Amount(SalesAmount,FreeTaxSalesAmount,ZeroTaxSalesAmount,TaxType,TaxRate,TaxAmount,TotalAmount). Update `EInvoiceDoc` + `EInvoiceDocTest` to the new API; delete `EInvoiceInput.java`.
 
-import java.time.format.DateTimeFormatter;
+- [ ] **Step 4: Iterate until the gate test passes**
 
-/**
- * Builds a MIG C0401 (B2C 開立存證) XML document from an EInvoiceDoc.
- * Element names/namespace/order MUST match test/resources/mig/C0401.xsd (MIG 4.x).
- */
-public final class MigC0401Builder {
-
-    // TODO-on-impl: replace with the exact namespace copied from the official sample (Task 1 Step 3).
-    private static final String NS = "urn:GEINV:eInvoiceMessage:C0401:4.0";
-    private static final DateTimeFormatter D = DateTimeFormatter.ofPattern("yyyyMMdd");
-    private static final DateTimeFormatter T = DateTimeFormatter.ofPattern("HH:mm:ss");
-
-    private MigC0401Builder() {}
-
-    public static String build(EInvoiceDoc d) {
-        StringBuilder x = new StringBuilder();
-        x.append("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n");
-        x.append("<Invoice xmlns=\"").append(NS).append("\">");
-        x.append("<Main>");
-        x.append(el("InvoiceNumber", d.getInvoiceNumber()));
-        x.append(el("InvoiceDate", d.getInvoiceDate().format(D)));
-        x.append(el("InvoiceTime", d.getInvoiceDate().format(T)));
-        x.append("<Seller>").append(el("Identifier", d.getSellerTaxId()))
-         .append(el("Name", d.getSellerName())).append("</Seller>");
-        x.append("<Buyer>").append(el("Identifier", d.getBuyerTaxId())).append("</Buyer>");
-        x.append(el("InvoiceType", d.getInvoiceType()));
-        x.append(el("DonateMark", d.getDonateMark()));
-        x.append(el("RandomNumber", d.getRandomNumber()));
-        x.append("</Main>");
-        x.append("<Details>");
-        int seq = 1;
-        for (EInvoiceItem it : d.getItems()) {
-            x.append("<ProductItem>")
-             .append(el("Description", it.description))
-             .append(el("Quantity", it.quantity.toPlainString()))
-             .append(el("UnitPrice", it.unitPrice.toPlainString()))
-             .append(el("Amount", it.amount.toPlainString()))
-             .append(el("SequenceNumber", String.valueOf(seq++)))
-             .append("</ProductItem>");
-        }
-        x.append("</Details>");
-        x.append("<Amount>")
-         .append(el("SalesAmount", d.getSalesAmount().toPlainString()))
-         .append(el("TaxType", d.getTaxType()))
-         .append(el("TaxRate", d.getTaxRate().toPlainString()))
-         .append(el("TaxAmount", d.getTaxAmount().toPlainString()))
-         .append(el("TotalAmount", d.getTotalAmount().toPlainString()))
-         .append("</Amount>");
-        x.append("</Invoice>");
-        return x.toString();
-    }
-
-    private static String el(String tag, String val) {
-        return "<" + tag + ">" + escape(val) + "</" + tag + ">";
-    }
-
-    private static String escape(String s) {
-        if (s == null) return "";
-        return s.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;");
-    }
-}
-```
-
-- [ ] **Step 4: Iterate until both tests pass**
-
-Run: `mvn test -Dtest=MigC0401BuilderTest`
-Expected: PASS (2 tests). If `validatesAgainstOfficialXsd` fails, read the validator error, open `C0401.xsd`, and fix element names/order/namespace until it validates. **Do not weaken the test** — fix the builder.
+Run: `mvn test -Dtest=MigF0401BuilderTest,EInvoiceDocTest`
+Expected: PASS. If `reproducesOfficialPrintSample` fails, diff the normalized strings and fix element name/order/omission until it matches the official sample. **Do not weaken the test** — fix the builder. Then `mvn test` — full suite green.
 
 - [ ] **Step 5: Commit**
 
 ```bash
-git add src/tw/idempiere/invoice/tax/einvoice/MigC0401Builder.java test/tw/idempiere/invoice/tax/einvoice/MigC0401BuilderTest.java
-git commit -m "feat: add MigC0401Builder gated by official C0401 XSD validation"
+git add src/tw/idempiere/invoice/tax/einvoice/ test/tw/idempiere/invoice/tax/einvoice/MigF0401BuilderTest.java test/tw/idempiere/invoice/tax/einvoice/EInvoiceDocTest.java
+git rm src/tw/idempiere/invoice/tax/einvoice/EInvoiceInput.java
+git commit -m "feat: add MigF0401Builder reproducing official MIG 4.1 F0401 B2C sample"
 ```
-
----
 
 ### Task 5: TransmissionAdapter + TurnkeyFileAdapter
 
@@ -580,7 +571,7 @@ git commit -m "feat: add TransmissionAdapter + TurnkeyFileAdapter (file drop)"
 - Test: `test/tw/idempiere/invoice/tax/model/MEInvoiceMessageTest.java`
 
 **Interfaces:**
-- Produces: `MEInvoiceMessage` model with columns per spec §5 and `COLUMNNAME_*` constants + getters/setters following the existing `MInvoicePrefixMap` pattern. Status values: `DRAFT`,`WRITTEN`,`CONFIRMED`,`FAILED`. MessageType: `C0401`.
+- Produces: `MEInvoiceMessage` model with columns per spec §5 and `COLUMNNAME_*` constants + getters/setters following the existing `MInvoicePrefixMap` pattern. Status values: `DRAFT`,`WRITTEN`,`CONFIRMED`,`FAILED`. MessageType: `F0401`.
 
 - [ ] **Step 1: Write the failing test (model constants + accessors)**
 
@@ -675,7 +666,7 @@ Expected: PASS (2 tests).
 
 - [ ] **Step 5: Add the table to PackOut.xml (follow existing TW_* blocks)**
 
-Copy the structure of an existing TW_* `AD_Table`+columns block in `PackOut.xml`. Columns: standard set (PK/_UU/audit/AD_Client_ID/AD_Org_ID/IsActive) + `TW_Invoice_Prefix_Map_ID` (TableDir FK, ref 19), `MessageType` (List), `RandomNumber` (String 4), `MigVersion` (String 10), `Status` (List), `XmlFileName` (String 255), `ErrorMessage` (String 2000), `GeneratedOn` (DateTime). New List references `TW E-Invoice Message Type` (value `C0401`) and `TW E-Invoice Status` (`DRAFT`/`WRITTEN`/`CONFIRMED`/`FAILED`) with fresh fixed UUIDs. Every displayed `AD_Field` needs `SeqNoGrid`+`IsDisplayedGrid=Y`; `_UU` `IsUpdateable=Y`. Bump `Version="1.0.12"`.
+Copy the structure of an existing TW_* `AD_Table`+columns block in `PackOut.xml`. Columns: standard set (PK/_UU/audit/AD_Client_ID/AD_Org_ID/IsActive) + `TW_Invoice_Prefix_Map_ID` (TableDir FK, ref 19), `MessageType` (List), `RandomNumber` (String 4), `MigVersion` (String 10), `Status` (List), `XmlFileName` (String 255), `ErrorMessage` (String 2000), `GeneratedOn` (DateTime). New List references `TW E-Invoice Message Type` (value `F0401`) and `TW E-Invoice Status` (`DRAFT`/`WRITTEN`/`CONFIRMED`/`FAILED`) with fresh fixed UUIDs. Every displayed `AD_Field` needs `SeqNoGrid`+`IsDisplayedGrid=Y`; `_UU` `IsUpdateable=Y`. Bump `Version="1.0.12"`.
 
 - [ ] **Step 6: Rebuild the 2Pack zip and verify**
 
@@ -714,8 +705,8 @@ git commit -m "feat: add TW_EInvoiceMessage table + model (2Pack 1.0.12)"
 - Test: `test/tw/idempiere/invoice/tax/process/GenerateEInvoiceAmountsTest.java` (pure helper)
 
 **Interfaces:**
-- Consumes: `EInvoiceDoc`, `MigC0401Builder`, `TurnkeyFileAdapter`, `RandomNumberGenerator`, `MEInvoiceMessage`, existing `TaxCalculationService`, `MInvoicePrefixMap`.
-- Produces: a runnable `SvrProcess` that, given a `TW_Invoice_Prefix_Map_ID`, sources data, builds C0401, drops the file, and writes a `TW_EInvoiceMessage` row.
+- Consumes: `EInvoiceDoc`, `MigF0401Builder`, `TurnkeyFileAdapter`, `RandomNumberGenerator`, `MEInvoiceMessage`, existing `TaxCalculationService`, `MInvoicePrefixMap`.
+- Produces: a runnable `SvrProcess` that, given a `TW_Invoice_Prefix_Map_ID`, sources data, builds F0401, drops the file, and writes a `TW_EInvoiceMessage` row.
 
 - [ ] **Step 1: Write a failing unit test for the pure sourcing helper**
 
@@ -807,13 +798,13 @@ public class GenerateEInvoiceProcess extends SvrProcess {
                 map.getBuyerTaxID(), map.getInvoiceNumber(),
                 map.getInvoiceDate().toLocalDateTime(), st[0], st[1], gross, items);
         EInvoiceDoc doc = EInvoiceDoc.forB2CTaxable(in, random);
-        String xml = MigC0401Builder.build(doc);
+        String xml = MigF0401Builder.build(doc);
 
         MEInvoiceMessage msg = new MEInvoiceMessage(getCtx(), 0, get_TrxName());
         msg.setTW_Invoice_Prefix_Map_ID(map.get_ID());
-        msg.setMessageType("C0401");
+        msg.setMessageType("F0401");
         msg.setRandomNumber(random);
-        msg.setMigVersion("4.0");
+        msg.setMigVersion("4.1");
         msg.set_Value(MEInvoiceMessage.COLUMNNAME_GeneratedOn, new java.sql.Timestamp(System.currentTimeMillis()));
 
         try {
@@ -823,7 +814,7 @@ public class GenerateEInvoiceProcess extends SvrProcess {
             msg.setXmlFileName(file);
             msg.setStatus("WRITTEN");
             msg.saveEx();
-            return "C0401 written: " + file;
+            return "F0401 written: " + file;
         } catch (Exception e) {
             msg.setStatus("FAILED");
             msg.setErrorMessage(e.getMessage());
@@ -857,7 +848,7 @@ Run `./clean_reinstall.sh`. In the UI: create an active `TW_InvoicePrefix`, issu
 ```bash
 ls -l /opt/turnkey/B2C/   # the <InvoiceNumber>.xml file exists
 psql -c "SELECT status, xmlfilename, randomnumber FROM adempiere.tw_einvoicemessage ORDER BY created DESC LIMIT 1;"
-xmllint --noout --schema test/resources/mig/C0401.xsd /opt/turnkey/B2C/<InvoiceNumber>.xml && echo "LIVE XML VALID"
+xmllint --noout /opt/turnkey/B2C/<InvoiceNumber>.xml && grep -q "eInvoiceMessage:F0401:4.1" /opt/turnkey/B2C/<InvoiceNumber>.xml && echo "LIVE XML OK"
 ```
 Expected: `Status=WRITTEN`, file present, `LIVE XML VALID`.
 
@@ -865,7 +856,7 @@ Expected: `Status=WRITTEN`, file present, `LIVE XML VALID`.
 
 ```bash
 git add -A
-git commit -m "feat: add GenerateEInvoiceProcess end-to-end C0401 generation (2Pack 1.0.13)"
+git commit -m "feat: add GenerateEInvoiceProcess end-to-end F0401 generation (2Pack 1.0.13)"
 ```
 
 ---
@@ -873,4 +864,4 @@ git commit -m "feat: add GenerateEInvoiceProcess end-to-end C0401 generation (2P
 ## Self-Review notes
 
 - **Spec coverage:** §3 components → Tasks 2–7; §4 data sourcing → Task 7 (`doIt` sources Org/C_Invoice/C_InvoiceLine/map); §5 table → Task 6; §6 first-cut scope → all tasks (carrier/donation/void excluded); §7 error handling → Tasks 3 (validation), 5 (file failure), 7 (FAILED status); §8 testing → Tasks 2–4 pure + Task 4 XSD gate + Task 7 live xmllint; §9 open items → Task 1 (XSD/version), Task 7 Step 3 note (Org tax id / C_Invoice mapping / API accessor check).
-- **Known approximations flagged for implementer:** exact C0401 element names/namespace (Task 4 note — XSD-gated), iDempiere 12 accessor names in Task 7 (`getName_Trl`, line getters — Step 3 note), Turnkey intake subfolder layout (Task 7 via `TW_TURNKEY_INTAKE_DIR` SysConfig). None are silent — each has a verification step.
+- **Known approximations flagged for implementer:** exact F0401 element names/namespace (Task 4 — gated by official-sample reproduction), iDempiere 12 accessor names in Task 7 (`getName_Trl`, line getters — Step 3 note), Turnkey intake subfolder layout (Task 7 via `TW_TURNKEY_INTAKE_DIR` SysConfig). None are silent — each has a verification step.
