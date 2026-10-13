@@ -41,4 +41,22 @@ public class EInvoiceDocTest {
         EInvoiceDoc.forB2CPrint("AA00000001", LocalDateTime.now(), seller("12345678"), buyer(),
                 "07", Collections.emptyList(), amount(), "0007");
     }
+
+    @Test(expected = AdempiereException.class)
+    public void rejectsNullBuyer() {
+        EInvoiceDoc.forB2CPrint("AA00000001", LocalDateTime.now(), seller("12345678"), null,
+                "07", oneItem(), amount(), "0007");
+    }
+
+    @Test(expected = AdempiereException.class)
+    public void rejectsNullAmount() {
+        EInvoiceDoc.forB2CPrint("AA00000001", LocalDateTime.now(), seller("12345678"), buyer(),
+                "07", oneItem(), null, "0007");
+    }
+
+    @Test(expected = AdempiereException.class)
+    public void rejectsNullInvoiceDateTime() {
+        EInvoiceDoc.forB2CPrint("AA00000001", null, seller("12345678"), buyer(),
+                "07", oneItem(), amount(), "0007");
+    }
 }

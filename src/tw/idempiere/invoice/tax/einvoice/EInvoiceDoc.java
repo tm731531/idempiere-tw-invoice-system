@@ -33,6 +33,12 @@ public final class EInvoiceDoc {
             throw new AdempiereException("E-Invoice: at least one line item (品項) is required");
         if (invoiceNumber == null || !invoiceNumber.matches("[A-Z]{2}\\d{8}"))
             throw new AdempiereException("E-Invoice: invoice number must be AA00000001 format");
+        if (buyer == null)
+            throw new AdempiereException("E-Invoice: buyer (買方) is required");
+        if (amount == null)
+            throw new AdempiereException("E-Invoice: amount is required");
+        if (invoiceDateTime == null)
+            throw new AdempiereException("E-Invoice: invoice date/time is required");
         return new EInvoiceDoc(invoiceNumber, invoiceDateTime, seller, buyer, invoiceType, items, amount, randomNumber);
     }
 

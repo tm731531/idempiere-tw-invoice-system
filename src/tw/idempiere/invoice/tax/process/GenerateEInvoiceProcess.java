@@ -60,7 +60,11 @@ public class GenerateEInvoiceProcess extends SvrProcess {
         MInvoicePrefixMap map = new MInvoicePrefixMap(getCtx(), p_MapId, get_TrxName());
         if (map.get_ID() <= 0) throw new AdempiereException("Invoice map record not found");
 
-        MEInvoiceMessage msg = new MEInvoiceMessage(getCtx(), 0, get_TrxName());
+        // Auto-commit (null trxName): the audit row must survive a rollback of
+        // this process's own transaction when doIt() rethrows (see brain:
+        // po-model best-effort audit pattern). Both the WRITTEN and FAILED
+        // saves below commit independently of get_TrxName().
+        MEInvoiceMessage msg = new MEInvoiceMessage(getCtx(), 0, null);
         msg.setTW_Invoice_Prefix_Map_ID(map.get_ID());
         msg.setMessageType("F0401");
         msg.setMigVersion("4.1");
@@ -111,8 +115,16 @@ public class GenerateEInvoiceProcess extends SvrProcess {
             return "F0401 written: " + file;
         } catch (Exception e) {
             msg.setStatus("FAILED");
-            msg.setErrorMessage(e.getMessage());
-            msg.saveEx();
+            String errMsg = e.getMessage();
+            if (errMsg != null && errMsg.length() > 2000)
+                errMsg = errMsg.substring(0, 2000);
+            msg.setErrorMessage(errMsg);
+            try {
+                msg.saveEx();
+            } catch (Exception saveEx) {
+                // Do not let an audit-save failure mask the original exception.
+                log.severe("Failed to save FAILED e-invoice audit row: " + saveEx.getMessage());
+            }
             throw e;
         }
     }
