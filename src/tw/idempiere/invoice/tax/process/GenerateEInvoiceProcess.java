@@ -1,6 +1,7 @@
 package tw.idempiere.invoice.tax.process;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.List;
 import org.adempiere.exceptions.AdempiereException;
@@ -34,8 +35,37 @@ public class GenerateEInvoiceProcess extends SvrProcess {
 
     /** B2C 二聯式 F0401: SalesAmount=TotalAmount=gross, TaxAmount=0 (no split). */
     public static AmountInfo b2cAmount(BigDecimal grandTotal) {
-        return new AmountInfo(grandTotal, BigDecimal.ZERO, BigDecimal.ZERO,
-                "1", TAX_RATE, BigDecimal.ZERO, grandTotal);
+        BigDecimal gross = grandTotal.setScale(0, RoundingMode.HALF_UP);
+        return new AmountInfo(gross, BigDecimal.ZERO, BigDecimal.ZERO,
+                "1", TAX_RATE, BigDecimal.ZERO, gross);
+    }
+
+    /**
+     * Allocate an integer gross total across lines in proportion to each line's net,
+     * so the returned integer amounts sum EXACTLY to grossTotal (last line absorbs rounding).
+     */
+    public static List<BigDecimal> allocateGross(List<BigDecimal> lineNets, BigDecimal grossTotal) {
+        int n = lineNets.size();
+        List<BigDecimal> result = new ArrayList<>();
+        if (n == 0) return result;
+        if (n == 1) {
+            result.add(grossTotal.setScale(0, RoundingMode.HALF_UP));
+            return result;
+        }
+
+        BigDecimal sumNet = BigDecimal.ZERO;
+        for (BigDecimal net : lineNets) sumNet = sumNet.add(net);
+
+        BigDecimal runningSum = BigDecimal.ZERO;
+        for (int i = 0; i < n - 1; i++) {
+            BigDecimal amt = sumNet.signum() == 0
+                    ? BigDecimal.ZERO
+                    : lineNets.get(i).multiply(grossTotal).divide(sumNet, 0, RoundingMode.HALF_UP);
+            result.add(amt);
+            runningSum = runningSum.add(amt);
+        }
+        result.add(grossTotal.subtract(runningSum).setScale(0, RoundingMode.HALF_UP));
+        return result;
     }
 
     private int p_MapId;
@@ -90,15 +120,28 @@ public class GenerateEInvoiceProcess extends SvrProcess {
                     ? "0000000000" : map.getBuyerTaxID().trim();
             BuyerInfo buyer = new BuyerInfo(buyerId, null, null);
 
+            MInvoiceLine[] lines = inv.getLines();
+            List<BigDecimal> nets = new ArrayList<>();
+            for (MInvoiceLine ln : lines) nets.add(ln.getLineNetAmt());
+
+            BigDecimal grossTotal = inv.getGrandTotal().setScale(0, RoundingMode.HALF_UP);
+            List<BigDecimal> grossAmounts = allocateGross(nets, grossTotal);
+
             List<EInvoiceItem> items = new ArrayList<>();
             int seq = 1;
-            for (MInvoiceLine ln : inv.getLines()) {
+            for (int i = 0; i < lines.length; i++) {
+                MInvoiceLine ln = lines[i];
                 String desc = ln.getName() != null ? ln.getName() : ln.getDescription();
-                items.add(new EInvoiceItem(desc, ln.getQtyInvoiced(), ln.getPriceActual(),
-                        "1", ln.getLineNetAmt(), String.format("%03d", seq++), null, null));
+                BigDecimal amt = grossAmounts.get(i);
+                BigDecimal qty = ln.getQtyInvoiced().setScale(0, RoundingMode.HALF_UP);
+                BigDecimal unitPrice = qty.compareTo(BigDecimal.ONE) == 0
+                        ? amt
+                        : (qty.signum() == 0 ? BigDecimal.ZERO : amt.divide(qty, 0, RoundingMode.HALF_UP));
+                items.add(new EInvoiceItem(desc, qty, unitPrice,
+                        "1", amt, String.format("%03d", seq++), null, null));
             }
 
-            AmountInfo amount = b2cAmount(inv.getGrandTotal());
+            AmountInfo amount = b2cAmount(grossTotal);
             String random = RandomNumberGenerator.generate();
             EInvoiceDoc doc = EInvoiceDoc.forB2CPrint(map.getInvoiceNumber(),
                     map.getInvoiceDate().toLocalDateTime(), seller, buyer, "07", items, amount, random);
